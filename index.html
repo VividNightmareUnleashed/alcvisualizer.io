@@ -1291,120 +1291,129 @@
         }
 
         // Update warnings
-        function updateWarnings() {
-            // Hip fire warnings - check raw values against 90
-            const hipYaw = parseInt(elements.yawSpeed.value);
-            const hipPitch = parseInt(elements.pitchSpeed.value);
-            const hipYawWarning = document.getElementById('hipYawWarning');
-            const hipPitchWarning = document.getElementById('hipPitchWarning');
-            
-            hipYawWarning.innerHTML = '';
-            hipPitchWarning.innerHTML = '';
-            
-            // Hip Yaw warning
-            if (hipYaw < 90) {
-                hipYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
-            } else if (hipYaw < 130) {
-                hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited strafe tracking</div>';
-            } else {
-                hipYawWarning.innerHTML = '<div class="warning warning-green">✓ Good for close range tracking</div>';
-            }
-            
-            // Hip Pitch warning
-            if (hipPitch < 90) {
-                hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range vertical movement</div>';
-            } else if (hipPitch < 130) {
-                hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
-            } else {
-                hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
-            }
-            
-            // ADS warnings - check raw values against 45
-            const adsYaw = parseInt(elements.adsYawSpeed.value);
-            const adsPitch = parseInt(elements.adsPitchSpeed.value);
-            const adsYawWarning = document.getElementById('adsYawWarning');
-            const adsPitchWarning = document.getElementById('adsPitchWarning');
-            
-            adsYawWarning.innerHTML = '';
-            adsPitchWarning.innerHTML = '';
-            
-            // ADS Yaw warning
-            if (adsYaw < 45) {
-                adsYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
-            } else if (adsYaw < 75) {
-                adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
-            } else {
-                adsYawWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
-            }
-            
-            // ADS Pitch warning
-            if (adsPitch < 45) {
-                adsPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
-            } else if (adsPitch < 75) {
-                adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
-            } else {
-                adsPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
-            }
-            
-            // Outer threshold warning
-            const outerWarning = document.getElementById('outerThresholdWarning');
-            outerWarning.innerHTML = '';
-            
-            if (elements.outerThreshold.value < 2) {
-                outerWarning.innerHTML = '<div class="warning warning-red">⚠️ ALPS controllers (standard Xbox/PS) need minimum 2% to avoid edge detection issues</div>';
-            }
+         // Update warnings
+function updateWarnings() {
+    // Hip fire warnings - check raw values against 90
+    const hipYaw = parseInt(elements.yawSpeed.value);
+    const hipPitch = parseInt(elements.pitchSpeed.value);
+    const hipYawWarning = document.getElementById('hipYawWarning');
+    const hipPitchWarning = document.getElementById('hipPitchWarning');
+    
+    hipYawWarning.innerHTML = '';
+    hipPitchWarning.innerHTML = '';
+    
+    // Hip Yaw warning
+    if (hipYaw < 90) {
+        hipYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
+    } else if (hipYaw < 130) {
+        hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited strafe tracking</div>';
+    } else if (hipYaw > 180) {
+        hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+    } else {
+        hipYawWarning.innerHTML = '<div class="warning warning-green">✓ Good for close range tracking</div>';
+    }
+    
+    // Hip Pitch warning
+    if (hipPitch < 90) {
+        hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range vertical movement</div>';
+    } else if (hipPitch < 130) {
+        hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
+    } else if (hipPitch > 180) {
+        hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+    } else {
+        hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
+    }
+    
+    // ADS warnings - check raw values against 45
+    const adsYaw = parseInt(elements.adsYawSpeed.value);
+    const adsPitch = parseInt(elements.adsPitchSpeed.value);
+    const adsYawWarning = document.getElementById('adsYawWarning');
+    const adsPitchWarning = document.getElementById('adsPitchWarning');
+    
+    adsYawWarning.innerHTML = '';
+    adsPitchWarning.innerHTML = '';
+    
+    // ADS Yaw warning
+    if (adsYaw < 45) {
+        adsYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
+    } else if (adsYaw < 75) {
+        adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
+    } else if (adsYaw > 120) {
+        adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s in ADS is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+    } else {
+        adsYawWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
+    }
+    
+    // ADS Pitch warning
+    if (adsPitch < 45) {
+        adsPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
+    } else if (adsPitch < 75) {
+        adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
+    } else if (adsPitch > 120) {
+        adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s in ADS is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+    } else {
+        adsPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
+    }
+    
+    // Outer threshold warning
+    const outerWarning = document.getElementById('outerThresholdWarning');
+    outerWarning.innerHTML = '';
+    
+    if (elements.outerThreshold.value < 2) {
+        outerWarning.innerHTML = '<div class="warning warning-red">⚠️ ALPS controllers (standard Xbox/PS) need minimum 2% to avoid edge detection issues</div>';
+    }
 
-            // Ramp-up time warnings based on turning extra values
-            const hipExtra = Math.max(parseInt(elements.extraYaw.value), parseInt(elements.extraPitch.value));
-            const hipRamp = parseInt(elements.rampTime.value);
-            const hipRampWarning = document.getElementById('hipRampWarning');
-            
-            hipRampWarning.innerHTML = '';
-            
-            if (hipExtra < 50) {
-                hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
-            } else if (hipExtra < 150) {
-                if (hipRamp > 50) {
-                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
-                } else if (hipRamp < 20) {
-                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may be too fast, consider 25-40%</div>';
-                } else {
-                    hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
-                }
-            } else {
-                // High turning extra (150+)
-                if (hipRamp < 20) {
-                    hipRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast! Will cause jerky turns with high turning extra</div>';
-                } else if (hipRamp > 40) {
-                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ May feel delayed, consider 25-35% for high turning extra</div>';
-                } else {
-                    hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Optimal for high acceleration (25-35%)</div>';
-                }
-            }
-
-            // ADS ramp warnings
-            const adsExtra = Math.max(parseInt(elements.adsExtraYaw.value), parseInt(elements.adsExtraPitch.value));
-            const adsRamp = parseInt(elements.adsRampTime.value);
-            const adsRampWarning = document.getElementById('adsRampWarning');
-            
-            adsRampWarning.innerHTML = '';
-            
-            if (adsExtra < 50) {
-                adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
-            } else if (adsExtra < 150) {
-                if (adsRamp > 50) {
-                    adsRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
-                } else {
-                    adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
-                }
-            } else {
-                if (adsRamp < 20) {
-                    adsRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast for ADS precision!</div>';
-                } else {
-                    adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ADS ramp-up</div>';
-                }
-            }
+    // Ramp-up time warnings based on turning extra values
+    const hipExtra = Math.max(parseInt(elements.extraYaw.value), parseInt(elements.extraPitch.value));
+    const hipRamp = parseInt(elements.rampTime.value);
+    const hipRampWarning = document.getElementById('hipRampWarning');
+    
+    hipRampWarning.innerHTML = '';
+    
+    if (hipExtra < 50) {
+        hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
+    } else if (hipExtra < 150) {
+        if (hipRamp > 50) {
+            hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
+        } else if (hipRamp < 20) {
+            hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may be too fast, consider 25-40%</div>';
+        } else {
+            hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
         }
+    } else {
+        // High turning extra (150+)
+        if (hipRamp < 20) {
+            hipRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast! Will cause jerky turns with high turning extra</div>';
+        } else if (hipRamp > 40) {
+            hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ May feel delayed, consider 25-35% for high turning extra</div>';
+        } else {
+            hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Optimal for high acceleration (25-35%)</div>';
+        }
+    }
+
+    // ADS ramp warnings
+    const adsExtra = Math.max(parseInt(elements.adsExtraYaw.value), parseInt(elements.adsExtraPitch.value));
+    const adsRamp = parseInt(elements.adsRampTime.value);
+    const adsRampWarning = document.getElementById('adsRampWarning');
+    
+    adsRampWarning.innerHTML = '';
+    
+    if (adsExtra < 50) {
+        adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
+    } else if (adsExtra < 150) {
+        if (adsRamp > 50) {
+            adsRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
+        } else {
+            adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
+        }
+    } else {
+        if (adsRamp < 20) {
+            adsRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast for ADS precision!</div>';
+        } else {
+            adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ADS ramp-up</div>';
+        }
+    }
+}
 
         // Update diagonal uniformity visualization
         function updateDiagonalUniformity() {
