@@ -1314,15 +1314,15 @@ function updateWarnings() {
     }
     
     // Hip Pitch warning
-    if (hipPitch < 90) {
-        hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range vertical movement</div>';
-    } else if (hipPitch < 130) {
-        hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
-    } else if (hipPitch > 180) {
-        hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
-    } else {
-        hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
-    }
+if (hipPitch <= 49) {
+    hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 50°/s - Cannot track close range vertical movement</div>';
+} else if (hipPitch >= 50 && hipPitch <= 59) {
+    hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
+} else if (hipPitch > 180) {
+    hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+} else {
+    hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
+}
     
     // ADS warnings - check raw values against 45
     const adsYaw = parseInt(elements.adsYawSpeed.value);
