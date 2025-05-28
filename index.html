@@ -2267,53 +2267,58 @@ function updateWarnings() {
         }
 
         // Update pro comparison
-        function updateProComparison() {
-            // Reference pro settings
-            const proHipYaw = 240;
-            const proHipPitch = 200;
-            const proAdsYaw = 110;
-            const proAdsPitch = 75;
-            
-            // Get current settings
-            const hipYaw = parseInt(elements.yawSpeed.value);
-            const hipPitch = parseInt(elements.pitchSpeed.value);
-            const adsYaw = parseInt(elements.adsYawSpeed.value);
-            const adsPitch = parseInt(elements.adsPitchSpeed.value);
-            
-            // Calculate similarity scores (0-100, where 100 = exact match)
-            // Using inverse of percentage difference, capped at 200% difference
-            const hipYawSimilarity = Math.max(0, 100 - Math.abs(hipYaw - proHipYaw) / proHipYaw * 100);
-            const hipPitchSimilarity = Math.max(0, 100 - Math.abs(hipPitch - proHipPitch) / proHipPitch * 100);
-            const adsYawSimilarity = Math.max(0, 100 - Math.abs(adsYaw - proAdsYaw) / proAdsYaw * 100);
-            const adsPitchSimilarity = Math.max(0, 100 - Math.abs(adsPitch - proAdsPitch) / proAdsPitch * 100);
-            
-            // Calculate overall similarity score (weighted average)
-            const overallSimilarity = (
-                hipYawSimilarity * 0.25 + 
-                hipPitchSimilarity * 0.25 + 
-                adsYawSimilarity * 0.25 + 
-                adsPitchSimilarity * 0.25
-            );
-            
-            // Update the display
-            document.getElementById('proBar').style.width = overallSimilarity + '%';
-            document.getElementById('proLabel').textContent = Math.round(overallSimilarity) + '%';
-            
-            // Update the comparison box content
-            const proComparisonDiv = document.getElementById('proComparison');
-            proComparisonDiv.innerHTML = `
-                <p style="margin-bottom: 10px;">Similarity to Reference Settings (240/200 Hip, 110/75 ADS):</p>
-                <div class="comparison-bar">
-                    <div class="comparison-fill" id="proBar" style="width: ${overallSimilarity}%"></div>
-                    <span class="comparison-label" id="proLabel">${Math.round(overallSimilarity)}%</span>
-                </div>
-                <div style="margin-top: 15px; font-size: 0.85em; color: #aaa;">
-                    <p>Your Settings vs Reference:</p>
-                    <p>• Hip: ${hipYaw}/${hipPitch} vs 240/200</p>
-                    <p>• ADS: ${adsYaw}/${adsPitch} vs 110/75</p>
-                </div>
-            `;
-        }
+        // Update pro comparison
+function updateProComparison() {
+    // Reference pro settings
+    const proHipYaw = 240;
+    const proHipPitch = 200;
+    const proAdsYaw = 110;
+    const proAdsPitch = 75;
+    
+    // Get current settings
+    const hipYaw = parseInt(elements.yawSpeed.value);
+    const hipPitch = parseInt(elements.pitchSpeed.value);
+    const adsYaw = parseInt(elements.adsYawSpeed.value);
+    const adsPitch = parseInt(elements.adsPitchSpeed.value);
+    
+    // Calculate hip fire similarity (average of yaw and pitch similarities)
+    const hipYawSimilarity = Math.max(0, 100 - Math.abs(hipYaw - proHipYaw) / proHipYaw * 100);
+    const hipPitchSimilarity = Math.max(0, 100 - Math.abs(hipPitch - proHipPitch) / proHipPitch * 100);
+    const hipFireSimilarity = (hipYawSimilarity + hipPitchSimilarity) / 2;
+    
+    // Calculate ADS similarity (average of yaw and pitch similarities)
+    const adsYawSimilarity = Math.max(0, 100 - Math.abs(adsYaw - proAdsYaw) / proAdsYaw * 100);
+    const adsPitchSimilarity = Math.max(0, 100 - Math.abs(adsPitch - proAdsPitch) / proAdsPitch * 100);
+    const adsSimilarity = (adsYawSimilarity + adsPitchSimilarity) / 2;
+    
+    // Update the comparison box content with separate bars
+    const proComparisonDiv = document.getElementById('proComparison');
+    proComparisonDiv.innerHTML = `
+        <p style="margin-bottom: 15px;">Similarity to Reference Settings:</p>
+        
+        <div style="margin-bottom: 15px;">
+            <p style="margin-bottom: 5px;">Hip Fire (vs 4 sensitivity):</p>
+            <div class="comparison-bar">
+                <div class="comparison-fill" style="width: ${hipFireSimilarity}%; background: linear-gradient(90deg, #ff4444, #ff7777);"></div>
+                <span class="comparison-label">${Math.round(hipFireSimilarity)}%</span>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <p style="margin-bottom: 5px;">ADS (vs 3 sensitivity):</p>
+            <div class="comparison-bar">
+                <div class="comparison-fill" style="width: ${adsSimilarity}%; background: linear-gradient(90deg, #44ff44, #77ff77);"></div>
+                <span class="comparison-label">${Math.round(adsSimilarity)}%</span>
+            </div>
+        </div>
+        
+        <div style="margin-top: 15px; font-size: 0.85em; color: #aaa;">
+            <p>Your Settings:</p>
+            <p>• Hip: ${hipYaw}/${hipPitch}</p>
+            <p>• ADS: ${adsYaw}/${adsPitch}</p>
+        </div>
+    `;
+}
 
         // Update range analysis
         function updateRangeAnalysis() {
