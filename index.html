@@ -17,6 +17,9 @@
             color: #ffffff;
             padding: 20px;
             font-weight: 500;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .main-container {
@@ -25,6 +28,73 @@
             display: grid;
             grid-template-columns: 600px 1fr;
             gap: 30px;
+            flex: 1;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background-color: #2a2a2a;
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(40, 40, 60, 0.2) 0%,
+                rgba(80, 30, 30, 0.1) 25%,
+                rgba(120, 40, 40, 0.05) 50%,
+                rgba(40, 40, 120, 0.1) 75%,
+                rgba(40, 40, 60, 0.2) 100%
+            );
+            pointer-events: none;
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+            color: #999;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .reddit-link {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: #FF4500;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .reddit-link:hover {
+            background-color: #FF5722;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 69, 0, 0.4);
+        }
+        
+        .reddit-icon {
+            width: 20px;
+            height: 20px;
+            fill: white;
         }
         
         /* Left Panel - Settings */
@@ -211,7 +281,7 @@
         
         /* Right Panel - Visualizations */
         .viz-panel {
-            background-color: #2a2a2a;
+            background-color: #4a4a4a;
             padding: 20px;
             border-radius: 10px;
             position: relative;
@@ -225,12 +295,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(40, 40, 60, 0.2) 0%,
-                rgba(80, 30, 30, 0.1) 25%,
-                rgba(120, 40, 40, 0.05) 50%,
-                rgba(40, 40, 120, 0.1) 75%,
-                rgba(40, 40, 60, 0.2) 100%
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.8) 0%,
+                rgba(80, 30, 30, 0.4) 20%,
+                rgba(120, 40, 40, 0.2) 40%,
+                rgba(40, 40, 120, 0.3) 60%,
+                rgba(80, 30, 30, 0.4) 80%,
+                rgba(40, 40, 60, 0.8) 100%
             );
             pointer-events: none;
         }
@@ -240,20 +311,43 @@
             display: flex;
             gap: 5px;
             margin-bottom: 20px;
-            background-color: #1a1a1a;
-            padding: 5px;
-            border-radius: 8px;
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
         }
         
         .viz-tab {
             padding: 8px 20px;
-            background-color: transparent;
+            background-color: #3a3a3a;
             color: #999;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .viz-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.6) 0%,
+                rgba(80, 30, 30, 0.3) 50%,
+                rgba(40, 40, 60, 0.6) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .viz-tab:hover::before {
+            opacity: 1;
         }
         
         .viz-tab.active {
@@ -271,7 +365,7 @@
         
         /* Canvas styling */
         .canvas-container {
-            background-color: #4a4a4a;
+            background-color: #5a5a5a;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 20px;
@@ -286,12 +380,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(40, 40, 60, 0.6) 0%,
-                rgba(80, 30, 30, 0.3) 25%,
-                rgba(120, 40, 40, 0.2) 50%,
-                rgba(40, 40, 120, 0.3) 75%,
-                rgba(40, 40, 60, 0.6) 100%
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.7) 0%,
+                rgba(80, 30, 30, 0.35) 20%,
+                rgba(120, 40, 40, 0.2) 40%,
+                rgba(40, 40, 120, 0.3) 60%,
+                rgba(80, 30, 30, 0.35) 80%,
+                rgba(40, 40, 60, 0.7) 100%
             );
             pointer-events: none;
         }
@@ -299,21 +394,23 @@
         canvas {
             display: block;
             margin: 0 auto;
-            background-color: #2a2a2a;
+            background-color: #3a3a3a;
             border-radius: 4px;
             position: relative;
             z-index: 1;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         /* Info boxes */
         .info-box {
-            background-color: #3a3a3a;
+            background-color: #4a4a4a;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
-            border-left: 4px solid #ff6b00;
+            border-left: 3px solid #ff6b00;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .info-box::before {
@@ -323,10 +420,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(40, 40, 60, 0.3) 0%,
-                rgba(80, 30, 30, 0.1) 50%,
-                rgba(40, 40, 60, 0.3) 100%
+            background: linear-gradient(to right, 
+                rgba(255, 107, 0, 0.15) 0%,
+                rgba(80, 30, 30, 0.1) 20%,
+                rgba(40, 40, 60, 0.15) 50%,
+                rgba(40, 40, 120, 0.1) 80%,
+                rgba(40, 40, 60, 0.15) 100%
             );
             pointer-events: none;
         }
@@ -337,6 +436,7 @@
             font-size: 16px;
             position: relative;
             z-index: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .info-box p {
@@ -345,6 +445,7 @@
             margin: 5px 0;
             position: relative;
             z-index: 1;
+            color: #e0e0e0;
         }
         
         /* Stats grid */
@@ -356,13 +457,14 @@
         }
         
         .stat-box {
-            background-color: #4a4a4a;
+            background-color: #5a5a5a;
             padding: 15px;
             border-radius: 5px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            border: 1px solid #555;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .stat-box::before {
@@ -372,19 +474,23 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(40, 40, 60, 0.5) 0%,
-                rgba(80, 30, 30, 0.2) 50%,
-                rgba(40, 40, 60, 0.5) 100%
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.6) 0%,
+                rgba(255, 107, 0, 0.1) 20%,
+                rgba(120, 40, 40, 0.15) 50%,
+                rgba(40, 40, 120, 0.2) 80%,
+                rgba(40, 40, 60, 0.6) 100%
             );
             pointer-events: none;
         }
         
         .stat-label {
             font-size: 12px;
-            color: #999;
+            color: #bbb;
             position: relative;
             z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .stat-value {
@@ -393,6 +499,7 @@
             font-weight: bold;
             position: relative;
             z-index: 1;
+            text-shadow: 0 2px 4px rgba(255, 107, 0, 0.3);
         }
         
         /* Action buttons */
@@ -447,40 +554,75 @@
             margin-top: 4px;
             font-size: 12px;
             font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .warning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.3) 0%,
+                rgba(80, 30, 30, 0.1) 50%,
+                rgba(40, 40, 60, 0.3) 100%
+            );
+            pointer-events: none;
         }
         
         .warning-red {
-            background-color: #ff333333;
-            border: 1px solid #ff3333;
+            background-color: rgba(80, 30, 30, 0.5);
+            border: 1px solid rgba(255, 51, 51, 0.5);
             color: #ff6666;
         }
         
         .warning-yellow {
-            background-color: #ffaa0033;
-            border: 1px solid #ffaa00;
+            background-color: rgba(80, 60, 20, 0.5);
+            border: 1px solid rgba(255, 170, 0, 0.5);
             color: #ffcc00;
         }
         
         .warning-green {
-            background-color: #00ff3333;
-            border: 1px solid #00ff33;
+            background-color: rgba(30, 80, 30, 0.5);
+            border: 1px solid rgba(0, 255, 51, 0.5);
             color: #00ff66;
         }
         
         /* Comparison bars */
         .comparison-bar {
             height: 20px;
-            background-color: #333;
+            background-color: #3a3a3a;
             border-radius: 10px;
             overflow: hidden;
             margin: 5px 0;
             position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .comparison-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.5) 0%,
+                rgba(80, 30, 30, 0.2) 50%,
+                rgba(40, 40, 60, 0.5) 100%
+            );
+            pointer-events: none;
         }
         
         .comparison-fill {
             height: 100%;
             background: linear-gradient(90deg, #ff6b00, #ff9944);
             transition: width 0.3s;
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
         }
         
         .comparison-label {
@@ -490,6 +632,7 @@
             transform: translateY(-50%);
             font-size: 12px;
             color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .viz-panel h2, .viz-panel h3, .viz-panel > * {
@@ -503,7 +646,7 @@
         }
         .analysis-panel {
             grid-column: 1 / -1;
-            background-color: #2a2a2a;
+            background-color: #4a4a4a;
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
@@ -518,12 +661,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(40, 40, 60, 0.2) 0%,
-                rgba(80, 30, 30, 0.1) 25%,
-                rgba(120, 40, 40, 0.05) 50%,
-                rgba(40, 40, 120, 0.1) 75%,
-                rgba(40, 40, 60, 0.2) 100%
+            background: linear-gradient(to right, 
+                rgba(40, 40, 60, 0.8) 0%,
+                rgba(80, 30, 30, 0.4) 20%,
+                rgba(120, 40, 40, 0.2) 40%,
+                rgba(40, 40, 120, 0.3) 60%,
+                rgba(80, 30, 30, 0.4) 80%,
+                rgba(40, 40, 60, 0.8) 100%
             );
             pointer-events: none;
         }
@@ -580,14 +724,15 @@
         
         /* Pro tip styling */
         .pro-tip {
-            background-color: #3a3a3a;
-            border: 1px solid #555;
+            background-color: #5a5a5a;
+            border: none;
             padding: 12px;
             border-radius: 5px;
             margin: 10px 0;
             font-size: 13px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .pro-tip::before {
@@ -597,9 +742,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, 
-                rgba(255, 107, 0, 0.1) 0%,
-                transparent 50%
+            background: linear-gradient(to right, 
+                rgba(255, 107, 0, 0.2) 0%,
+                rgba(80, 30, 30, 0.1) 20%,
+                rgba(40, 40, 60, 0.15) 50%,
+                rgba(40, 40, 120, 0.1) 80%,
+                transparent 100%
             );
             pointer-events: none;
         }
@@ -610,11 +758,13 @@
             margin-bottom: 5px;
             position: relative;
             z-index: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .pro-tip p {
             position: relative;
             z-index: 1;
+            color: #e0e0e0;
         }
     </style>
 </head>
@@ -1012,6 +1162,16 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span class="footer-content">by vivid nightmare</span>
+        <a href="https://www.reddit.com/user/VividNightmare_/" target="_blank" class="reddit-link" title="Reddit Profile">
+            <svg class="reddit-icon" viewBox="0 0 24 24">
+                <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+            </svg>
+        </a>
+    </footer>
 
     <script>
         // Setting configurations
@@ -1486,7 +1646,7 @@
             
             deadzoneCtx.clearRect(0, 0, deadzoneCanvas.width, deadzoneCanvas.height);
             
-            deadzoneCtx.fillStyle = '#2a2a2a';
+            deadzoneCtx.fillStyle = '#3a3a3a';
             deadzoneCtx.fillRect(0, 0, deadzoneCanvas.width, deadzoneCanvas.height);
             
             // Outer ring
@@ -1572,7 +1732,7 @@
             
             curveCtx.clearRect(0, 0, width, height);
             
-            curveCtx.fillStyle = '#2a2a2a';
+            curveCtx.fillStyle = '#3a3a3a';
             curveCtx.fillRect(0, 0, width, height);
             
             const deadzonePercent = parseInt(document.getElementById('deadzone').value) / 100;
@@ -1684,7 +1844,7 @@
             
             strafeCtx.clearRect(0, 0, width, height);
             
-            strafeCtx.fillStyle = '#2a2a2a';
+            strafeCtx.fillStyle = '#3a3a3a';
             strafeCtx.fillRect(0, 0, width, height);
             
             const hipYaw = parseInt(document.getElementById('yawSpeed').value);
@@ -1843,8 +2003,9 @@
             const adsCanTrackAt3m = adsYaw >= 45;
             const statusBox = document.getElementById('strafeStatusBox');
             
-            statusBox.style.backgroundColor = '#3a3a3a';
-            statusBox.style.border = '2px solid #555';
+            statusBox.style.backgroundColor = '#4a4a4a';
+            statusBox.style.border = 'none';
+            statusBox.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
             
             if (hipCanTrackAt3m && adsCanTrackAt3m) {
                 statusBox.style.display = 'block';
@@ -1874,7 +2035,7 @@
             
             diagonalCtx.clearRect(0, 0, width, height);
             
-            diagonalCtx.fillStyle = '#2a2a2a';
+            diagonalCtx.fillStyle = '#3a3a3a';
             diagonalCtx.fillRect(0, 0, width, height);
             
             // Grid
@@ -1963,7 +2124,7 @@
             
             aimAssistCtx.clearRect(0, 0, width, height);
             
-            aimAssistCtx.fillStyle = '#2a2a2a';
+            aimAssistCtx.fillStyle = '#3a3a3a';
             aimAssistCtx.fillRect(0, 0, width, height);
             
             aimAssistCtx.strokeStyle = '#3a3a3a';
@@ -2139,7 +2300,7 @@
             
             speedComparisonCtx.clearRect(0, 0, width, height);
             
-            speedComparisonCtx.fillStyle = '#2a2a2a';
+            speedComparisonCtx.fillStyle = '#3a3a3a';
             speedComparisonCtx.fillRect(0, 0, width, height);
             
             const hipBase = parseInt(document.getElementById('yawSpeed').value);
