@@ -1,3 +1,6 @@
+Here's the comprehensively commented version of the code:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex Legends ALC Settings Visualizer - Pro Edition</title>
     <style>
+        /* ==============================================
+           RESET & BASE STYLES
+           ============================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        /* Dark theme optimized for gaming tools
+           Background: Near-black for reduced eye strain
+           Text: Light gray for good contrast without harshness */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0a0a0a;
@@ -19,12 +28,18 @@
             overflow-x: hidden;
         }
         
+        /* ==============================================
+           LAYOUT CONTAINERS
+           ============================================== */
+        
+        /* Main container with max-width for readability on ultra-wide monitors */
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
         
+        /* Header with Apex-inspired red gradient */
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -36,7 +51,7 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Depth effect */
         }
         
         .subtitle {
@@ -44,6 +59,12 @@
             opacity: 0.9;
         }
         
+        /* ==============================================
+           GRID SYSTEM
+           ============================================== */
+        
+        /* Three-column layout for desktop
+           Left: Controls, Middle: Visualizations, Right: Analysis */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -51,18 +72,26 @@
             margin-bottom: 20px;
         }
         
+        /* Responsive breakpoints */
         @media (max-width: 1200px) {
+            /* Tablet: Two columns */
             .main-grid {
                 grid-template-columns: 1fr 1fr;
             }
         }
         
         @media (max-width: 768px) {
+            /* Mobile: Single column */
             .main-grid {
                 grid-template-columns: 1fr;
             }
         }
         
+        /* ==============================================
+           PANEL STYLES
+           ============================================== */
+        
+        /* Dark panels with subtle borders for section separation */
         .panel {
             background-color: #1a1a1a;
             border-radius: 10px;
@@ -71,6 +100,7 @@
             border: 1px solid #333;
         }
         
+        /* Panel headers with Apex red accent */
         .panel h2 {
             color: #ff4444;
             margin-bottom: 15px;
@@ -79,23 +109,33 @@
             padding-bottom: 10px;
         }
         
+        /* ==============================================
+           SETTINGS SECTIONS
+           ============================================== */
+        
+        /* Individual settings groups within panels */
         .settings-section {
             margin-bottom: 25px;
             padding: 15px;
-            background-color: #222;
+            background-color: #222; /* Slightly lighter than panel */
             border-radius: 8px;
         }
         
         .settings-section h3 {
-            color: #ff7777;
+            color: #ff7777; /* Lighter red for subsections */
             margin-bottom: 15px;
             font-size: 1.2em;
         }
+        
+        /* ==============================================
+           SLIDER COMPONENTS
+           ============================================== */
         
         .slider-group {
             margin-bottom: 20px;
         }
         
+        /* Label container with setting name and current value */
         .slider-label {
             display: flex;
             justify-content: space-between;
@@ -103,6 +143,7 @@
             font-weight: 500;
         }
         
+        /* Clickable value display for inline editing */
         .slider-value {
             color: #ff4444;
             font-weight: bold;
@@ -118,6 +159,7 @@
             background-color: #333;
         }
         
+        /* Hidden input for inline value editing */
         .value-input {
             width: 60px;
             padding: 2px 6px;
@@ -127,9 +169,10 @@
             border-radius: 3px;
             font-weight: bold;
             text-align: center;
-            display: none;
+            display: none; /* Hidden by default, shown on click */
         }
         
+        /* Custom styled range sliders */
         input[type="range"] {
             width: 100%;
             height: 8px;
@@ -145,6 +188,7 @@
             opacity: 1;
         }
         
+        /* Webkit browsers (Chrome, Safari) */
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -153,9 +197,10 @@
             background: #ff4444;
             cursor: pointer;
             border-radius: 50%;
-            box-shadow: 0 0 5px rgba(255,68,68,0.5);
+            box-shadow: 0 0 5px rgba(255,68,68,0.5); /* Glow effect */
         }
         
+        /* Firefox */
         input[type="range"]::-moz-range-thumb {
             width: 20px;
             height: 20px;
@@ -164,6 +209,10 @@
             border-radius: 50%;
             box-shadow: 0 0 5px rgba(255,68,68,0.5);
         }
+        
+        /* ==============================================
+           SELECT DROPDOWNS
+           ============================================== */
         
         select {
             width: 100%;
@@ -176,6 +225,11 @@
             cursor: pointer;
         }
         
+        /* ==============================================
+           CANVAS CONTAINERS
+           ============================================== */
+        
+        /* Dark background for canvas elements with border */
         .canvas-container {
             background-color: #0a0a0a;
             border-radius: 8px;
@@ -191,6 +245,11 @@
             border-radius: 4px;
         }
         
+        /* ==============================================
+           VISUALIZATION LAYOUTS
+           ============================================== */
+        
+        /* Two-column grid for visualization pairs */
         .visualization-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -198,12 +257,17 @@
             margin-bottom: 20px;
         }
         
+        /* ==============================================
+           INFO BOXES
+           ============================================== */
+        
+        /* Information boxes with left border accent */
         .info-box {
             background-color: #222;
             padding: 15px;
             border-radius: 8px;
             margin-top: 10px;
-            border-left: 4px solid #ff4444;
+            border-left: 4px solid #ff4444; /* Left accent border */
         }
         
         .info-box h3 {
@@ -217,6 +281,10 @@
             opacity: 0.9;
             margin: 5px 0;
         }
+        
+        /* ==============================================
+           BUTTONS
+           ============================================== */
         
         .button-group {
             display: flex;
@@ -239,20 +307,26 @@
         
         button:hover {
             background-color: #cc0000;
-            transform: translateY(-2px);
+            transform: translateY(-2px); /* Lift effect */
             box-shadow: 0 4px 8px rgba(255,68,68,0.3);
         }
+        
+        /* ==============================================
+           UTILITY CLASSES
+           ============================================== */
         
         .preset-select {
             margin-bottom: 15px;
         }
         
+        /* Small helper text below inputs */
         .help-text {
             font-size: 0.85em;
             color: #999;
             margin-top: 5px;
         }
         
+        /* Legend for visualizations */
         .legend {
             display: flex;
             justify-content: center;
@@ -274,6 +348,11 @@
             border-radius: 3px;
         }
         
+        /* ==============================================
+           TAB NAVIGATION
+           ============================================== */
+        
+        /* Main setting tabs (Hip Fire / ADS) */
         .tab-buttons {
             display: flex;
             gap: 10px;
@@ -303,6 +382,7 @@
             display: block;
         }
 
+        /* Visualization tabs (Core, Movement, etc.) */
         .viz-tabs {
             display: flex;
             gap: 5px;
@@ -336,6 +416,11 @@
             display: block;
         }
 
+        /* ==============================================
+           SPECIFIC COMPONENT STYLES
+           ============================================== */
+
+        /* Curve type indicator next to response curve value */
         .curve-type-indicator {
             font-size: 0.9em;
             color: #ff7777;
@@ -343,6 +428,7 @@
             font-style: italic;
         }
 
+        /* Aim assist view mode toggle */
         .aa-mode-toggle {
             display: flex;
             gap: 10px;
@@ -359,6 +445,11 @@
             background-color: #ff7777;
         }
 
+        /* ==============================================
+           WARNING SYSTEM
+           ============================================== */
+
+        /* Warning boxes with color-coded severity */
         .warning {
             padding: 8px 12px;
             border-radius: 5px;
@@ -370,24 +461,32 @@
             gap: 5px;
         }
 
+        /* Critical warnings */
         .warning-red {
             background-color: #ff333333;
             border: 1px solid #ff3333;
             color: #ff6666;
         }
 
+        /* Caution warnings */
         .warning-yellow {
             background-color: #ffaa0033;
             border: 1px solid #ffaa00;
             color: #ffcc00;
         }
 
+        /* Good/optimal settings */
         .warning-green {
             background-color: #00ff3333;
             border: 1px solid #00ff33;
             color: #00ff66;
         }
 
+        /* ==============================================
+           PRO TIPS
+           ============================================== */
+
+        /* Pro tip boxes for advanced information */
         .pro-tip {
             background-color: #442222;
             border: 1px solid #664444;
@@ -403,6 +502,11 @@
             margin-bottom: 5px;
         }
 
+        /* ==============================================
+           STATISTICS DISPLAY
+           ============================================== */
+
+        /* Grid for stat boxes */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -428,6 +532,11 @@
             font-weight: bold;
         }
 
+        /* ==============================================
+           COMPARISON BARS
+           ============================================== */
+
+        /* Horizontal progress bars for comparisons */
         .comparison-bar {
             height: 20px;
             background-color: #333;
@@ -452,6 +561,11 @@
             color: #fff;
         }
 
+        /* ==============================================
+           DIAGONAL UNIFORMITY
+           ============================================== */
+
+        /* Special box for diagonal uniformity status */
         .diagonal-uniformity-box {
             background-color: #2a2a2a;
             padding: 15px;
@@ -466,6 +580,7 @@
             margin-bottom: 10px;
         }
 
+        /* Color coding for uniformity status */
         .uniformity-good {
             color: #00ff66;
         }
@@ -478,6 +593,11 @@
             color: #ff6666;
         }
 
+        /* ==============================================
+           AIM ASSIST ANALYSIS
+           ============================================== */
+
+        /* Section for AA dependency analysis */
         .aa-analysis-section {
             background-color: #1a1a1a;
             padding: 15px;
@@ -505,6 +625,7 @@
             margin-bottom: 5px;
         }
 
+        /* Profile summary box */
         .aa-profile-box {
             background-color: #2a2a2a;
             padding: 15px;
@@ -530,6 +651,11 @@
             margin-top: 3px;
         }
 
+        /* ==============================================
+           STRAFE TRACKING STATUS
+           ============================================== */
+
+        /* Success message for strafe tracking */
         .strafe-status-box {
             background-color: #2a2a2a;
             padding: 15px;
@@ -548,16 +674,19 @@
 </head>
 <body>
     <div class="container">
+        <!-- Main header section -->
         <header>
             <h1>Apex Legends ALC Settings Visualizer - Pro Edition</h1>
             <p class="subtitle">Advanced visualization and analysis for competitive controller settings</p>
         </header>
 
+        <!-- Three-column layout grid -->
         <div class="main-grid">
-            <!-- Left Panel - Controls -->
+            <!-- LEFT PANEL: Settings Controls -->
             <div class="panel">
                 <h2>ALC Settings</h2>
                 
+                <!-- Preset selector -->
                 <div class="preset-select">
                     <label for="presets">Load Preset:</label>
                     <select id="presets">
@@ -568,16 +697,19 @@
                     </select>
                 </div>
 
+                <!-- Hip Fire / ADS toggle tabs -->
                 <div class="tab-buttons">
                     <button class="tab-button active" onclick="switchTab('hipfire')">Hip Fire</button>
                     <button class="tab-button" onclick="switchTab('ads')">ADS</button>
                 </div>
 
-                <!-- Hip Fire Settings -->
+                <!-- Hip Fire Settings Tab -->
                 <div id="hipfire-tab" class="tab-content active">
+                    <!-- Deadzone Settings Group -->
                     <div class="settings-section">
                         <h3>Deadzone Settings</h3>
                         
+                        <!-- Look Deadzone Slider -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Look Deadzone</span>
@@ -588,6 +720,7 @@
                             <p class="help-text">Lower = Better micro-adjustments. Stick drift doesn't affect aim!</p>
                         </div>
 
+                        <!-- Outer Threshold Slider -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Outer Threshold</span>
@@ -599,6 +732,7 @@
                             <div id="outerThresholdWarning"></div>
                         </div>
 
+                        <!-- Response Curve Slider -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Response Curve</span>
@@ -611,9 +745,11 @@
                         </div>
                     </div>
 
+                    <!-- Look Speed Settings Group -->
                     <div class="settings-section">
                         <h3>Look Speed</h3>
                         
+                        <!-- Yaw Speed Slider -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Yaw Speed (Horizontal)</span>
@@ -624,6 +760,7 @@
                             <div id="hipYawWarning"></div>
                         </div>
 
+                        <!-- Pitch Speed Slider -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Pitch Speed (Vertical)</span>
@@ -635,9 +772,11 @@
                         </div>
                     </div>
 
+                    <!-- Turning Extra Settings Group -->
                     <div class="settings-section">
                         <h3>Turning Extra</h3>
                         
+                        <!-- Turning Extra Yaw -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Turning Extra Yaw</span>
@@ -647,6 +786,7 @@
                             <input type="range" id="extraYaw" min="0" max="250" value="220" step="1">
                         </div>
 
+                        <!-- Turning Extra Pitch -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Turning Extra Pitch</span>
@@ -656,6 +796,7 @@
                             <input type="range" id="extraPitch" min="0" max="250" value="0" step="1">
                         </div>
 
+                        <!-- Ramp-up Time -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Ramp-up Time</span>
@@ -666,6 +807,7 @@
                             <div id="hipRampWarning"></div>
                         </div>
 
+                        <!-- Ramp-up Delay -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Ramp-up Delay</span>
@@ -677,11 +819,13 @@
                     </div>
                 </div>
 
-                <!-- ADS Settings -->
+                <!-- ADS Settings Tab (hidden by default) -->
                 <div id="ads-tab" class="tab-content">
+                    <!-- ADS Look Speed Settings -->
                     <div class="settings-section">
                         <h3>ADS Look Speed</h3>
                         
+                        <!-- ADS Yaw Speed -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Yaw Speed</span>
@@ -692,6 +836,7 @@
                             <div id="adsYawWarning"></div>
                         </div>
 
+                        <!-- ADS Pitch Speed -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Pitch Speed</span>
@@ -703,9 +848,11 @@
                         </div>
                     </div>
 
+                    <!-- ADS Turning Extra Settings -->
                     <div class="settings-section">
                         <h3>ADS Turning Extra</h3>
                         
+                        <!-- ADS Turning Extra Yaw -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Turning Extra Yaw</span>
@@ -715,6 +862,7 @@
                             <input type="range" id="adsExtraYaw" min="0" max="250" value="30" step="1">
                         </div>
 
+                        <!-- ADS Turning Extra Pitch -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Turning Extra Pitch</span>
@@ -724,6 +872,7 @@
                             <input type="range" id="adsExtraPitch" min="0" max="250" value="30" step="1">
                         </div>
 
+                        <!-- ADS Ramp-up Time -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Ramp-up Time</span>
@@ -734,6 +883,7 @@
                             <div id="adsRampWarning"></div>
                         </div>
 
+                        <!-- ADS Ramp-up Delay -->
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Ramp-up Delay</span>
@@ -745,6 +895,7 @@
                     </div>
                 </div>
 
+                <!-- Action buttons -->
                 <div class="button-group">
                     <button onclick="resetSettings()">Reset to Default</button>
                     <button onclick="exportSettings()">Export Settings</button>
@@ -752,10 +903,11 @@
                 </div>
             </div>
 
-            <!-- Middle Panel - Visualizations -->
+            <!-- MIDDLE PANEL: Visualizations -->
             <div class="panel">
                 <h2>Visualizations</h2>
                 
+                <!-- Visualization category tabs -->
                 <div class="viz-tabs">
                     <button class="viz-tab active" onclick="switchVizTab('core')">Core</button>
                     <button class="viz-tab" onclick="switchVizTab('movement')">Movement</button>
@@ -763,9 +915,10 @@
                     <button class="viz-tab" onclick="switchVizTab('metrics')">Metrics</button>
                 </div>
 
-                <!-- Core Tab -->
+                <!-- Core Visualizations Tab -->
                 <div id="core-viz" class="viz-content active">
                     <div class="visualization-grid">
+                        <!-- Deadzone Map -->
                         <div>
                             <h3 style="color: #ff7777; margin-bottom: 10px;">Deadzone Map</h3>
                             <div class="canvas-container">
@@ -787,6 +940,7 @@
                             </div>
                         </div>
                         
+                        <!-- Response Curve -->
                         <div>
                             <h3 style="color: #ff7777; margin-bottom: 10px;">Response Curve</h3>
                             <div class="canvas-container">
@@ -799,8 +953,9 @@
                     </div>
                 </div>
 
-                <!-- Movement Tab -->
+                <!-- Movement Visualizations Tab -->
                 <div id="movement-viz" class="viz-content">
+                    <!-- Strafe Tracking Analysis -->
                     <div>
                         <h3 style="color: #ff7777; margin-bottom: 10px;">Strafe Tracking Analysis</h3>
                         <div class="canvas-container">
@@ -820,11 +975,13 @@
                                 <span>Cannot Track</span>
                             </div>
                         </div>
+                        <!-- Success message shown when sens can track all speeds -->
                         <div id="strafeStatusBox" class="strafe-status-box" style="display: none;">
                             <div class="strafe-status-good">✓ Your sensitivity can track all strafe speeds!</div>
                         </div>
                     </div>
 
+                    <!-- Diagonal Uniformity -->
                     <div style="margin-top: 20px;">
                         <h3 style="color: #ff7777; margin-bottom: 10px;">Diagonal Uniformity</h3>
                         <div class="canvas-container">
@@ -837,8 +994,9 @@
                     </div>
                 </div>
 
-                <!-- Aim Assist Tab -->
+                <!-- Aim Assist Visualizations Tab -->
                 <div id="aimassist-viz" class="viz-content">
+                    <!-- Aim Assist Behavior Graph -->
                     <div>
                         <h3 style="color: #ff7777; margin-bottom: 10px;">Aim Assist Behavior (0.3 PC Controller)</h3>
                         <div class="aa-mode-toggle">
@@ -861,9 +1019,11 @@
                         </div>
                     </div>
 
+                    <!-- AA Dependency Analysis -->
                     <div class="aa-analysis-section" style="margin-top: 20px;">
                         <div class="aa-analysis-title">AA Dependency & Retention Analysis</div>
                         
+                        <!-- Hip Fire AA Meters -->
                         <div class="aa-meter-group">
                             <div class="aa-meter-label" id="hipAALabel">Hip Fire (160°/s)</div>
                             <div style="margin-bottom: 10px;">
@@ -884,6 +1044,7 @@
                             </div>
                         </div>
 
+                        <!-- ADS AA Meters -->
                         <div class="aa-meter-group" style="margin-top: 20px;">
                             <div class="aa-meter-label" id="adsAALabel">ADS (110°/s)</div>
                             <div style="margin-bottom: 10px;">
@@ -904,12 +1065,14 @@
                             </div>
                         </div>
 
+                        <!-- AA Profile Summary -->
                         <div class="aa-profile-box">
                             <div class="aa-profile-title">Overall Profile: <span id="aaProfileType">Analyzing...</span></div>
                             <p class="aa-profile-text" id="aaProfileDescription">Loading profile analysis...</p>
                         </div>
                     </div>
 
+                    <!-- Turning Extra Activation -->
                     <div style="margin-top: 20px;">
                         <h3 style="color: #ff7777; margin-bottom: 10px;">Turning Extra Activation</h3>
                         <div class="canvas-container">
@@ -921,8 +1084,9 @@
                     </div>
                 </div>
 
-                <!-- Metrics Tab -->
+                <!-- Metrics Visualizations Tab -->
                 <div id="metrics-viz" class="viz-content">
+                    <!-- 180° Turn Time Stats -->
                     <div class="stats-grid">
                         <div class="stat-box">
                             <div class="stat-label">Hip 180° Time</div>
@@ -942,6 +1106,7 @@
                         </div>
                     </div>
 
+                    <!-- Speed Breakdown -->
                     <div class="info-box" style="margin-top: 20px;">
                         <h3>Speed Breakdown</h3>
                         <p>Hip Fire Base: <span id="hipBaseSpeed" style="color: #ff7777;">160°/s</span></p>
@@ -950,6 +1115,7 @@
                         <p>ADS Max: <span id="adsMaxSpeed" style="color: #ff7777;">140°/s</span></p>
                     </div>
 
+                    <!-- Speed Comparison Chart -->
                     <div style="margin-top: 20px;">
                         <h3 style="color: #ff7777; margin-bottom: 10px;">Effective Speed Comparison</h3>
                         <div class="canvas-container">
@@ -959,15 +1125,17 @@
                 </div>
             </div>
 
-            <!-- Right Panel - Analysis & Tips -->
+            <!-- RIGHT PANEL: Analysis & Tips -->
             <div class="panel">
                 <h2>Analysis & Pro Tips</h2>
                 
+                <!-- Current Settings Analysis -->
                 <div class="info-box">
                     <h3>Current Settings Analysis</h3>
                     <div id="analysisText">Loading analysis...</div>
                 </div>
 
+                <!-- Diagonal Uniformity Score -->
                 <div class="info-box" style="margin-top: 15px;">
                     <h3>Diagonal Uniformity Score</h3>
                     <div id="diagonalUniformity">
@@ -985,6 +1153,7 @@
                     </div>
                 </div>
 
+                <!-- Micro-adjustment Capability -->
                 <div class="info-box" style="margin-top: 15px;">
                     <h3>Micro-adjustment Capability</h3>
                     <div id="microAdjustment">
@@ -997,6 +1166,7 @@
                     </div>
                 </div>
 
+                <!-- Pro Tips -->
                 <div class="pro-tip">
                     <div class="pro-tip-title">💡 Hidden Decimals</div>
                     <p>Manually clicking values in-game (instead of D-pad) adds hidden decimals that persist. Set to 0 or edit config to remove them.</p>
@@ -1018,6 +1188,7 @@
                     <p>Only activates at 100% stick deflection AND outside aim assist range. Disabled in AA bubble for consistency.</p>
                 </div>
 
+                <!-- Settings Comparison -->
                 <div class="info-box" style="margin-top: 15px;">
                     <h3>Settings Comparison</h3>
                     <div id="proComparison">
@@ -1029,6 +1200,7 @@
                     </div>
                 </div>
 
+                <!-- Effective Ranges -->
                 <div class="info-box" style="margin-top: 15px;">
                     <h3>Effective Ranges</h3>
                     <div id="rangeAnalysis">
@@ -1042,7 +1214,14 @@
     </div>
 
     <script>
-        // Get all elements
+        // ==============================================
+        // GLOBAL VARIABLES AND ELEMENT REFERENCES
+        // ==============================================
+        
+        /**
+         * DOM element references for all settings controls
+         * Organized by setting type (hip fire, ADS, other)
+         */
         const elements = {
             // Hip fire settings
             deadzone: document.getElementById('deadzone'),
@@ -1065,6 +1244,10 @@
             presets: document.getElementById('presets')
         };
 
+        /**
+         * DOM element references for value display labels
+         * These show the current value next to each slider
+         */
         const valueElements = {
             deadzoneValue: document.getElementById('deadzoneValue'),
             outerThresholdValue: document.getElementById('outerThresholdValue'),
@@ -1083,7 +1266,10 @@
             adsRampDelayValue: document.getElementById('adsRampDelayValue')
         };
 
-        // Canvas contexts
+        /**
+         * Canvas contexts for visualizations
+         * Each canvas renders a different aspect of the settings
+         */
         const deadzoneCanvas = document.getElementById('deadzoneCanvas');
         const deadzoneCtx = deadzoneCanvas.getContext('2d');
         const curveCanvas = document.getElementById('curveCanvas');
@@ -1099,10 +1285,15 @@
         const speedComparisonCanvas = document.getElementById('speedComparisonCanvas');
         const speedComparisonCtx = speedComparisonCanvas.getContext('2d');
 
-        // State
-        let aaViewMode = 'hipfire';
+        /**
+         * Application state variables
+         */
+        let aaViewMode = 'hipfire'; // Current aim assist view mode
 
-        // Presets
+        /**
+         * Preset configurations
+         * These are common pro player settings
+         */
         const presets = {
             default: {
                 deadzone: 15,
@@ -1157,7 +1348,15 @@
             }
         };
 
-        // Edit value functions
+        // ==============================================
+        // VALUE EDITING FUNCTIONS
+        // ==============================================
+
+        /**
+         * Enables inline editing of a setting value
+         * Hides the display span and shows an input field
+         * @param {string} settingName - The name of the setting to edit
+         */
         function editValue(settingName) {
             const valueSpan = document.getElementById(settingName + 'Value');
             const input = document.getElementById(settingName + 'Input');
@@ -1168,6 +1367,11 @@
             input.select();
         }
 
+        /**
+         * Saves the edited value and updates the slider
+         * Validates the input to ensure it's within allowed range
+         * @param {string} settingName - The name of the setting to save
+         */
         function saveValue(settingName) {
             const valueSpan = document.getElementById(settingName + 'Value');
             const input = document.getElementById(settingName + 'Input');
@@ -1177,18 +1381,23 @@
             const min = parseInt(slider.min);
             const max = parseInt(slider.max);
             
+            // Clamp value to valid range
             value = Math.max(min, Math.min(max, value));
             
             slider.value = value;
             input.value = value;
             
+            // Hide input, show span
             valueSpan.style.display = 'inline';
             input.style.display = 'none';
             
             updateValues();
         }
 
-        // Add input handlers for value inputs
+        /**
+         * Sets up event handlers for all inline value inputs
+         * Handles blur and Enter key events
+         */
         document.querySelectorAll('.value-input').forEach(input => {
             const settingName = input.id.replace('Input', '');
             
@@ -1201,30 +1410,70 @@
             });
         });
 
-        // Calculate diagonal uniformity
+        // ==============================================
+        // CALCULATION FUNCTIONS
+        // ==============================================
+
+        /**
+         * Calculates diagonal movement uniformity percentage
+         * Uniformity measures how similar yaw and pitch speeds are
+         * 100% = perfectly matched (circular movement)
+         * Lower % = more elliptical movement (harder to control diagonally)
+         * 
+         * @param {number} yaw - Horizontal look speed in degrees/second
+         * @param {number} pitch - Vertical look speed in degrees/second
+         * @returns {number} Uniformity percentage (0-100)
+         */
         function calculateUniformity(yaw, pitch) {
             const min = Math.min(yaw, pitch);
             const max = Math.max(yaw, pitch);
+            // Avoid division by zero, return perfect uniformity if both are 0
             return max > 0 ? (min / max * 100) : 100;
         }
 
-        // Calculate AA dependency for hip fire
+        /**
+         * Calculates aim assist dependency for hip fire
+         * Based on the principle that lower speeds require more AA to track effectively
+         * 
+         * Thresholds:
+         * - 180°/s or higher: 0% dependency (can track without AA)
+         * - 90°/s or lower: 100% dependency (requires AA for effective tracking)
+         * - Linear interpolation between these values
+         * 
+         * @param {number} speed - Hip fire yaw speed in degrees/second
+         * @returns {number} AA dependency percentage (0-100)
+         */
         function calculateHipAADependency(speed) {
-            // Hip fire: 180+ = 0%, 90 = 100%
             if (speed >= 180) return 0;
             if (speed <= 90) return 100;
             return ((180 - speed) / 90) * 100;
         }
 
-        // Calculate AA dependency for ADS
+        /**
+         * Calculates aim assist dependency for ADS
+         * Lower thresholds than hip fire due to slower movement when ADS
+         * 
+         * Thresholds:
+         * - 100°/s or higher: 0% dependency
+         * - 45°/s or lower: 100% dependency
+         * 
+         * @param {number} speed - ADS yaw speed in degrees/second
+         * @returns {number} AA dependency percentage (0-100)
+         */
         function calculateAdsAADependency(speed) {
-            // ADS: 100+ = 0%, 45 = 100%
             if (speed >= 100) return 0;
             if (speed <= 45) return 100;
             return ((100 - speed) / 55) * 100;
         }
 
-        // Draw AA meters with separate values
+        // ==============================================
+        // AIM ASSIST ANALYSIS FUNCTIONS
+        // ==============================================
+
+        /**
+         * Updates the AA dependency and retention meters
+         * Analyzes current settings to determine AA reliance profile
+         */
         function drawAAMeters() {
             const hipSpeed = parseInt(elements.yawSpeed.value);
             const adsSpeed = parseInt(elements.adsYawSpeed.value);
@@ -1253,7 +1502,7 @@
             document.getElementById('hipAALabel').textContent = `Hip Fire (${hipSpeed}°/s)`;
             document.getElementById('adsAALabel').textContent = `ADS (${adsSpeed}°/s)`;
             
-            // Determine profile type
+            // Determine profile type based on dependency combinations
             let profileType = "";
             let profileDescription = "";
             
@@ -1280,7 +1529,7 @@
             document.getElementById('aaProfileType').textContent = profileType;
             document.getElementById('aaProfileDescription').textContent = profileDescription;
             
-            // Update meter descriptions based on values
+            // Update meter descriptions based on dependency levels
             if (hipDependency > 75) {
                 document.getElementById('hipDependencyDesc').textContent = "Heavy reliance - tracking difficult without AA";
             } else if (hipDependency > 50) {
@@ -1301,7 +1550,7 @@
                 document.getElementById('hipRetentionDesc').textContent = "Minimal stickiness - free movement";
             }
             
-            // Similar for ADS
+            // Similar descriptions for ADS
             if (adsDependency > 75) {
                 document.getElementById('adsDependencyDesc').textContent = "Heavy reliance - tracking difficult without AA";
             } else if (adsDependency > 50) {
@@ -1323,7 +1572,14 @@
             }
         }
 
-        // Tab switching
+        // ==============================================
+        // UI INTERACTION FUNCTIONS
+        // ==============================================
+
+        /**
+         * Switches between Hip Fire and ADS setting tabs
+         * @param {string} tab - Either 'hipfire' or 'ads'
+         */
         function switchTab(tab) {
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1337,7 +1593,10 @@
             }
         }
 
-        // Visualization tab switching
+        /**
+         * Switches between visualization tabs
+         * @param {string} tab - One of: 'core', 'movement', 'aimassist', 'metrics'
+         */
         function switchVizTab(tab) {
             document.querySelectorAll('.viz-tab').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.viz-content').forEach(content => content.classList.remove('active'));
@@ -1349,7 +1608,10 @@
             updateVisualizations();
         }
 
-        // Set AA view mode
+        /**
+         * Sets the aim assist visualization mode
+         * @param {string} mode - Either 'hipfire' or 'ads'
+         */
         function setAAMode(mode) {
             aaViewMode = mode;
             document.querySelectorAll('.aa-mode-toggle button').forEach(btn => btn.classList.remove('active'));
@@ -1377,7 +1639,11 @@
             drawAimAssist();
         }
 
-        // Get curve type name
+        /**
+         * Gets a descriptive name for the response curve value
+         * @param {number} value - Response curve value (0-30)
+         * @returns {string} Descriptive name
+         */
         function getCurveTypeName(value) {
             if (value == 0) return "Linear";
             if (value <= 5) return "Mild Curve";
@@ -1388,9 +1654,16 @@
             return "Extreme Acceleration";
         }
 
-        // Update warnings
+        // ==============================================
+        // WARNING SYSTEM
+        // ==============================================
+
+        /**
+         * Updates all warning messages based on current settings
+         * Checks for suboptimal configurations and provides guidance
+         */
         function updateWarnings() {
-            // Hip fire warnings - check raw values against 90
+            // Hip fire yaw warnings
             const hipYaw = parseInt(elements.yawSpeed.value);
             const hipPitch = parseInt(elements.pitchSpeed.value);
             const hipYawWarning = document.getElementById('hipYawWarning');
@@ -1399,7 +1672,7 @@
             hipYawWarning.innerHTML = '';
             hipPitchWarning.innerHTML = '';
             
-            // Hip Yaw warning
+            // Hip Yaw warning thresholds
             if (hipYaw < 90) {
                 hipYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
             } else if (hipYaw < 130) {
@@ -1410,7 +1683,7 @@
                 hipYawWarning.innerHTML = '<div class="warning warning-green">✓ Good for close range tracking</div>';
             }
             
-            // Hip Pitch warning - FIXED THRESHOLDS
+            // Hip Pitch warning thresholds
             if (hipPitch <= 49) {
                 hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 50°/s - Cannot track close range vertical movement</div>';
             } else if (hipPitch >= 50 && hipPitch <= 59) {
@@ -1421,7 +1694,7 @@
                 hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
             }
             
-            // ADS warnings - check raw values against 45
+            // ADS warnings
             const adsYaw = parseInt(elements.adsYawSpeed.value);
             const adsPitch = parseInt(elements.adsPitchSpeed.value);
             const adsYawWarning = document.getElementById('adsYawWarning');
@@ -1430,7 +1703,7 @@
             adsYawWarning.innerHTML = '';
             adsPitchWarning.innerHTML = '';
             
-            // ADS Yaw warning
+            // ADS Yaw warning thresholds
             if (adsYaw < 45) {
                 adsYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
             } else if (adsYaw < 75) {
@@ -1441,7 +1714,7 @@
                 adsYawWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
             }
             
-            // ADS Pitch warning
+            // ADS Pitch warning thresholds
             if (adsPitch < 45) {
                 adsPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
             } else if (adsPitch < 75) {
@@ -1452,7 +1725,7 @@
                 adsPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
             }
             
-            // Outer threshold warning
+            // Outer threshold warning for ALPS controllers
             const outerWarning = document.getElementById('outerThresholdWarning');
             outerWarning.innerHTML = '';
             
@@ -1460,7 +1733,7 @@
                 outerWarning.innerHTML = '<div class="warning warning-red">⚠️ ALPS controllers (standard Xbox/PS) need minimum 2% to avoid edge detection issues</div>';
             }
 
-            // Ramp-up time warnings - MORE LOGICAL
+            // Ramp-up time warnings based on turning extra values
             const hipExtra = Math.max(parseInt(elements.extraYaw.value), parseInt(elements.extraPitch.value));
             const hipRamp = parseInt(elements.rampTime.value);
             const hipRampWarning = document.getElementById('hipRampWarning');
@@ -1512,7 +1785,14 @@
             }
         }
 
-        // Update diagonal uniformity visualization
+        // ==============================================
+        // UNIFORMITY CALCULATIONS
+        // ==============================================
+
+        /**
+         * Updates diagonal uniformity scores and visualizations
+         * Calculates how well-matched yaw and pitch speeds are
+         */
         function updateDiagonalUniformity() {
             const hipYaw = parseInt(elements.yawSpeed.value);
             const hipPitch = parseInt(elements.pitchSpeed.value);
@@ -1548,7 +1828,14 @@
             }
         }
 
-        // Draw diagonal uniformity visualization
+        // ==============================================
+        // VISUALIZATION DRAWING FUNCTIONS
+        // ==============================================
+
+        /**
+         * Draws the diagonal uniformity visualization
+         * Shows how yaw/pitch ratios affect movement shape
+         */
         function drawDiagonalVisualization() {
             const width = diagonalCanvas.width;
             const height = diagonalCanvas.height;
@@ -1600,7 +1887,7 @@
             const adsYaw = parseInt(elements.adsYawSpeed.value);
             const adsPitch = parseInt(elements.adsPitchSpeed.value);
             
-            // Draw hip fire oval
+            // Draw hip fire oval (ellipse based on yaw/pitch ratio)
             diagonalCtx.save();
             diagonalCtx.translate(centerX - centerX/2, centerY);
             const hipScaleX = 1;
@@ -1642,7 +1929,10 @@
             diagonalCtx.fillText('Green = ADS Movement', centerX + 100, 35);
         }
 
-        // Draw aim assist visualization
+        /**
+         * Draws the aim assist range and strength visualization
+         * Shows how AA behaves at different distances
+         */
         function drawAimAssist() {
             const width = aimAssistCanvas.width;
             const height = aimAssistCanvas.height;
@@ -1689,7 +1979,7 @@
                 aimAssistCtx.fillStyle = '#00ff0033';
                 aimAssistCtx.fillRect(padding + (3/40) * graphWidth, padding, (30/40) * graphWidth, graphHeight);
                 
-                // Draw AA strength curve
+                // Draw AA strength curve (constant 30% in range)
                 aimAssistCtx.strokeStyle = '#00ff00';
                 aimAssistCtx.lineWidth = 3;
                 aimAssistCtx.beginPath();
@@ -1825,7 +2115,10 @@
             aimAssistCtx.fillText('Bubble Size', width - 130, 35);
         }
 
-        // Draw turning extra visualization
+        /**
+         * Draws the turning extra activation zones
+         * Shows where and when acceleration kicks in
+         */
         function drawTurningExtra() {
             const width = turningExtraCanvas.width;
             const height = turningExtraCanvas.height;
@@ -1849,7 +2142,7 @@
             turningExtraCtx.fillRect(padding, padding, (3/40) * graphWidth, graphHeight);
             turningExtraCtx.fillRect(padding + (33/40) * graphWidth, padding, (7/40) * graphWidth, graphHeight);
             
-            // Draw stick deflection requirement
+            // Draw stick deflection requirement line
             const stickThreshold = padding + graphHeight * 0.2; // 80% line (100% required)
             
             turningExtraCtx.strokeStyle = '#ff4444';
@@ -1902,7 +2195,10 @@
             turningExtraCtx.fillText('Distance (Hip Fire)', width / 2, height - 5);
         }
 
-        // Draw speed comparison - FIXED TO USE RAW VALUES
+        /**
+         * Draws speed comparison bar chart
+         * Compares base and max speeds for hip fire and ADS
+         */
         function drawSpeedComparison() {
             const width = speedComparisonCanvas.width;
             const height = speedComparisonCanvas.height;
@@ -1917,7 +2213,7 @@
             speedComparisonCtx.fillStyle = '#0a0a0a';
             speedComparisonCtx.fillRect(0, 0, width, height);
             
-            // Get RAW speed values (already in degrees per second)
+            // Get speed values (already in degrees per second)
             const hipBase = parseInt(elements.yawSpeed.value);
             const hipMax = parseInt(elements.yawSpeed.value) + parseInt(elements.extraYaw.value);
             const adsBase = parseInt(elements.adsYawSpeed.value);
@@ -1962,7 +2258,7 @@
                 speedComparisonCtx.fillStyle = bar.color;
                 speedComparisonCtx.fillRect(bar.x, height - padding - barHeight, barWidth, barHeight);
                 
-                // Value label - show raw speed value
+                // Value label
                 speedComparisonCtx.fillStyle = '#fff';
                 speedComparisonCtx.font = '11px Arial';
                 speedComparisonCtx.textAlign = 'center';
@@ -1973,14 +2269,20 @@
                 speedComparisonCtx.fillText(bar.label, bar.x + barWidth / 2, height - padding + 15);
             });
             
-            // Update speed values in metrics - values are already in degrees per second
+            // Update speed values in metrics
             document.getElementById('hipBaseSpeed').textContent = hipBase + '°/s';
             document.getElementById('hipMaxSpeed').textContent = hipMax + '°/s';
             document.getElementById('adsBaseSpeed').textContent = adsBase + '°/s';
             document.getElementById('adsMaxSpeed').textContent = adsMax + '°/s';
         }
 
-        // Update value displays
+        // ==============================================
+        // UPDATE FUNCTIONS
+        // ==============================================
+
+        /**
+         * Updates all value displays and triggers analysis updates
+         */
         function updateValues() {
             const includePercent = ['deadzone', 'outerThreshold', 'rampTime', 'rampDelay', 'adsRampTime', 'adsRampDelay'];
             
@@ -2012,7 +2314,9 @@
             updateAnalysis();
         }
 
-        // Calculate 180 turn times - FIXED TO USE RAW VALUES
+        /**
+         * Calculates and updates 180° turn time statistics
+         */
         function updateStats() {
             const hipYaw = parseInt(elements.yawSpeed.value);
             const hipYawExtra = parseInt(elements.yawSpeed.value) + parseInt(elements.extraYaw.value);
@@ -2025,7 +2329,18 @@
             document.getElementById('ads180TimeExtra').textContent = (180 / adsYawExtra).toFixed(2) + 's';
         }
 
-        // Apply deadzone calculations
+        // ==============================================
+        // STICK INPUT PROCESSING
+        // ==============================================
+
+        /**
+         * Applies deadzone and outer threshold to stick input
+         * @param {number} x - Raw X input (-1 to 1)
+         * @param {number} y - Raw Y input (-1 to 1)
+         * @param {number} deadzone - Deadzone percentage
+         * @param {number} outerThreshold - Outer threshold percentage
+         * @returns {Object} Processed input with deadzone applied
+         */
         function applyDeadzone(x, y, deadzone, outerThreshold) {
             const magnitude = Math.sqrt(x * x + y * y);
             const deadzoneValue = deadzone / 100;
@@ -2049,13 +2364,20 @@
             };
         }
 
-        // FIXED Apply response curve function
+        /**
+         * Applies response curve to input value
+         * Different curve types provide different acceleration characteristics
+         * 
+         * @param {number} input - Normalized input value (-1 to 1)
+         * @param {number} curveValue - Response curve setting (0-30)
+         * @returns {number} Curved output value
+         */
         function applyResponseCurve(input, curveValue) {
             const absInput = Math.abs(input);
             let output;
             
             if (curveValue == 0) {
-                // 0 = Perfect Linear
+                // 0 = Perfect Linear (1:1 input)
                 output = absInput;
             } else if (curveValue <= 5) {
                 // 1-5 = Mild exponential curve
@@ -2070,7 +2392,7 @@
             } else if (curveValue == 10) {
                 // 10 = Classic (Default Apex curve)
                 output = Math.pow(absInput, 2.2);
-            } else if (curveValue < 20) {  // FIXED: Changed from <= 20
+            } else if (curveValue < 20) {
                 // 11-19 = Increasing exponential curves
                 const power = 2.2 + (curveValue - 10) * 0.15; // 2.35 to 3.55
                 output = Math.pow(absInput, power);
@@ -2083,7 +2405,14 @@
             return Math.sign(input) * output;
         }
 
-        // Draw deadzone visualization
+        // ==============================================
+        // DEADZONE VISUALIZATION
+        // ==============================================
+
+        /**
+         * Draws the animated deadzone visualization
+         * Shows how deadzone affects stick input in real-time
+         */
         function drawDeadzone() {
             const centerX = deadzoneCanvas.width / 2;
             const centerY = deadzoneCanvas.height / 2;
@@ -2135,7 +2464,7 @@
             deadzoneCtx.lineTo(centerX, centerY + 10);
             deadzoneCtx.stroke();
             
-            // Draw sample stick position
+            // Draw sample stick position (animated)
             const stickAngle = Date.now() / 2000;
             const stickRadius = maxRadius * 0.7;
             const stickX = Math.cos(stickAngle) * stickRadius / maxRadius;
@@ -2143,13 +2472,13 @@
             
             const processed = applyDeadzone(stickX, stickY, elements.deadzone.value, elements.outerThreshold.value);
             
-            // Draw input position
+            // Draw input position (red dot)
             deadzoneCtx.fillStyle = '#ff4444';
             deadzoneCtx.beginPath();
             deadzoneCtx.arc(centerX + stickX * maxRadius, centerY + stickY * maxRadius, 5, 0, Math.PI * 2);
             deadzoneCtx.fill();
             
-            // Draw output position
+            // Draw output position (green dot) if not in deadzone
             if (!processed.inDeadzone) {
                 deadzoneCtx.fillStyle = '#00ff00';
                 deadzoneCtx.beginPath();
@@ -2166,7 +2495,10 @@
             }
         }
 
-        // UPDATED Draw response curve with deadzone and outer threshold
+        /**
+         * Draws the response curve graph
+         * Shows how input is transformed with deadzone and outer threshold
+         */
         function drawResponseCurve() {
             const width = curveCanvas.width;
             const height = curveCanvas.height;
@@ -2183,7 +2515,7 @@
             
             // Get settings
             const deadzonePercent = parseInt(elements.deadzone.value) / 100;
-            // Minimum 1% outer threshold even if set to 0
+            // Minimum 1% outer threshold even if set to 0 (game behavior)
             const outerThresholdPercent = Math.max(0.01, parseInt(elements.outerThreshold.value) / 100);
             
             // Draw grid
@@ -2218,7 +2550,7 @@
             curveCtx.lineTo(padding, height - padding);
             curveCtx.stroke();
             
-            // Draw linear reference
+            // Draw linear reference (diagonal line)
             curveCtx.strokeStyle = '#444';
             curveCtx.lineWidth = 1;
             curveCtx.setLineDash([5, 5]);
@@ -2228,13 +2560,13 @@
             curveCtx.stroke();
             curveCtx.setLineDash([]);
             
-            // Draw deadzone area
+            // Draw deadzone area (red shading)
             if (deadzonePercent > 0) {
                 curveCtx.fillStyle = '#ff000022';
                 curveCtx.fillRect(padding, padding, deadzonePercent * graphWidth, graphHeight);
             }
             
-            // Draw outer threshold area (always at least 1%)
+            // Draw outer threshold area (yellow shading)
             curveCtx.fillStyle = '#ffff0022';
             curveCtx.fillRect(
                 padding + (1 - outerThresholdPercent) * graphWidth, 
@@ -2287,7 +2619,10 @@
             curveCtx.restore();
         }
 
-        // UPDATED Draw strafe tracking visualization with simplification
+        /**
+         * Draws strafe tracking capability visualization
+         * Shows whether settings can track enemy movement at various distances
+         */
         function drawStrafeTracking() {
             const width = strafeCanvas.width;
             const height = strafeCanvas.height;
@@ -2306,7 +2641,7 @@
             const hipYaw = parseInt(elements.yawSpeed.value);
             const adsYaw = parseInt(elements.adsYawSpeed.value);
             
-            // Check if hip fire can track all speeds
+            // Check if settings can track all speeds
             const hipCanTrackAll = hipYaw >= 130;
             const adsCanTrackAll = adsYaw >= 75;
             
@@ -2345,7 +2680,7 @@
                     strafeCtx.fillStyle = '#00ff00';
                     strafeCtx.fillRect(padding, scenario.y - 10, graphWidth, 20);
                 } else {
-                    // Draw tracking capability line as before
+                    // Draw tracking capability gradient
                     for (let dist = 3; dist <= 50; dist++) {
                         const x = padding + ((dist - 3) / 47) * graphWidth;
                         const nextX = padding + ((dist - 2) / 47) * graphWidth;
@@ -2373,7 +2708,7 @@
                 }
             });
             
-            // Draw axes
+// Draw axes
             strafeCtx.strokeStyle = '#666';
             strafeCtx.lineWidth = 2;
             strafeCtx.beginPath();
@@ -2387,7 +2722,7 @@
             strafeCtx.textAlign = 'center';
             strafeCtx.fillText('Distance (meters)', width / 2, height - 5);
             
-            // Show status box if both can track all
+            // Show/hide status box based on tracking capability
             const statusBox = document.getElementById('strafeStatusBox');
             if (hipCanTrackAll && adsCanTrackAll) {
                 statusBox.style.display = 'block';
@@ -2396,7 +2731,14 @@
             }
         }
 
-        // Update micro-adjustment visualization
+        // ==============================================
+        // MICRO-ADJUSTMENT ANALYSIS
+        // ==============================================
+
+        /**
+         * Updates micro-adjustment capability based on deadzone
+         * Lower deadzone = better micro-adjustments
+         */
         function updateMicroAdjustment() {
             const deadzone = parseInt(elements.deadzone.value);
             const capability = Math.max(0, 100 - deadzone * 2); // Lower deadzone = higher capability
@@ -2417,7 +2759,10 @@
             document.getElementById('microText').textContent = text;
         }
 
-        // UPDATED Update pro comparison
+        /**
+         * Updates pro comparison metrics
+         * Compares current settings to reference settings (240/200 hip, 110/75 ADS)
+         */
         function updateProComparison() {
             // Reference pro settings
             const proHipYaw = 240;
@@ -2470,12 +2815,15 @@
             `;
         }
 
-        // Update range analysis
+        /**
+         * Updates effective range analysis
+         * Determines how well settings work at different engagement distances
+         */
         function updateRangeAnalysis() {
             const hipYaw = parseInt(elements.yawSpeed.value);
             const adsYaw = parseInt(elements.adsYawSpeed.value);
             
-            // Close range
+            // Close range (3-10m) analysis
             if (hipYaw >= 130) {
                 document.getElementById('closeRangeStatus').textContent = 'Excellent';
                 document.getElementById('closeRangeStatus').style.color = '#00ff00';
@@ -2487,7 +2835,7 @@
                 document.getElementById('closeRangeStatus').style.color = '#ff0000';
             }
             
-            // Mid range
+            // Mid range (10-30m) analysis
             if (adsYaw >= 75) {
                 document.getElementById('midRangeStatus').textContent = 'Excellent';
                 document.getElementById('midRangeStatus').style.color = '#00ff00';
@@ -2499,7 +2847,7 @@
                 document.getElementById('midRangeStatus').style.color = '#ff0000';
             }
             
-            // Long range
+            // Long range (30m+) analysis
             const curve = parseInt(elements.responseCurve.value);
             if (curve <= 10 && adsYaw >= 45) {
                 document.getElementById('longRangeStatus').textContent = 'Excellent';
@@ -2513,7 +2861,10 @@
             }
         }
 
-        // Update analysis text
+        /**
+         * Updates the comprehensive analysis text
+         * Provides personalized recommendations based on current settings
+         */
         function updateAnalysis() {
             const deadzone = parseInt(elements.deadzone.value);
             const curve = parseInt(elements.responseCurve.value);
@@ -2524,7 +2875,7 @@
             
             let analysis = "";
             
-            // Deadzone analysis - updated perspective
+            // Deadzone analysis
             if (deadzone === 0) {
                 analysis += "• Perfect deadzone: Maximum micro-adjustment capability.\n";
             } else if (deadzone < 5) {
@@ -2571,7 +2922,7 @@
             if (extraYaw > 100) {
                 analysis += "• High turning extra enables quick 180s while maintaining low base sens.\n";
             } else if (extraYaw === 0) {
-analysis += "• No turning extra: Consider adding some for emergency flicks.\n";
+                analysis += "• No turning extra: Consider adding some for emergency flicks.\n";
             }
             
             // Overall recommendation
@@ -2593,19 +2944,37 @@ analysis += "• No turning extra: Consider adding some for emergency flicks.\n"
             updateRangeAnalysis();
         }
 
-        // Animation loop
+        // ==============================================
+        // ANIMATION LOOP
+        // ==============================================
+
+        /**
+         * Animation loop for the deadzone visualization
+         * Creates the rotating stick position effect
+         */
         function animate() {
             drawDeadzone();
             requestAnimationFrame(animate);
         }
 
-        // Event listeners
+        // ==============================================
+        // EVENT LISTENERS
+        // ==============================================
+
+        /**
+         * Set up event listeners for all sliders
+         * Triggers updates when values change
+         */
         Object.keys(elements).forEach(key => {
             if (key !== 'presets') {
                 elements[key].addEventListener('input', updateValues);
             }
         });
 
+        /**
+         * Preset selector change handler
+         * Loads preset values when selected
+         */
         elements.presets.addEventListener('change', (e) => {
             if (e.target.value !== 'custom') {
                 const preset = presets[e.target.value];
@@ -2618,7 +2987,13 @@ analysis += "• No turning extra: Consider adding some for emergency flicks.\n"
             }
         });
 
-        // Reset function
+        // ==============================================
+        // UTILITY FUNCTIONS
+        // ==============================================
+
+        /**
+         * Resets all settings to default values
+         */
         function resetSettings() {
             const defaultSettings = presets.default;
             Object.keys(defaultSettings).forEach(key => {
@@ -2630,7 +3005,10 @@ analysis += "• No turning extra: Consider adding some for emergency flicks.\n"
             updateValues();
         }
 
-        // Export settings
+        /**
+         * Exports current settings to clipboard
+         * Creates a formatted text string with all values
+         */
         function exportSettings() {
             const settings = {};
             Object.keys(elements).forEach(key => {
@@ -2667,7 +3045,10 @@ ADS Ramp-up Delay: ${settings.adsRampDelay}%`;
             });
         }
 
-        // Import settings
+        /**
+         * Imports settings from a text string
+         * Parses the exported format and applies values
+         */
         function importSettings() {
             const input = prompt('Paste your settings string here:');
             if (input) {
@@ -2719,7 +3100,10 @@ ADS Ramp-up Delay: ${settings.adsRampDelay}%`;
             }
         }
 
-        // Update all visualizations
+        /**
+         * Updates all visualizations
+         * Called when any setting changes
+         */
         function updateVisualizations() {
             drawResponseCurve();
             drawStrafeTracking();
@@ -2730,7 +3114,14 @@ ADS Ramp-up Delay: ${settings.adsRampDelay}%`;
             drawAAMeters();
         }
 
-        // Initialize
+        // ==============================================
+        // INITIALIZATION
+        // ==============================================
+
+        /**
+         * Initialize the application
+         * Updates all values and starts the animation loop
+         */
         updateValues();
         animate();
     </script>
