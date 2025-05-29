@@ -108,6 +108,26 @@
             font-weight: bold;
             min-width: 50px;
             text-align: right;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        
+        .slider-value:hover {
+            background-color: #333;
+        }
+        
+        .value-input {
+            width: 60px;
+            padding: 2px 6px;
+            background-color: #333;
+            color: #ff4444;
+            border: 1px solid #555;
+            border-radius: 3px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
         }
         
         input[type="range"] {
@@ -509,6 +529,21 @@
             color: #aaa;
             margin-top: 3px;
         }
+
+        .strafe-status-box {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #444;
+            text-align: center;
+        }
+
+        .strafe-status-good {
+            color: #00ff66;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -546,7 +581,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Look Deadzone</span>
-                                <span class="slider-value" id="deadzoneValue">15%</span>
+                                <span class="slider-value" id="deadzoneValue" onclick="editValue('deadzone')">15%</span>
+                                <input type="number" class="value-input" id="deadzoneInput" min="0" max="50" value="15">
                             </div>
                             <input type="range" id="deadzone" min="0" max="50" value="15" step="1">
                             <p class="help-text">Lower = Better micro-adjustments. Stick drift doesn't affect aim!</p>
@@ -555,16 +591,19 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Outer Threshold</span>
-                                <span class="slider-value" id="outerThresholdValue">2%</span>
+                                <span class="slider-value" id="outerThresholdValue" onclick="editValue('outerThreshold')">2%</span>
+                                <input type="number" class="value-input" id="outerThresholdInput" min="0" max="30" value="2">
                             </div>
                             <input type="range" id="outerThreshold" min="0" max="30" value="2" step="1">
+                            <p class="help-text">Minimum 1% is always applied for edge detection</p>
                             <div id="outerThresholdWarning"></div>
                         </div>
 
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Response Curve</span>
-                                <span class="slider-value" id="responseCurveValue">10</span>
+                                <span class="slider-value" id="responseCurveValue" onclick="editValue('responseCurve')">10</span>
+                                <input type="number" class="value-input" id="responseCurveInput" min="0" max="30" value="10">
                                 <span class="curve-type-indicator" id="curveTypeIndicator">(Classic)</span>
                             </div>
                             <input type="range" id="responseCurve" min="0" max="30" value="10" step="1">
@@ -578,7 +617,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Yaw Speed (Horizontal)</span>
-                                <span class="slider-value" id="yawSpeedValue">160</span>
+                                <span class="slider-value" id="yawSpeedValue" onclick="editValue('yawSpeed')">160</span>
+                                <input type="number" class="value-input" id="yawSpeedInput" min="0" max="500" value="160">
                             </div>
                             <input type="range" id="yawSpeed" min="0" max="500" value="160" step="1">
                             <div id="hipYawWarning"></div>
@@ -587,7 +627,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Pitch Speed (Vertical)</span>
-                                <span class="slider-value" id="pitchSpeedValue">120</span>
+                                <span class="slider-value" id="pitchSpeedValue" onclick="editValue('pitchSpeed')">120</span>
+                                <input type="number" class="value-input" id="pitchSpeedInput" min="0" max="500" value="120">
                             </div>
                             <input type="range" id="pitchSpeed" min="0" max="500" value="120" step="1">
                             <div id="hipPitchWarning"></div>
@@ -600,7 +641,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Turning Extra Yaw</span>
-                                <span class="slider-value" id="extraYawValue">220</span>
+                                <span class="slider-value" id="extraYawValue" onclick="editValue('extraYaw')">220</span>
+                                <input type="number" class="value-input" id="extraYawInput" min="0" max="250" value="220">
                             </div>
                             <input type="range" id="extraYaw" min="0" max="250" value="220" step="1">
                         </div>
@@ -608,7 +650,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Turning Extra Pitch</span>
-                                <span class="slider-value" id="extraPitchValue">0</span>
+                                <span class="slider-value" id="extraPitchValue" onclick="editValue('extraPitch')">0</span>
+                                <input type="number" class="value-input" id="extraPitchInput" min="0" max="250" value="0">
                             </div>
                             <input type="range" id="extraPitch" min="0" max="250" value="0" step="1">
                         </div>
@@ -616,7 +659,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Ramp-up Time</span>
-                                <span class="slider-value" id="rampTimeValue">33%</span>
+                                <span class="slider-value" id="rampTimeValue" onclick="editValue('rampTime')">33%</span>
+                                <input type="number" class="value-input" id="rampTimeInput" min="0" max="100" value="33">
                             </div>
                             <input type="range" id="rampTime" min="0" max="100" value="33" step="1">
                             <div id="hipRampWarning"></div>
@@ -625,7 +669,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>Ramp-up Delay</span>
-                                <span class="slider-value" id="rampDelayValue">0%</span>
+                                <span class="slider-value" id="rampDelayValue" onclick="editValue('rampDelay')">0%</span>
+                                <input type="number" class="value-input" id="rampDelayInput" min="0" max="100" value="0">
                             </div>
                             <input type="range" id="rampDelay" min="0" max="100" value="0" step="1">
                         </div>
@@ -640,7 +685,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Yaw Speed</span>
-                                <span class="slider-value" id="adsYawSpeedValue">110</span>
+                                <span class="slider-value" id="adsYawSpeedValue" onclick="editValue('adsYawSpeed')">110</span>
+                                <input type="number" class="value-input" id="adsYawSpeedInput" min="0" max="500" value="110">
                             </div>
                             <input type="range" id="adsYawSpeed" min="0" max="500" value="110" step="1">
                             <div id="adsYawWarning"></div>
@@ -649,7 +695,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Pitch Speed</span>
-                                <span class="slider-value" id="adsPitchSpeedValue">75</span>
+                                <span class="slider-value" id="adsPitchSpeedValue" onclick="editValue('adsPitchSpeed')">75</span>
+                                <input type="number" class="value-input" id="adsPitchSpeedInput" min="0" max="500" value="75">
                             </div>
                             <input type="range" id="adsPitchSpeed" min="0" max="500" value="75" step="1">
                             <div id="adsPitchWarning"></div>
@@ -662,7 +709,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Turning Extra Yaw</span>
-                                <span class="slider-value" id="adsExtraYawValue">30</span>
+                                <span class="slider-value" id="adsExtraYawValue" onclick="editValue('adsExtraYaw')">30</span>
+                                <input type="number" class="value-input" id="adsExtraYawInput" min="0" max="250" value="30">
                             </div>
                             <input type="range" id="adsExtraYaw" min="0" max="250" value="30" step="1">
                         </div>
@@ -670,7 +718,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Turning Extra Pitch</span>
-                                <span class="slider-value" id="adsExtraPitchValue">30</span>
+                                <span class="slider-value" id="adsExtraPitchValue" onclick="editValue('adsExtraPitch')">30</span>
+                                <input type="number" class="value-input" id="adsExtraPitchInput" min="0" max="250" value="30">
                             </div>
                             <input type="range" id="adsExtraPitch" min="0" max="250" value="30" step="1">
                         </div>
@@ -678,7 +727,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Ramp-up Time</span>
-                                <span class="slider-value" id="adsRampTimeValue">100%</span>
+                                <span class="slider-value" id="adsRampTimeValue" onclick="editValue('adsRampTime')">100%</span>
+                                <input type="number" class="value-input" id="adsRampTimeInput" min="0" max="100" value="100">
                             </div>
                             <input type="range" id="adsRampTime" min="0" max="100" value="100" step="1">
                             <div id="adsRampWarning"></div>
@@ -687,7 +737,8 @@
                         <div class="slider-group">
                             <div class="slider-label">
                                 <span>ADS Ramp-up Delay</span>
-                                <span class="slider-value" id="adsRampDelayValue">25%</span>
+                                <span class="slider-value" id="adsRampDelayValue" onclick="editValue('adsRampDelay')">25%</span>
+                                <input type="number" class="value-input" id="adsRampDelayInput" min="0" max="100" value="25">
                             </div>
                             <input type="range" id="adsRampDelay" min="0" max="100" value="25" step="1">
                         </div>
@@ -768,6 +819,9 @@
                                 <div class="legend-color" style="background-color: #ff0000;"></div>
                                 <span>Cannot Track</span>
                             </div>
+                        </div>
+                        <div id="strafeStatusBox" class="strafe-status-box" style="display: none;">
+                            <div class="strafe-status-good">✓ Your sensitivity can track all strafe speeds!</div>
                         </div>
                     </div>
 
@@ -1103,6 +1157,50 @@
             }
         };
 
+        // Edit value functions
+        function editValue(settingName) {
+            const valueSpan = document.getElementById(settingName + 'Value');
+            const input = document.getElementById(settingName + 'Input');
+            
+            valueSpan.style.display = 'none';
+            input.style.display = 'inline-block';
+            input.focus();
+            input.select();
+        }
+
+        function saveValue(settingName) {
+            const valueSpan = document.getElementById(settingName + 'Value');
+            const input = document.getElementById(settingName + 'Input');
+            const slider = elements[settingName];
+            
+            let value = parseInt(input.value);
+            const min = parseInt(slider.min);
+            const max = parseInt(slider.max);
+            
+            value = Math.max(min, Math.min(max, value));
+            
+            slider.value = value;
+            input.value = value;
+            
+            valueSpan.style.display = 'inline';
+            input.style.display = 'none';
+            
+            updateValues();
+        }
+
+        // Add input handlers for value inputs
+        document.querySelectorAll('.value-input').forEach(input => {
+            const settingName = input.id.replace('Input', '');
+            
+            input.addEventListener('blur', () => saveValue(settingName));
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveValue(settingName);
+                }
+            });
+        });
+
         // Calculate diagonal uniformity
         function calculateUniformity(yaw, pitch) {
             const min = Math.min(yaw, pitch);
@@ -1285,135 +1383,134 @@
             if (value <= 5) return "Mild Curve";
             if (value <= 9) return "Moderate Curve";
             if (value == 10) return "Classic";
-            if (value <= 15) return "S-Curve";
-            if (value <= 20) return "Strong Curve";
-            return "Heavy Acceleration";
+            if (value <= 15) return "Strong Curve";
+            if (value <= 20) return "Heavy Curve";
+            return "Extreme Acceleration";
         }
 
         // Update warnings
-         // Update warnings
-function updateWarnings() {
-    // Hip fire warnings - check raw values against 90
-    const hipYaw = parseInt(elements.yawSpeed.value);
-    const hipPitch = parseInt(elements.pitchSpeed.value);
-    const hipYawWarning = document.getElementById('hipYawWarning');
-    const hipPitchWarning = document.getElementById('hipPitchWarning');
-    
-    hipYawWarning.innerHTML = '';
-    hipPitchWarning.innerHTML = '';
-    
-    // Hip Yaw warning
-    if (hipYaw < 90) {
-        hipYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
-    } else if (hipYaw < 130) {
-        hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited strafe tracking</div>';
-    } else if (hipYaw > 180) {
-        hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
-    } else {
-        hipYawWarning.innerHTML = '<div class="warning warning-green">✓ Good for close range tracking</div>';
-    }
-    
-    // Hip Pitch warning
-if (hipPitch <= 49) {
-    hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 50°/s - Cannot track close range vertical movement</div>';
-} else if (hipPitch >= 50 && hipPitch <= 59) {
-    hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
-} else if (hipPitch > 180) {
-    hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
-} else {
-    hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
-}
-    
-    // ADS warnings - check raw values against 45
-    const adsYaw = parseInt(elements.adsYawSpeed.value);
-    const adsPitch = parseInt(elements.adsPitchSpeed.value);
-    const adsYawWarning = document.getElementById('adsYawWarning');
-    const adsPitchWarning = document.getElementById('adsPitchWarning');
-    
-    adsYawWarning.innerHTML = '';
-    adsPitchWarning.innerHTML = '';
-    
-    // ADS Yaw warning
-    if (adsYaw < 45) {
-        adsYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
-    } else if (adsYaw < 75) {
-        adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
-    } else if (adsYaw > 120) {
-        adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s in ADS is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
-    } else {
-        adsYawWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
-    }
-    
-    // ADS Pitch warning
-    if (adsPitch < 45) {
-        adsPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
-    } else if (adsPitch < 75) {
-        adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
-    } else if (adsPitch > 120) {
-        adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s in ADS is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
-    } else {
-        adsPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
-    }
-    
-    // Outer threshold warning
-    const outerWarning = document.getElementById('outerThresholdWarning');
-    outerWarning.innerHTML = '';
-    
-    if (elements.outerThreshold.value < 2) {
-        outerWarning.innerHTML = '<div class="warning warning-red">⚠️ ALPS controllers (standard Xbox/PS) need minimum 2% to avoid edge detection issues</div>';
-    }
+        function updateWarnings() {
+            // Hip fire warnings - check raw values against 90
+            const hipYaw = parseInt(elements.yawSpeed.value);
+            const hipPitch = parseInt(elements.pitchSpeed.value);
+            const hipYawWarning = document.getElementById('hipYawWarning');
+            const hipPitchWarning = document.getElementById('hipPitchWarning');
+            
+            hipYawWarning.innerHTML = '';
+            hipPitchWarning.innerHTML = '';
+            
+            // Hip Yaw warning
+            if (hipYaw < 90) {
+                hipYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
+            } else if (hipYaw < 130) {
+                hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited strafe tracking</div>';
+            } else if (hipYaw > 180) {
+                hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+            } else {
+                hipYawWarning.innerHTML = '<div class="warning warning-green">✓ Good for close range tracking</div>';
+            }
+            
+            // Hip Pitch warning - FIXED THRESHOLDS
+            if (hipPitch <= 49) {
+                hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 50°/s - Cannot track close range vertical movement</div>';
+            } else if (hipPitch >= 50 && hipPitch <= 59) {
+                hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
+            } else if (hipPitch > 180) {
+                hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s in hip fire is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+            } else {
+                hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
+            }
+            
+            // ADS warnings - check raw values against 45
+            const adsYaw = parseInt(elements.adsYawSpeed.value);
+            const adsPitch = parseInt(elements.adsPitchSpeed.value);
+            const adsYawWarning = document.getElementById('adsYawWarning');
+            const adsPitchWarning = document.getElementById('adsPitchWarning');
+            
+            adsYawWarning.innerHTML = '';
+            adsPitchWarning.innerHTML = '';
+            
+            // ADS Yaw warning
+            if (adsYaw < 45) {
+                adsYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
+            } else if (adsYaw < 75) {
+                adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
+            } else if (adsYaw > 120) {
+                adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s in ADS is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+            } else {
+                adsYawWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
+            }
+            
+            // ADS Pitch warning
+            if (adsPitch < 45) {
+                adsPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
+            } else if (adsPitch < 75) {
+                adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
+            } else if (adsPitch > 120) {
+                adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s in ADS is generally unnecessary. You are starting to delve into territory where your turn speed is higher than needed in most situations. Proceed carefully - the extra speed will increasingly come back to bite you in high stress situations if your stick control isn\'t up to the task.</div>';
+            } else {
+                adsPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
+            }
+            
+            // Outer threshold warning
+            const outerWarning = document.getElementById('outerThresholdWarning');
+            outerWarning.innerHTML = '';
+            
+            if (elements.outerThreshold.value < 2) {
+                outerWarning.innerHTML = '<div class="warning warning-red">⚠️ ALPS controllers (standard Xbox/PS) need minimum 2% to avoid edge detection issues</div>';
+            }
 
-    // Ramp-up time warnings based on turning extra values
-    const hipExtra = Math.max(parseInt(elements.extraYaw.value), parseInt(elements.extraPitch.value));
-    const hipRamp = parseInt(elements.rampTime.value);
-    const hipRampWarning = document.getElementById('hipRampWarning');
-    
-    hipRampWarning.innerHTML = '';
-    
-    if (hipExtra < 50) {
-        hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
-    } else if (hipExtra < 150) {
-        if (hipRamp > 50) {
-            hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
-        } else if (hipRamp < 20) {
-            hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may be too fast, consider 25-40%</div>';
-        } else {
-            hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
-        }
-    } else {
-        // High turning extra (150+)
-        if (hipRamp < 20) {
-            hipRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast! Will cause jerky turns with high turning extra</div>';
-        } else if (hipRamp > 40) {
-            hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ May feel delayed, consider 25-35% for high turning extra</div>';
-        } else {
-            hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Optimal for high acceleration (25-35%)</div>';
-        }
-    }
+            // Ramp-up time warnings - MORE LOGICAL
+            const hipExtra = Math.max(parseInt(elements.extraYaw.value), parseInt(elements.extraPitch.value));
+            const hipRamp = parseInt(elements.rampTime.value);
+            const hipRampWarning = document.getElementById('hipRampWarning');
+            
+            hipRampWarning.innerHTML = '';
+            
+            if (hipExtra < 50) {
+                hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
+            } else if (hipExtra < 150) {
+                if (hipRamp > 40) {
+                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish, consider 25-40%</div>';
+                } else if (hipRamp < 25) {
+                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may be too fast, consider 25-40%</div>';
+                } else {
+                    hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra (25-40%)</div>';
+                }
+            } else {
+                // High turning extra (150+)
+                if (hipRamp > 30) {
+                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ May feel delayed with high turning extra, consider 20-30%</div>';
+                } else if (hipRamp < 20) {
+                    hipRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Very fast acceleration, may be hard to control</div>';
+                } else {
+                    hipRampWarning.innerHTML = '<div class="warning warning-green">✓ Optimal for high acceleration (20-30%)</div>';
+                }
+            }
 
-    // ADS ramp warnings
-    const adsExtra = Math.max(parseInt(elements.adsExtraYaw.value), parseInt(elements.adsExtraPitch.value));
-    const adsRamp = parseInt(elements.adsRampTime.value);
-    const adsRampWarning = document.getElementById('adsRampWarning');
-    
-    adsRampWarning.innerHTML = '';
-    
-    if (adsExtra < 50) {
-        adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
-    } else if (adsExtra < 150) {
-        if (adsRamp > 50) {
-            adsRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
-        } else {
-            adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
+            // ADS ramp warnings
+            const adsExtra = Math.max(parseInt(elements.adsExtraYaw.value), parseInt(elements.adsExtraPitch.value));
+            const adsRamp = parseInt(elements.adsRampTime.value);
+            const adsRampWarning = document.getElementById('adsRampWarning');
+            
+            adsRampWarning.innerHTML = '';
+            
+            if (adsExtra < 50) {
+                adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Ramp-up has minimal impact with low turning extra</div>';
+            } else if (adsExtra < 150) {
+                if (adsRamp > 50) {
+                    adsRampWarning.innerHTML = '<div class="warning warning-yellow">⚡ Ramp-up may feel sluggish for moderate turning extra</div>';
+                } else {
+                    adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ramp-up for moderate turning extra</div>';
+                }
+            } else {
+                if (adsRamp < 20) {
+                    adsRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast for ADS precision!</div>';
+                } else {
+                    adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ADS ramp-up</div>';
+                }
+            }
         }
-    } else {
-        if (adsRamp < 20) {
-            adsRampWarning.innerHTML = '<div class="warning warning-red">⚠️ Too fast for ADS precision!</div>';
-        } else {
-            adsRampWarning.innerHTML = '<div class="warning warning-green">✓ Good ADS ramp-up</div>';
-        }
-    }
-}
 
         // Update diagonal uniformity visualization
         function updateDiagonalUniformity() {
@@ -1885,21 +1982,25 @@ if (hipPitch <= 49) {
 
         // Update value displays
         function updateValues() {
-            valueElements.deadzoneValue.textContent = elements.deadzone.value + '%';
-            valueElements.outerThresholdValue.textContent = elements.outerThreshold.value + '%';
-            valueElements.responseCurveValue.textContent = elements.responseCurve.value;
-            valueElements.yawSpeedValue.textContent = elements.yawSpeed.value;
-            valueElements.pitchSpeedValue.textContent = elements.pitchSpeed.value;
-            valueElements.extraYawValue.textContent = elements.extraYaw.value;
-            valueElements.extraPitchValue.textContent = elements.extraPitch.value;
-            valueElements.rampTimeValue.textContent = elements.rampTime.value + '%';
-            valueElements.rampDelayValue.textContent = elements.rampDelay.value + '%';
-            valueElements.adsYawSpeedValue.textContent = elements.adsYawSpeed.value;
-            valueElements.adsPitchSpeedValue.textContent = elements.adsPitchSpeed.value;
-            valueElements.adsExtraYawValue.textContent = elements.adsExtraYaw.value;
-            valueElements.adsExtraPitchValue.textContent = elements.adsExtraPitch.value;
-            valueElements.adsRampTimeValue.textContent = elements.adsRampTime.value + '%';
-            valueElements.adsRampDelayValue.textContent = elements.adsRampDelay.value + '%';
+            const includePercent = ['deadzone', 'outerThreshold', 'rampTime', 'rampDelay', 'adsRampTime', 'adsRampDelay'];
+            
+            Object.keys(valueElements).forEach(key => {
+                const settingName = key.replace('Value', '');
+                const element = valueElements[key];
+                const value = elements[settingName].value;
+                
+                if (includePercent.includes(settingName)) {
+                    element.textContent = value + '%';
+                } else {
+                    element.textContent = value;
+                }
+                
+                // Update input values too
+                const input = document.getElementById(settingName + 'Input');
+                if (input) {
+                    input.value = value;
+                }
+            });
             
             // Update curve type indicator
             document.getElementById('curveTypeIndicator').textContent = `(${getCurveTypeName(elements.responseCurve.value)})`;
@@ -1948,7 +2049,7 @@ if (hipPitch <= 49) {
             };
         }
 
-        // Apply response curve
+        // FIXED Apply response curve function
         function applyResponseCurve(input, curveValue) {
             const absInput = Math.abs(input);
             let output;
@@ -1958,24 +2059,24 @@ if (hipPitch <= 49) {
                 output = absInput;
             } else if (curveValue <= 5) {
                 // 1-5 = Mild exponential curve
-                const power = 1 + (curveValue * 0.1);
+                const power = 1 + (curveValue * 0.2); // 1.2 to 2.0
                 output = Math.pow(absInput, power);
             } else if (curveValue <= 9) {
                 // 6-9 = Moderate curve approaching classic
-                const t = (curveValue - 5) / 4; // Interpolation factor
+                const t = (curveValue - 5) / 4;
                 const linearOutput = absInput;
-                const classicOutput = Math.pow(absInput, 1.5); // Classic curve approximation
+                const classicOutput = Math.pow(absInput, 2.2);
                 output = linearOutput * (1 - t) + classicOutput * t;
             } else if (curveValue == 10) {
                 // 10 = Classic (Default Apex curve)
-                output = Math.pow(absInput, 1.5);
-            } else if (curveValue <= 20) {
-                // 11-20 = S-curve with increasing strength
-                const k = (curveValue - 10) / 5;
-                output = Math.tanh(k * absInput * 3) / Math.tanh(k * 3);
+                output = Math.pow(absInput, 2.2);
+            } else if (curveValue < 20) {  // FIXED: Changed from <= 20
+                // 11-19 = Increasing exponential curves
+                const power = 2.2 + (curveValue - 10) * 0.15; // 2.35 to 3.55
+                output = Math.pow(absInput, power);
             } else {
-                // 21-30 = Heavy acceleration curve
-                const power = 2 + (curveValue - 20) * 0.1;
+                // 20-30 = Heavy acceleration curves
+                const power = 3.7 + (curveValue - 20) * 0.25; // 3.7 to 6.2
                 output = Math.pow(absInput, power);
             }
             
@@ -2065,7 +2166,7 @@ if (hipPitch <= 49) {
             }
         }
 
-        // Draw response curve
+        // UPDATED Draw response curve with deadzone and outer threshold
         function drawResponseCurve() {
             const width = curveCanvas.width;
             const height = curveCanvas.height;
@@ -2079,6 +2180,11 @@ if (hipPitch <= 49) {
             // Draw background
             curveCtx.fillStyle = '#0a0a0a';
             curveCtx.fillRect(0, 0, width, height);
+            
+            // Get settings
+            const deadzonePercent = parseInt(elements.deadzone.value) / 100;
+            // Minimum 1% outer threshold even if set to 0
+            const outerThresholdPercent = Math.max(0.01, parseInt(elements.outerThreshold.value) / 100);
             
             // Draw grid
             curveCtx.strokeStyle = '#333';
@@ -2122,16 +2228,43 @@ if (hipPitch <= 49) {
             curveCtx.stroke();
             curveCtx.setLineDash([]);
             
+            // Draw deadzone area
+            if (deadzonePercent > 0) {
+                curveCtx.fillStyle = '#ff000022';
+                curveCtx.fillRect(padding, padding, deadzonePercent * graphWidth, graphHeight);
+            }
+            
+            // Draw outer threshold area (always at least 1%)
+            curveCtx.fillStyle = '#ffff0022';
+            curveCtx.fillRect(
+                padding + (1 - outerThresholdPercent) * graphWidth, 
+                padding, 
+                outerThresholdPercent * graphWidth, 
+                graphHeight
+            );
+            
             // Draw response curve
             curveCtx.strokeStyle = '#ff4444';
             curveCtx.lineWidth = 3;
             curveCtx.beginPath();
             
             for (let i = 0; i <= 100; i++) {
-                const input = i / 100;
-                const output = applyResponseCurve(input, elements.responseCurve.value);
-                const x = padding + input * graphWidth;
-                const y = height - padding - output * graphHeight;
+                const rawInput = i / 100;
+                let x = padding + rawInput * graphWidth;
+                let y = height - padding;
+                
+                if (rawInput <= deadzonePercent) {
+                    // In deadzone - no output
+                    y = height - padding;
+                } else if (rawInput >= 1 - outerThresholdPercent) {
+                    // In outer threshold - max output
+                    y = padding;
+                } else {
+                    // Active zone - apply curve
+                    const normalizedInput = (rawInput - deadzonePercent) / (1 - deadzonePercent - outerThresholdPercent);
+                    const curvedOutput = applyResponseCurve(normalizedInput, elements.responseCurve.value);
+                    y = height - padding - curvedOutput * graphHeight;
+                }
                 
                 if (i === 0) {
                     curveCtx.moveTo(x, y);
@@ -2154,7 +2287,7 @@ if (hipPitch <= 49) {
             curveCtx.restore();
         }
 
-        // Draw strafe tracking visualization
+        // UPDATED Draw strafe tracking visualization with simplification
         function drawStrafeTracking() {
             const width = strafeCanvas.width;
             const height = strafeCanvas.height;
@@ -2172,6 +2305,10 @@ if (hipPitch <= 49) {
             // Get current speeds
             const hipYaw = parseInt(elements.yawSpeed.value);
             const adsYaw = parseInt(elements.adsYawSpeed.value);
+            
+            // Check if hip fire can track all speeds
+            const hipCanTrackAll = hipYaw >= 130;
+            const adsCanTrackAll = adsYaw >= 75;
             
             // Draw grid and labels
             strafeCtx.strokeStyle = '#333';
@@ -2193,8 +2330,8 @@ if (hipPitch <= 49) {
             
             // Draw tracking capability zones
             const scenarios = [
-                { name: 'Hip Fire', speed: hipYaw, y: padding + graphHeight * 0.3 },
-                { name: 'ADS', speed: adsYaw, y: padding + graphHeight * 0.7 }
+                { name: 'Hip Fire', speed: hipYaw, y: padding + graphHeight * 0.3, canTrackAll: hipCanTrackAll },
+                { name: 'ADS', speed: adsYaw, y: padding + graphHeight * 0.7, canTrackAll: adsCanTrackAll }
             ];
             
             scenarios.forEach(scenario => {
@@ -2203,30 +2340,36 @@ if (hipPitch <= 49) {
                 strafeCtx.textAlign = 'left';
                 strafeCtx.fillText(scenario.name, padding - 35, scenario.y + 5);
                 
-                // Draw tracking capability line
-                for (let dist = 3; dist <= 50; dist++) {
-                    const x = padding + ((dist - 3) / 47) * graphWidth;
-                    const nextX = padding + ((dist - 2) / 47) * graphWidth;
-                    
-                    // Calculate required tracking speed at this distance
-                    const baseRequired = scenario.name === 'Hip Fire' ? 90 : 45;
-                    const requiredSpeed = baseRequired * (3 / Math.max(3, dist)); // Scales with distance
-                    
-                    let color;
-                    if (scenario.speed >= requiredSpeed * 1.5) {
-                        color = '#00ff00'; // Can track easily
-                    } else if (scenario.speed >= requiredSpeed) {
-                        color = '#ffff00'; // Can track with difficulty
-                    } else {
-                        color = '#ff0000'; // Cannot track
+                if (scenario.canTrackAll) {
+                    // Draw solid green bar if can track all
+                    strafeCtx.fillStyle = '#00ff00';
+                    strafeCtx.fillRect(padding, scenario.y - 10, graphWidth, 20);
+                } else {
+                    // Draw tracking capability line as before
+                    for (let dist = 3; dist <= 50; dist++) {
+                        const x = padding + ((dist - 3) / 47) * graphWidth;
+                        const nextX = padding + ((dist - 2) / 47) * graphWidth;
+                        
+                        // Calculate required tracking speed at this distance
+                        const baseRequired = scenario.name === 'Hip Fire' ? 90 : 45;
+                        const requiredSpeed = baseRequired * (3 / Math.max(3, dist)); // Scales with distance
+                        
+                        let color;
+                        if (scenario.speed >= requiredSpeed * 1.5) {
+                            color = '#00ff00'; // Can track easily
+                        } else if (scenario.speed >= requiredSpeed) {
+                            color = '#ffff00'; // Can track with difficulty
+                        } else {
+                            color = '#ff0000'; // Cannot track
+                        }
+                        
+                        strafeCtx.strokeStyle = color;
+                        strafeCtx.lineWidth = 20;
+                        strafeCtx.beginPath();
+                        strafeCtx.moveTo(x, scenario.y - 10);
+                        strafeCtx.lineTo(nextX, scenario.y - 10);
+                        strafeCtx.stroke();
                     }
-                    
-                    strafeCtx.strokeStyle = color;
-                    strafeCtx.lineWidth = 20;
-                    strafeCtx.beginPath();
-                    strafeCtx.moveTo(x, scenario.y - 10);
-                    strafeCtx.lineTo(nextX, scenario.y - 10);
-                    strafeCtx.stroke();
                 }
             });
             
@@ -2243,6 +2386,14 @@ if (hipPitch <= 49) {
             strafeCtx.font = '12px Arial';
             strafeCtx.textAlign = 'center';
             strafeCtx.fillText('Distance (meters)', width / 2, height - 5);
+            
+            // Show status box if both can track all
+            const statusBox = document.getElementById('strafeStatusBox');
+            if (hipCanTrackAll && adsCanTrackAll) {
+                statusBox.style.display = 'block';
+            } else {
+                statusBox.style.display = 'none';
+            }
         }
 
         // Update micro-adjustment visualization
@@ -2266,60 +2417,58 @@ if (hipPitch <= 49) {
             document.getElementById('microText').textContent = text;
         }
 
-        // Update pro comparison
-        // Update pro comparison
-// Update pro comparison
-function updateProComparison() {
-    // Reference pro settings
-    const proHipYaw = 240;
-    const proHipPitch = 200;
-    const proAdsYaw = 110;
-    const proAdsPitch = 75;
-    
-    // Get current settings
-    const hipYaw = parseInt(elements.yawSpeed.value);
-    const hipPitch = parseInt(elements.pitchSpeed.value);
-    const adsYaw = parseInt(elements.adsYawSpeed.value);
-    const adsPitch = parseInt(elements.adsPitchSpeed.value);
-    
-    // Calculate hip fire similarity (average of yaw and pitch similarities)
-    const hipYawSimilarity = Math.max(0, 100 - Math.abs(hipYaw - proHipYaw) / proHipYaw * 100);
-    const hipPitchSimilarity = Math.max(0, 100 - Math.abs(hipPitch - proHipPitch) / proHipPitch * 100);
-    const hipFireSimilarity = (hipYawSimilarity + hipPitchSimilarity) / 2;
-    
-    // Calculate ADS similarity (average of yaw and pitch similarities)
-    const adsYawSimilarity = Math.max(0, 100 - Math.abs(adsYaw - proAdsYaw) / proAdsYaw * 100);
-    const adsPitchSimilarity = Math.max(0, 100 - Math.abs(adsPitch - proAdsPitch) / proAdsPitch * 100);
-    const adsSimilarity = (adsYawSimilarity + adsPitchSimilarity) / 2;
-    
-    // Update the comparison box content with separate bars
-    const proComparisonDiv = document.getElementById('proComparison');
-    proComparisonDiv.innerHTML = `
-        <p style="margin-bottom: 15px;">Similarity to Reference Settings:</p>
-        
-        <div style="margin-bottom: 15px;">
-            <p style="margin-bottom: 5px;">Hip Fire (vs 4 sensitivity):</p>
-            <div class="comparison-bar">
-                <div class="comparison-fill" style="width: ${hipFireSimilarity}%; background: linear-gradient(90deg, #6666ff, #9999ff);"></div>
-                <span class="comparison-label">${Math.round(hipFireSimilarity)}%</span>
-            </div>
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <p style="margin-bottom: 5px;">ADS (vs 3 sensitivity):</p>
-            <div class="comparison-bar">
-                <div class="comparison-fill" style="width: ${adsSimilarity}%; background: linear-gradient(90deg, #6666ff, #9999ff);"></div>
-                <span class="comparison-label">${Math.round(adsSimilarity)}%</span>
-            </div>
-        </div>
-        
-        <div style="margin-top: 15px; font-size: 0.85em; color: #aaa;">
-            <p>Your Settings:</p>
-            <p>• Hip: ${hipYaw}/${hipPitch}</p>
-            <p>• ADS: ${adsYaw}/${adsPitch}</p>
-        </div>
-    `;
-}
+        // UPDATED Update pro comparison
+        function updateProComparison() {
+            // Reference pro settings
+            const proHipYaw = 240;
+            const proHipPitch = 200;
+            const proAdsYaw = 110;
+            const proAdsPitch = 75;
+            
+            // Get current settings
+            const hipYaw = parseInt(elements.yawSpeed.value);
+            const hipPitch = parseInt(elements.pitchSpeed.value);
+            const adsYaw = parseInt(elements.adsYawSpeed.value);
+            const adsPitch = parseInt(elements.adsPitchSpeed.value);
+            
+            // Calculate hip fire similarity (average of yaw and pitch similarities)
+            const hipYawSimilarity = Math.max(0, 100 - Math.abs(hipYaw - proHipYaw) / proHipYaw * 100);
+            const hipPitchSimilarity = Math.max(0, 100 - Math.abs(hipPitch - proHipPitch) / proHipPitch * 100);
+            const hipFireSimilarity = (hipYawSimilarity + hipPitchSimilarity) / 2;
+            
+            // Calculate ADS similarity (average of yaw and pitch similarities)
+            const adsYawSimilarity = Math.max(0, 100 - Math.abs(adsYaw - proAdsYaw) / proAdsYaw * 100);
+            const adsPitchSimilarity = Math.max(0, 100 - Math.abs(adsPitch - proAdsPitch) / proAdsPitch * 100);
+            const adsSimilarity = (adsYawSimilarity + adsPitchSimilarity) / 2;
+            
+            // Update the comparison box content with separate bars
+            const proComparisonDiv = document.getElementById('proComparison');
+            proComparisonDiv.innerHTML = `
+                <p style="margin-bottom: 15px;">Similarity to Reference Settings:</p>
+                
+                <div style="margin-bottom: 15px;">
+                    <p style="margin-bottom: 5px;">Hip Fire (vs 4 sensitivity):</p>
+                    <div class="comparison-bar">
+                        <div class="comparison-fill" style="width: ${hipFireSimilarity}%; background: linear-gradient(90deg, #6666ff, #9999ff);"></div>
+                        <span class="comparison-label">${Math.round(hipFireSimilarity)}%</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <p style="margin-bottom: 5px;">ADS (vs 3 sensitivity):</p>
+                    <div class="comparison-bar">
+                        <div class="comparison-fill" style="width: ${adsSimilarity}%; background: linear-gradient(90deg, #6666ff, #9999ff);"></div>
+                        <span class="comparison-label">${Math.round(adsSimilarity)}%</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.85em; color: #aaa;">
+                    <p>Your Settings:</p>
+                    <p>• Hip: ${hipYaw}/${hipPitch}</p>
+                    <p>• ADS: ${adsYaw}/${adsPitch}</p>
+                </div>
+            `;
+        }
 
         // Update range analysis
         function updateRangeAnalysis() {
@@ -2422,7 +2571,7 @@ function updateProComparison() {
             if (extraYaw > 100) {
                 analysis += "• High turning extra enables quick 180s while maintaining low base sens.\n";
             } else if (extraYaw === 0) {
-                analysis += "• No turning extra: Consider adding some for emergency flicks.\n";
+analysis += "• No turning extra: Consider adding some for emergency flicks.\n";
             }
             
             // Overall recommendation
