@@ -1,12 +1,4 @@
-// Draw optimal range indicator for hip fire
-            if (dist >= 100 && dist <= 200) { // 10-20m is optimal
-                ctx.fillStyle = 'rgba(0, 255, 100, 0.1)';
-                const optimalLabel = project3D(80, -20, dist);
-                ctx.fillRect(optimalLabel.x - 40, optimalLabel.y - 10, 80, 20);
-                ctx.fillStyle = '#00ff66';
-                ctx.font = '10px Arial';
-                ctx.fillText('Optimal', optimalLabel.x, optimalLabel.y + 3);
-            }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
