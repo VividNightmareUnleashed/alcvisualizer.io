@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+// Draw optimal range indicator for hip fire
+            if (dist >= 100 && dist <= 200) { // 10-20m is optimal
+                ctx.fillStyle = 'rgba(0, 255, 100, 0.1)';
+                const optimalLabel = project3D(80, -20, dist);
+                ctx.fillRect(optimalLabel.x - 40, optimalLabel.y - 10, 80, 20);
+                ctx.fillStyle = '#00ff66';
+                ctx.font = '10px Arial';
+                ctx.fillText('Optimal', optimalLabel.x, optimalLabel.y + 3);
+            }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,10 +19,32 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary-color: #ff6b00;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2a2a2a;
+            --bg-tertiary: #3a3a3a;
+            --bg-quaternary: #4a4a4a;
+            --bg-quinary: #5a5a5a;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-tertiary: #ccc;
+            --text-quaternary: #999;
+            --text-quinary: #666;
+            --border-color: #555;
+            --warning-red: #ff6666;
+            --warning-yellow: #ffcc00;
+            --warning-green: #00ff66;
+            --gradient-1: rgba(40, 40, 60, 0.8);
+            --gradient-2: rgba(80, 30, 30, 0.4);
+            --gradient-3: rgba(120, 40, 40, 0.2);
+            --gradient-4: rgba(40, 40, 120, 0.3);
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             padding: 20px;
             font-weight: 500;
             min-height: 100vh;
@@ -31,9 +61,8 @@
             flex: 1;
         }
         
-        /* Footer Styles */
         .footer {
-            background-color: #2a2a2a;
+            background-color: var(--bg-secondary);
             padding: 20px;
             margin-top: 40px;
             border-radius: 10px;
@@ -46,7 +75,7 @@
             gap: 15px;
         }
         
-        .footer::before {
+        .gradient-overlay::before {
             content: '';
             position: absolute;
             top: 0;
@@ -66,7 +95,7 @@
         .footer-content {
             position: relative;
             z-index: 1;
-            color: #999;
+            color: var(--text-quaternary);
             font-size: 14px;
             font-weight: 500;
         }
@@ -97,40 +126,21 @@
             fill: white;
         }
         
-        /* Left Panel - Settings */
-        .settings-panel {
-            background-color: #2a2a2a;
+        .panel {
+            background-color: var(--bg-secondary);
             padding: 20px;
             border-radius: 10px;
             position: relative;
             overflow: hidden;
         }
         
-        .settings-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(40, 40, 60, 0.2) 0%,
-                rgba(80, 30, 30, 0.1) 25%,
-                rgba(120, 40, 40, 0.05) 50%,
-                rgba(40, 40, 120, 0.1) 75%,
-                rgba(40, 40, 60, 0.2) 100%
-            );
-            pointer-events: none;
-        }
-        
-        .settings-panel > * {
+        .panel > * {
             position: relative;
             z-index: 1;
         }
         
-        /* Settings Row Styles */
         .setting-row {
-            background-color: #4a4a4a;
+            background-color: var(--bg-quaternary);
             height: 50px;
             margin-bottom: 6px;
             display: flex;
@@ -139,7 +149,6 @@
             overflow: hidden;
         }
         
-        /* Gradient overlay for the 3D effect */
         .setting-row::before {
             content: '';
             position: absolute;
@@ -148,17 +157,16 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(to right, 
-                rgba(40, 40, 60, 0.8) 0%,
-                rgba(80, 30, 30, 0.4) 20%,
-                rgba(120, 40, 40, 0.2) 40%,
-                rgba(40, 40, 120, 0.3) 60%,
-                rgba(80, 30, 30, 0.4) 80%,
-                rgba(40, 40, 60, 0.8) 100%
+                var(--gradient-1) 0%,
+                var(--gradient-2) 20%,
+                var(--gradient-3) 40%,
+                var(--gradient-4) 60%,
+                var(--gradient-2) 80%,
+                var(--gradient-1) 100%
             );
             pointer-events: none;
         }
         
-        /* Label */
         .setting-label {
             position: relative;
             z-index: 2;
@@ -168,7 +176,6 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         
-        /* Slider container */
         .slider-container {
             flex: 1;
             height: 100%;
@@ -176,7 +183,6 @@
             margin-right: 60px;
         }
         
-        /* Hidden range input */
         .slider-input {
             position: absolute;
             width: 100%;
@@ -186,7 +192,6 @@
             z-index: 4;
         }
         
-        /* White fill bar */
         .slider-fill {
             position: absolute;
             left: 0;
@@ -197,29 +202,26 @@
             z-index: 1;
         }
         
-        /* Orange indicator line */
         .slider-indicator {
             position: absolute;
             width: 3px;
             height: 100%;
-            background-color: #ff6b00;
+            background-color: var(--primary-color);
             top: 0;
             transition: left 0.1s ease;
             z-index: 3;
             box-shadow: 0 0 8px rgba(255, 107, 0, 0.8);
         }
         
-        /* Gray vertical separator line */
         .slider-separator {
             position: absolute;
             width: 2px;
             height: 100%;
-            background-color: #666;
+            background-color: var(--text-quinary);
             top: 0;
             z-index: 2;
         }
         
-        /* Value display */
         .setting-value {
             position: absolute;
             right: 15px;
@@ -231,19 +233,17 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         
-        /* Section headers */
         .section-header {
-            background-color: #3a3a3a;
+            background-color: var(--bg-tertiary);
             height: 40px;
             margin: 15px 0 6px 0;
             display: flex;
             align-items: center;
             padding-left: 15px;
             font-size: 16px;
-            color: #ccc;
+            color: var(--text-tertiary);
         }
         
-        /* Tab buttons */
         .tab-container {
             display: flex;
             gap: 8px;
@@ -251,10 +251,10 @@
         }
         
         .tab-button {
-            background-color: #3a3a3a;
+            background-color: var(--bg-tertiary);
             border: none;
             padding: 10px 25px;
-            color: #999;
+            color: var(--text-quaternary);
             font-size: 16px;
             cursor: pointer;
             transition: all 0.2s;
@@ -263,12 +263,12 @@
         }
         
         .tab-button.active {
-            background-color: #ff6b00;
+            background-color: var(--primary-color);
             color: white;
         }
         
         .tab-button:hover:not(.active) {
-            background-color: #4a4a4a;
+            background-color: var(--bg-quaternary);
         }
         
         .tab-content {
@@ -279,13 +279,8 @@
             display: block;
         }
         
-        /* Right Panel - Visualizations */
         .viz-panel {
-            background-color: #4a4a4a;
-            padding: 20px;
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
+            background-color: var(--bg-quaternary);
         }
         
         .viz-panel::before {
@@ -296,30 +291,26 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(to right, 
-                rgba(40, 40, 60, 0.8) 0%,
-                rgba(80, 30, 30, 0.4) 20%,
-                rgba(120, 40, 40, 0.2) 40%,
-                rgba(40, 40, 120, 0.3) 60%,
-                rgba(80, 30, 30, 0.4) 80%,
-                rgba(40, 40, 60, 0.8) 100%
+                var(--gradient-1) 0%,
+                var(--gradient-2) 20%,
+                var(--gradient-3) 40%,
+                var(--gradient-4) 60%,
+                var(--gradient-2) 80%,
+                var(--gradient-1) 100%
             );
             pointer-events: none;
         }
         
-        /* Visualization tabs */
         .viz-tabs {
             display: flex;
             gap: 5px;
             margin-bottom: 20px;
-            background-color: transparent;
-            padding: 0;
-            border-radius: 0;
         }
         
         .viz-tab {
             padding: 8px 20px;
-            background-color: #3a3a3a;
-            color: #999;
+            background-color: var(--bg-tertiary);
+            color: var(--text-quaternary);
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -329,29 +320,8 @@
             overflow: hidden;
         }
         
-        .viz-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to right, 
-                rgba(40, 40, 60, 0.6) 0%,
-                rgba(80, 30, 30, 0.3) 50%,
-                rgba(40, 40, 60, 0.6) 100%
-            );
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .viz-tab:hover::before {
-            opacity: 1;
-        }
-        
         .viz-tab.active {
-            background-color: #ff6b00;
+            background-color: var(--primary-color);
             color: white;
         }
         
@@ -363,9 +333,8 @@
             display: block;
         }
         
-        /* Canvas styling */
         .canvas-container {
-            background-color: #5a5a5a;
+            background-color: var(--bg-quinary);
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 20px;
@@ -394,23 +363,36 @@
         canvas {
             display: block;
             margin: 0 auto;
-            background-color: #3a3a3a;
+            background-color: var(--bg-tertiary);
             border-radius: 4px;
             position: relative;
             z-index: 1;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
-        /* Info boxes */
+        #aimAssist3DCanvas {
+            cursor: grab;
+        }
+        
+        #aimAssist3DCanvas:active {
+            cursor: grabbing;
+        }
+        
         .info-box {
-            background-color: #4a4a4a;
+            background-color: var(--bg-quaternary);
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
-            border-left: 3px solid #ff6b00;
+            border-left: 3px solid var(--primary-color);
             position: relative;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        #strafeStatusBox.info-box {
+            border-left: none;
+            text-align: center;
+            margin-top: 15px;
         }
         
         .info-box::before {
@@ -431,7 +413,7 @@
         }
         
         .info-box h3 {
-            color: #ff6b00;
+            color: var(--primary-color);
             margin-bottom: 10px;
             font-size: 16px;
             position: relative;
@@ -445,10 +427,9 @@
             margin: 5px 0;
             position: relative;
             z-index: 1;
-            color: #e0e0e0;
+            color: var(--text-secondary);
         }
         
-        /* Stats grid */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -457,13 +438,12 @@
         }
         
         .stat-box {
-            background-color: #5a5a5a;
+            background-color: var(--bg-quinary);
             padding: 15px;
             border-radius: 5px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            border: none;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
@@ -495,14 +475,13 @@
         
         .stat-value {
             font-size: 24px;
-            color: #ff6b00;
+            color: var(--primary-color);
             font-weight: bold;
             position: relative;
             z-index: 1;
             text-shadow: 0 2px 4px rgba(255, 107, 0, 0.3);
         }
         
-        /* Action buttons */
         .action-buttons {
             margin-top: 20px;
             display: flex;
@@ -511,7 +490,7 @@
         }
         
         .action-button {
-            background-color: #ff6b00;
+            background-color: var(--primary-color);
             border: none;
             padding: 10px 20px;
             color: white;
@@ -527,14 +506,13 @@
             transform: translateY(-2px);
         }
         
-        /* Preset selector */
         .preset-container {
             margin-bottom: 15px;
         }
         
         .preset-select {
-            background-color: #3a3a3a;
-            border: 2px solid #555;
+            background-color: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
             color: white;
             padding: 8px 15px;
             font-size: 14px;
@@ -544,10 +522,9 @@
         }
         
         .preset-select option {
-            background-color: #2a2a2a;
+            background-color: var(--bg-secondary);
         }
         
-        /* Warning system */
         .warning {
             padding: 6px 10px;
             border-radius: 4px;
@@ -576,25 +553,24 @@
         .warning-red {
             background-color: rgba(80, 30, 30, 0.5);
             border: 1px solid rgba(255, 51, 51, 0.5);
-            color: #ff6666;
+            color: var(--warning-red);
         }
         
         .warning-yellow {
             background-color: rgba(80, 60, 20, 0.5);
             border: 1px solid rgba(255, 170, 0, 0.5);
-            color: #ffcc00;
+            color: var(--warning-yellow);
         }
         
         .warning-green {
             background-color: rgba(30, 80, 30, 0.5);
             border: 1px solid rgba(0, 255, 51, 0.5);
-            color: #00ff66;
+            color: var(--warning-green);
         }
         
-        /* Comparison bars */
         .comparison-bar {
             height: 20px;
-            background-color: #3a3a3a;
+            background-color: var(--bg-tertiary);
             border-radius: 10px;
             overflow: hidden;
             margin: 5px 0;
@@ -619,7 +595,7 @@
         
         .comparison-fill {
             height: 100%;
-            background: linear-gradient(90deg, #ff6b00, #ff9944);
+            background: linear-gradient(90deg, var(--primary-color), #ff9944);
             transition: width 0.3s;
             position: relative;
             box-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
@@ -635,18 +611,9 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
-        .viz-panel h2, .viz-panel h3, .viz-panel > * {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .analysis-panel h2, .analysis-panel > * {
-            position: relative;
-            z-index: 1;
-        }
         .analysis-panel {
             grid-column: 1 / -1;
-            background-color: #4a4a4a;
+            background-color: var(--bg-quaternary);
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
@@ -662,24 +629,14 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(to right, 
-                rgba(40, 40, 60, 0.8) 0%,
-                rgba(80, 30, 30, 0.4) 20%,
-                rgba(120, 40, 40, 0.2) 40%,
-                rgba(40, 40, 120, 0.3) 60%,
-                rgba(80, 30, 30, 0.4) 80%,
-                rgba(40, 40, 60, 0.8) 100%
+                var(--gradient-1) 0%,
+                var(--gradient-2) 20%,
+                var(--gradient-3) 40%,
+                var(--gradient-4) 60%,
+                var(--gradient-2) 80%,
+                var(--gradient-1) 100%
             );
             pointer-events: none;
-        }
-        
-        .viz-panel h2, .viz-panel h3, .viz-panel > * {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .analysis-panel h2, .analysis-panel > * {
-            position: relative;
-            z-index: 1;
         }
         
         .analysis-grid {
@@ -688,7 +645,6 @@
             gap: 20px;
         }
         
-        /* Mobile responsiveness */
         @media (max-width: 1400px) {
             .main-container {
                 grid-template-columns: 1fr;
@@ -699,7 +655,6 @@
             }
         }
         
-        /* Legend */
         .legend {
             display: flex;
             justify-content: center;
@@ -719,12 +674,11 @@
             width: 20px;
             height: 15px;
             border-radius: 3px;
-            border: 1px solid #555;
+            border: 1px solid var(--border-color);
         }
         
-        /* Pro tip styling */
         .pro-tip {
-            background-color: #5a5a5a;
+            background-color: var(--bg-quinary);
             border: none;
             padding: 12px;
             border-radius: 5px;
@@ -753,7 +707,7 @@
         }
         
         .pro-tip-title {
-            color: #ff6b00;
+            color: var(--primary-color);
             font-weight: bold;
             margin-bottom: 5px;
             position: relative;
@@ -764,15 +718,25 @@
         .pro-tip p {
             position: relative;
             z-index: 1;
-            color: #e0e0e0;
+            color: var(--text-secondary);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <!-- Settings Panel -->
-        <div class="settings-panel">
-            <h2 style="color: #ff6b00; margin-bottom: 15px;">ALC Settings</h2>
+        <div class="settings-panel panel gradient-overlay">
+            <h2>ALC Settings</h2>
             
             <div class="preset-container">
                 <select class="preset-select" id="presets">
@@ -782,205 +746,36 @@
                     <option value="extesyy">Extesyy</option>
                 </select>
             </div>
-
+            
             <div class="tab-container">
-                <button class="tab-button active" onclick="switchTab('hipfire')">Hip Fire</button>
-                <button class="tab-button" onclick="switchTab('ads')">ADS</button>
+                <button class="tab-button active" data-tab="hipfire">Hip Fire</button>
+                <button class="tab-button" data-tab="ads">ADS</button>
             </div>
-
-            <!-- Hip Fire Settings -->
-            <div id="hipfire-tab" class="tab-content active">
-                <!-- Deadzone Settings -->
-                <div class="setting-row">
-                    <div class="setting-label">Deadzone</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="deadzone" min="0" max="50" value="15" step="1">
-                        <div class="slider-fill" id="deadzoneFill"></div>
-                        <div class="slider-indicator" id="deadzoneIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="deadzoneValue">15%</div>
-                </div>
-                <div id="deadzoneWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Outer Threshold</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="outerThreshold" min="0" max="30" value="2" step="1">
-                        <div class="slider-fill" id="outerThresholdFill"></div>
-                        <div class="slider-indicator" id="outerThresholdIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="outerThresholdValue">2%</div>
-                </div>
-                <div id="outerThresholdWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Response Curve</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="responseCurve" min="0" max="30" value="10" step="1">
-                        <div class="slider-fill" id="responseCurveFill"></div>
-                        <div class="slider-indicator" id="responseCurveIndicator"></div>
-                        <div class="slider-separator" id="responseCurveSeparator" style="left: 33.33%"></div>
-                    </div>
-                    <div class="setting-value" id="responseCurveValue">10</div>
-                </div>
-
-                <div class="section-header">Per Optic Settings...</div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Yaw Speed</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="yawSpeed" min="0" max="500" value="160" step="1">
-                        <div class="slider-fill" id="yawSpeedFill"></div>
-                        <div class="slider-indicator" id="yawSpeedIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="yawSpeedValue">160</div>
-                </div>
-                <div id="hipYawWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Pitch Speed</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="pitchSpeed" min="0" max="500" value="120" step="1">
-                        <div class="slider-fill" id="pitchSpeedFill"></div>
-                        <div class="slider-indicator" id="pitchSpeedIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="pitchSpeedValue">120</div>
-                </div>
-                <div id="hipPitchWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Turning Extra Yaw</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="extraYaw" min="0" max="250" value="220" step="1">
-                        <div class="slider-fill" id="extraYawFill"></div>
-                        <div class="slider-indicator" id="extraYawIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="extraYawValue">220</div>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Turning Extra Pitch</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="extraPitch" min="0" max="250" value="0" step="1">
-                        <div class="slider-fill" id="extraPitchFill"></div>
-                        <div class="slider-indicator" id="extraPitchIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="extraPitchValue">0</div>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Turning Ramp-up Time</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="rampTime" min="0" max="100" value="33" step="1">
-                        <div class="slider-fill" id="rampTimeFill"></div>
-                        <div class="slider-indicator" id="rampTimeIndicator"></div>
-                        <div class="slider-separator" id="rampTimeSeparator" style="left: 40%"></div>
-                    </div>
-                    <div class="setting-value" id="rampTimeValue">33%</div>
-                </div>
-                <div id="hipRampWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">Turning Ramp-up Delay</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="rampDelay" min="0" max="100" value="0" step="1">
-                        <div class="slider-fill" id="rampDelayFill"></div>
-                        <div class="slider-indicator" id="rampDelayIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="rampDelayValue">0%</div>
-                </div>
-            </div>
-
-            <!-- ADS Settings -->
-            <div id="ads-tab" class="tab-content">
-                <div class="setting-row">
-                    <div class="setting-label">ADS Yaw Speed</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="adsYawSpeed" min="0" max="500" value="110" step="1">
-                        <div class="slider-fill" id="adsYawSpeedFill"></div>
-                        <div class="slider-indicator" id="adsYawSpeedIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="adsYawSpeedValue">110</div>
-                </div>
-                <div id="adsYawWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">ADS Pitch Speed</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="adsPitchSpeed" min="0" max="500" value="75" step="1">
-                        <div class="slider-fill" id="adsPitchSpeedFill"></div>
-                        <div class="slider-indicator" id="adsPitchSpeedIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="adsPitchSpeedValue">75</div>
-                </div>
-                <div id="adsPitchWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">ADS Turning Extra Yaw</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="adsExtraYaw" min="0" max="250" value="30" step="1">
-                        <div class="slider-fill" id="adsExtraYawFill"></div>
-                        <div class="slider-indicator" id="adsExtraYawIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="adsExtraYawValue">30</div>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">ADS Turning Extra Pitch</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="adsExtraPitch" min="0" max="250" value="30" step="1">
-                        <div class="slider-fill" id="adsExtraPitchFill"></div>
-                        <div class="slider-indicator" id="adsExtraPitchIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="adsExtraPitchValue">30</div>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-label">ADS Turning Ramp-up Time</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="adsRampTime" min="0" max="100" value="100" step="1">
-                        <div class="slider-fill" id="adsRampTimeFill"></div>
-                        <div class="slider-indicator" id="adsRampTimeIndicator"></div>
-                        <div class="slider-separator" id="adsRampTimeSeparator" style="left: 40%"></div>
-                    </div>
-                    <div class="setting-value" id="adsRampTimeValue">100%</div>
-                </div>
-                <div id="adsRampWarning"></div>
-
-                <div class="setting-row">
-                    <div class="setting-label">ADS Turning Ramp-up Delay</div>
-                    <div class="slider-container">
-                        <input type="range" class="slider-input" id="adsRampDelay" min="0" max="100" value="25" step="1">
-                        <div class="slider-fill" id="adsRampDelayFill"></div>
-                        <div class="slider-indicator" id="adsRampDelayIndicator"></div>
-                    </div>
-                    <div class="setting-value" id="adsRampDelayValue">25%</div>
-                </div>
-            </div>
-
+            
+            <div id="hipfire-tab" class="tab-content active"></div>
+            <div id="ads-tab" class="tab-content"></div>
+            
             <div class="action-buttons">
-                <button class="action-button" onclick="resetSettings()">Reset to Default</button>
-                <button class="action-button" onclick="exportSettings()">Export</button>
-                <button class="action-button" onclick="importSettings()">Import</button>
+                <button class="action-button" id="reset-btn">Reset to Default</button>
+                <button class="action-button" id="export-btn">Export</button>
+                <button class="action-button" id="import-btn">Import</button>
             </div>
         </div>
-
-        <!-- Visualization Panel -->
-        <div class="viz-panel">
-            <h2 style="color: #ff6b00; margin-bottom: 15px;">Visualizations & Analysis</h2>
+        
+        <div class="viz-panel panel">
+            <h2>Visualizations & Analysis</h2>
             
             <div class="viz-tabs">
-                <button class="viz-tab active" onclick="switchVizTab('core')">Core</button>
-                <button class="viz-tab" onclick="switchVizTab('movement')">Movement</button>
-                <button class="viz-tab" onclick="switchVizTab('aimassist')">Aim Assist</button>
-                <button class="viz-tab" onclick="switchVizTab('metrics')">Metrics</button>
+                <button class="viz-tab active" data-viz="core">Core</button>
+                <button class="viz-tab" data-viz="movement">Movement</button>
+                <button class="viz-tab" data-viz="aimassist">Aim Assist</button>
+                <button class="viz-tab" data-viz="metrics">Metrics</button>
             </div>
-
-            <!-- Core Visualizations -->
+            
             <div id="core-viz" class="viz-content active">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div>
-                        <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">Deadzone Map</h3>
+                        <h3>Deadzone Map</h3>
                         <div class="canvas-container">
                             <canvas id="deadzoneCanvas" width="280" height="280"></canvas>
                         </div>
@@ -1001,52 +796,75 @@
                     </div>
                     
                     <div>
-                        <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">Response Curve</h3>
+                        <h3>Response Curve</h3>
                         <div class="canvas-container">
                             <canvas id="curveCanvas" width="280" height="280"></canvas>
                         </div>
-                        <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #999;">
+                        <p style="text-align: center; margin-top: 10px; font-size: 12px; color: var(--text-quaternary);">
                             Input vs Output - Shows acceleration
                         </p>
                     </div>
                 </div>
             </div>
-
-            <!-- Movement Visualizations -->
+            
             <div id="movement-viz" class="viz-content">
                 <div>
-                    <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">Strafe Tracking Analysis</h3>
+                    <h3>Strafe Tracking Analysis</h3>
                     <div class="canvas-container">
                         <canvas id="strafeCanvas" width="600" height="300"></canvas>
                     </div>
-                    <div id="strafeStatusBox" style="display: none; background-color: #2a2a2a; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #444; text-align: center;">
-                    </div>
+                    <div id="strafeStatusBox" class="info-box" style="display: none;"></div>
                 </div>
-
+                
                 <div style="margin-top: 20px;">
-                    <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">Diagonal Uniformity</h3>
+                    <h3>Diagonal Uniformity</h3>
                     <div class="canvas-container">
                         <canvas id="diagonalCanvas" width="600" height="250"></canvas>
                     </div>
-                    <div id="diagonalAnalysis" style="background-color: #3a3a3a; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #555;">
+                    <div id="diagonalAnalysis" class="info-box">
                         <div id="uniformityStatus" style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Loading...</div>
                         <p id="uniformityText">Analyzing diagonal movement...</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Aim Assist Visualizations -->
+            
             <div id="aimassist-viz" class="viz-content">
                 <div>
-                    <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">Aim Assist Behavior (0.3 PC Controller)</h3>
+                    <h3>Aim Assist Behavior (0.3 PC Controller)</h3>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center;">
                         <span>View Mode:</span>
-                        <button class="action-button active" onclick="setAAMode('hipfire')" style="padding: 5px 15px;">Hip Fire</button>
-                        <button class="action-button" onclick="setAAMode('ads')" style="padding: 5px 15px; background-color: #555;">ADS</button>
+                        <button class="action-button active" data-aa-mode="hipfire" style="padding: 5px 15px;">Hip Fire</button>
+                        <button class="action-button" data-aa-mode="ads" style="padding: 5px 15px; background-color: #555;">ADS</button>
                     </div>
                     <div class="canvas-container">
                         <canvas id="aimAssistCanvas" width="600" height="300"></canvas>
                     </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">3D Aim Assist Visualization</h3>
+                        <div class="canvas-container">
+                            <canvas id="aimAssist3DCanvas" width="600" height="400"></canvas>
+                        </div>
+                        <div style="text-align: center; margin-top: 10px;">
+                            <button class="action-button" id="rotate3D" style="padding: 5px 15px;">Toggle Rotation</button>
+                            <span style="margin-left: 20px; color: #999; font-size: 12px;">Drag to rotate view</span>
+                        </div>
+                        <div class="legend" style="margin-top: 15px;">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ff6b00;"></div>
+                                <span>Player Position</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: rgba(255, 107, 0, 0.5);"></div>
+                                <span>AA Bubble/Cone</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: rgba(120, 40, 40, 0.3);"></div>
+                                <span>No AA Zone</span>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="info-box">
                         <h3>Aim Assist Mechanics</h3>
                         <div id="aaInfoContent">
@@ -1059,8 +877,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Metrics Visualizations -->
+            
             <div id="metrics-viz" class="viz-content">
                 <div class="stats-grid">
                     <div class="stat-box">
@@ -1080,80 +897,80 @@
                         <div class="stat-value" id="ads180TimeExtra">0.00s</div>
                     </div>
                 </div>
-
+                
                 <div class="info-box" style="margin-top: 20px;">
                     <h3>Speed Breakdown</h3>
-                    <p>Hip Fire Base: <span id="hipBaseSpeed" style="color: #ff6b00;">160°/s</span></p>
-                    <p>Hip Fire Max: <span id="hipMaxSpeed" style="color: #ff6b00;">380°/s</span></p>
-                    <p>ADS Base: <span id="adsBaseSpeed" style="color: #ff6b00;">110°/s</span></p>
-                    <p>ADS Max: <span id="adsMaxSpeed" style="color: #ff6b00;">140°/s</span></p>
+                    <p>Hip Fire Base: <span id="hipBaseSpeed" style="color: var(--primary-color);">160°/s</span></p>
+                    <p>Hip Fire Max: <span id="hipMaxSpeed" style="color: var(--primary-color);">380°/s</span></p>
+                    <p>ADS Base: <span id="adsBaseSpeed" style="color: var(--primary-color);">110°/s</span></p>
+                    <p>ADS Max: <span id="adsMaxSpeed" style="color: var(--primary-color);">140°/s</span></p>
                 </div>
-
+                
                 <div style="margin-top: 20px;">
-                    <h3 style="color: #ff6b00; margin-bottom: 10px; font-size: 16px;">Effective Speed Comparison</h3>
+                    <h3>Effective Speed Comparison</h3>
                     <div class="canvas-container">
                         <canvas id="speedComparisonCanvas" width="600" height="300"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Analysis Panel -->
+        
         <div class="analysis-panel">
-            <h2 style="color: #ff6b00; margin-bottom: 20px;">Analysis & Pro Tips</h2>
+            <h2>Analysis & Pro Tips</h2>
             
             <div class="analysis-grid">
                 <div class="info-box">
                     <h3>Current Settings Analysis</h3>
                     <div id="analysisText">Loading analysis...</div>
                 </div>
-
+                
                 <div class="info-box">
                     <h3>Diagonal Uniformity Score</h3>
                     <div id="diagonalUniformity">
                         <p>Hip Fire Uniformity:</p>
                         <div class="comparison-bar">
-                            <div class="comparison-fill" id="hipUniformityBar" style="width: 75%"></div>
+                            <div class="comparison-fill" id="hipUniformityBar"></div>
                             <span class="comparison-label" id="hipUniformityLabel">75%</span>
                         </div>
                         <p style="margin-top: 10px;">ADS Uniformity:</p>
                         <div class="comparison-bar">
-                            <div class="comparison-fill" id="adsUniformityBar" style="width: 68%"></div>
+                            <div class="comparison-fill" id="adsUniformityBar"></div>
                             <span class="comparison-label" id="adsUniformityLabel">68%</span>
                         </div>
-                        <p style="margin-top: 10px; font-size: 12px; color: #999;">Pro players maintain 80-100% for consistent diagonal tracking</p>
+                        <p style="margin-top: 10px; font-size: 12px; color: var(--text-quaternary);">
+                            Pro players maintain 80-100% for consistent diagonal tracking
+                        </p>
                     </div>
                 </div>
-
+                
                 <div class="info-box">
                     <h3>Micro-adjustment Capability</h3>
                     <div id="microAdjustment">
                         <p>Deadzone Impact:</p>
                         <div class="comparison-bar">
-                            <div class="comparison-fill" id="microBar" style="width: 50%"></div>
+                            <div class="comparison-fill" id="microBar"></div>
                             <span class="comparison-label" id="microLabel">50%</span>
                         </div>
-                        <p id="microText" style="margin-top: 10px; font-size: 12px; color: #999;">Lower deadzone = better micro-adjustments</p>
+                        <p id="microText" style="margin-top: 10px; font-size: 12px; color: var(--text-quaternary);">
+                            Lower deadzone = better micro-adjustments
+                        </p>
                     </div>
                 </div>
-
+                
                 <div>
                     <div class="pro-tip">
                         <div class="pro-tip-title">💡 Hidden Decimals</div>
                         <p>Manually clicking values in-game (instead of D-pad) adds hidden decimals that persist. Set to 0 or edit config to remove them.</p>
                     </div>
-
                     <div class="pro-tip">
                         <div class="pro-tip-title">🎯 Why Lower Deadzone?</div>
                         <p>Smaller deadzone = more precision with less stick movement. Stick drift doesn't impact aim - it only causes visual movement when not aiming.</p>
                     </div>
-
                     <div class="pro-tip">
                         <div class="pro-tip-title">📈 Linear vs Classic</div>
                         <p><strong>Linear (0):</strong> 1:1 input, best for recoil control & consistency. Higher skill ceiling.<br>
                         <strong>Classic (10):</strong> More forgiving, easier to handle, but less precise.</p>
                     </div>
-
                     <div class="pro-tip">
                         <div class="pro-tip-title">⚡ Turning Extra Secret</div>
                         <p>Only activates at 100% stick deflection AND outside aim assist range. Disabled in AA bubble for consistency.</p>
@@ -1162,9 +979,8 @@
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
+    
+    <footer class="footer gradient-overlay">
         <span class="footer-content">by Vivid Nightmare</span>
         <a href="https://www.reddit.com/user/VividNightmare_/" target="_blank" class="reddit-link" title="Reddit Profile">
             <svg class="reddit-icon" viewBox="0 0 24 24">
@@ -1173,1339 +989,1762 @@
         </a>
     </footer>
 
-    <script>
-        // Setting configurations
-        const settings = [
-            'deadzone', 'outerThreshold', 'responseCurve', 'yawSpeed', 'pitchSpeed',
-            'extraYaw', 'extraPitch', 'rampTime', 'rampDelay',
-            'adsYawSpeed', 'adsPitchSpeed', 'adsExtraYaw', 'adsExtraPitch',
-            'adsRampTime', 'adsRampDelay'
-        ];
+<script>
+// Constants
+const CONSTANTS = {
+    COLORS: {
+        PRIMARY: '#ff6b00',
+        GRID: '#3a3a3a',
+        AXES: '#666',
+        TEXT_LIGHT: '#999',
+        TEXT_WHITE: '#fff',
+        DEADZONE: 'rgba(120, 40, 40, 0.4)',
+        ACTIVE_ZONE: 'rgba(255, 255, 255, 0.1)',
+        OUTER_ZONE: 'rgba(255, 107, 0, 0.15)',
+        NO_AA_ZONE: 'rgba(120, 40, 40, 0.15)',
+        AA_ACTIVE_ZONE: 'rgba(255, 255, 255, 0.05)'
+    },
+    THRESHOLDS: {
+        HIP_YAW_MIN: 90,
+        HIP_YAW_VIABLE: 130,
+        HIP_YAW_MAX: 180,
+        HIP_PITCH_MIN: 50,
+        HIP_PITCH_VIABLE: 60,
+        HIP_PITCH_MAX: 180,
+        ADS_YAW_MIN: 45,
+        ADS_YAW_VIABLE: 75,
+        ADS_YAW_MAX: 120,
+        ADS_PITCH_MIN: 45,
+        ADS_PITCH_VIABLE: 75,
+        ADS_PITCH_MAX: 120
+    },
+    AA: {
+        HIP_MIN_RANGE: 3,
+        HIP_MAX_RANGE: 33,
+        STRENGTH: 0.3
+    }
+};
 
-        // Settings that show percentage
-        const percentageSettings = ['deadzone', 'outerThreshold', 'rampTime', 'rampDelay', 'adsRampTime', 'adsRampDelay'];
+const SETTINGS_CONFIG = {
+    hipfire: [
+        { id: 'deadzone', label: 'Deadzone', min: 0, max: 50, default: 15, unit: '%', warningId: 'deadzoneWarning' },
+        { id: 'outerThreshold', label: 'Outer Threshold', min: 0, max: 30, default: 2, unit: '%', warningId: 'outerThresholdWarning' },
+        { id: 'responseCurve', label: 'Response Curve', min: 0, max: 30, default: 10, unit: '', separator: 33.33 },
+        { section: 'Per Optic Settings...' },
+        { id: 'yawSpeed', label: 'Yaw Speed', min: 0, max: 500, default: 160, unit: '', warningId: 'hipYawWarning' },
+        { id: 'pitchSpeed', label: 'Pitch Speed', min: 0, max: 500, default: 120, unit: '', warningId: 'hipPitchWarning' },
+        { id: 'extraYaw', label: 'Turning Extra Yaw', min: 0, max: 250, default: 220, unit: '' },
+        { id: 'extraPitch', label: 'Turning Extra Pitch', min: 0, max: 250, default: 0, unit: '' },
+        { id: 'rampTime', label: 'Turning Ramp-up Time', min: 0, max: 100, default: 33, unit: '%', separator: 40, warningId: 'hipRampWarning' },
+        { id: 'rampDelay', label: 'Turning Ramp-up Delay', min: 0, max: 100, default: 0, unit: '%' }
+    ],
+    ads: [
+        { id: 'adsYawSpeed', label: 'ADS Yaw Speed', min: 0, max: 500, default: 110, unit: '', warningId: 'adsYawWarning' },
+        { id: 'adsPitchSpeed', label: 'ADS Pitch Speed', min: 0, max: 500, default: 75, unit: '', warningId: 'adsPitchWarning' },
+        { id: 'adsExtraYaw', label: 'ADS Turning Extra Yaw', min: 0, max: 250, default: 30, unit: '' },
+        { id: 'adsExtraPitch', label: 'ADS Turning Extra Pitch', min: 0, max: 250, default: 30, unit: '' },
+        { id: 'adsRampTime', label: 'ADS Turning Ramp-up Time', min: 0, max: 100, default: 100, unit: '%', separator: 40, warningId: 'adsRampWarning' },
+        { id: 'adsRampDelay', label: 'ADS Turning Ramp-up Delay', min: 0, max: 100, default: 25, unit: '%' }
+    ]
+};
 
-        // Preset configurations
-        const presets = {
-            default: {
-                deadzone: 15,
-                outerThreshold: 2,
-                responseCurve: 10,
-                yawSpeed: 160,
-                pitchSpeed: 120,
-                extraYaw: 220,
-                extraPitch: 0,
-                rampTime: 33,
-                rampDelay: 0,
-                adsYawSpeed: 110,
-                adsPitchSpeed: 75,
-                adsExtraYaw: 30,
-                adsExtraPitch: 30,
-                adsRampTime: 100,
-                adsRampDelay: 25
-            },
-            genburten: {
-                deadzone: 0,
-                outerThreshold: 2,
-                responseCurve: 0,
-                yawSpeed: 500,
-                pitchSpeed: 500,
-                extraYaw: 0,
-                extraPitch: 0,
-                rampTime: 0,
-                rampDelay: 0,
-                adsYawSpeed: 130,
-                adsPitchSpeed: 130,
-                adsExtraYaw: 0,
-                adsExtraPitch: 0,
-                adsRampTime: 0,
-                adsRampDelay: 0
-            },
-            extesyy: {
-                deadzone: 0,
-                outerThreshold: 2,
-                responseCurve: 1,
-                yawSpeed: 350,
-                pitchSpeed: 320,
-                extraYaw: 0,
-                extraPitch: 0,
-                rampTime: 0,
-                rampDelay: 0,
-                adsYawSpeed: 110,
-                adsPitchSpeed: 110,
-                adsExtraYaw: 0,
-                adsExtraPitch: 0,
-                adsRampTime: 0,
-                adsRampDelay: 0
+const PRESETS = {
+    default: {
+        deadzone: 15, outerThreshold: 2, responseCurve: 10,
+        yawSpeed: 160, pitchSpeed: 120, extraYaw: 220, extraPitch: 0,
+        rampTime: 33, rampDelay: 0,
+        adsYawSpeed: 110, adsPitchSpeed: 75, adsExtraYaw: 30, adsExtraPitch: 30,
+        adsRampTime: 100, adsRampDelay: 25
+    },
+    genburten: {
+        deadzone: 0, outerThreshold: 2, responseCurve: 0,
+        yawSpeed: 500, pitchSpeed: 500, extraYaw: 0, extraPitch: 0,
+        rampTime: 0, rampDelay: 0,
+        adsYawSpeed: 130, adsPitchSpeed: 130, adsExtraYaw: 0, adsExtraPitch: 0,
+        adsRampTime: 0, adsRampDelay: 0
+    },
+    extesyy: {
+        deadzone: 0, outerThreshold: 2, responseCurve: 1,
+        yawSpeed: 350, pitchSpeed: 320, extraYaw: 0, extraPitch: 0,
+        rampTime: 0, rampDelay: 0,
+        adsYawSpeed: 110, adsPitchSpeed: 110, adsExtraYaw: 0, adsExtraPitch: 0,
+        adsRampTime: 0, adsRampDelay: 0
+    }
+};
+
+class ALCAnalyzer {
+    constructor() {
+        this.state = { ...PRESETS.default };
+        this.canvases = {};
+        this.contexts = {};
+        this.aaViewMode = 'hipfire';
+        this.animationId = null;
+        
+        this.init();
+    }
+    
+    init() {
+        this.initCanvases();
+        this.generateSettings();
+        this.attachEventListeners();
+        this.updateAll();
+        this.startAnimation();
+    }
+    
+    initCanvases() {
+        const canvasIds = ['deadzoneCanvas', 'curveCanvas', 'strafeCanvas', 
+                          'diagonalCanvas', 'aimAssistCanvas', 'speedComparisonCanvas', 'aimAssist3DCanvas'];
+        
+        canvasIds.forEach(id => {
+            const canvas = document.getElementById(id);
+            if (canvas) {
+                this.canvases[id] = canvas;
+                this.contexts[id] = canvas.getContext('2d');
             }
-        };
-
-        // Canvas contexts
-        const deadzoneCanvas = document.getElementById('deadzoneCanvas');
-        const deadzoneCtx = deadzoneCanvas.getContext('2d');
-        const curveCanvas = document.getElementById('curveCanvas');
-        const curveCtx = curveCanvas.getContext('2d');
-        const strafeCanvas = document.getElementById('strafeCanvas');
-        const strafeCtx = strafeCanvas.getContext('2d');
-        const diagonalCanvas = document.getElementById('diagonalCanvas');
-        const diagonalCtx = diagonalCanvas.getContext('2d');
-        const aimAssistCanvas = document.getElementById('aimAssistCanvas');
-        const aimAssistCtx = aimAssistCanvas.getContext('2d');
-        const speedComparisonCanvas = document.getElementById('speedComparisonCanvas');
-        const speedComparisonCtx = speedComparisonCanvas.getContext('2d');
-
-        let aaViewMode = 'hipfire';
-
-        // Update slider visual elements
-        function updateSlider(settingName) {
-            const slider = document.getElementById(settingName);
-            const fill = document.getElementById(settingName + 'Fill');
-            const indicator = document.getElementById(settingName + 'Indicator');
-            const valueDisplay = document.getElementById(settingName + 'Value');
+        });
+        
+        // Initialize 3D visualization properties
+        this.rotation3D = { x: -0.3, y: 0.5, z: 0 };
+        this.autoRotate3D = false;
+        this.isDragging = false;
+        this.lastMousePos = { x: 0, y: 0 };
+        
+        // Add mouse interaction for 3D canvas
+        const canvas3D = this.canvases.aimAssist3DCanvas;
+        if (canvas3D) {
+            canvas3D.addEventListener('mousedown', (e) => this.handle3DMouseDown(e));
+            canvas3D.addEventListener('mousemove', (e) => this.handle3DMouseMove(e));
+            canvas3D.addEventListener('mouseup', () => this.handle3DMouseUp());
+            canvas3D.addEventListener('mouseleave', () => this.handle3DMouseUp());
             
-            const value = slider.value;
-            const max = slider.max;
-            const percentage = (value / max) * 100;
-            
-            // Update fill width and indicator position
-            fill.style.width = percentage + '%';
-            indicator.style.left = percentage + '%';
-            
-            // Update value display
-            if (percentageSettings.includes(settingName)) {
-                valueDisplay.textContent = value + '%';
-            } else {
-                valueDisplay.textContent = value;
-            }
+            // Touch support for mobile
+            canvas3D.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                this.handle3DMouseDown(touch);
+            });
+            canvas3D.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                this.handle3DMouseMove(touch);
+            });
+            canvas3D.addEventListener('touchend', () => this.handle3DMouseUp());
         }
-
-        // Initialize all sliders
+    }
+    
+    generateSettings() {
+        const hipfireTab = document.getElementById('hipfire-tab');
+        const adsTab = document.getElementById('ads-tab');
+        
+        this.generateSettingsHTML(hipfireTab, SETTINGS_CONFIG.hipfire);
+        this.generateSettingsHTML(adsTab, SETTINGS_CONFIG.ads);
+    }
+    
+    generateSettingsHTML(container, settings) {
         settings.forEach(setting => {
-            const slider = document.getElementById(setting);
-            if (slider) {
-                // Update on input
-                slider.addEventListener('input', () => {
-                    updateSlider(setting);
-                    updateWarnings();
-                    updateVisualizations();
-                    updateAnalysis();
-                    updateStats();
-                });
-                // Initial update
-                updateSlider(setting);
+            if (setting.section) {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section-header';
+                sectionDiv.textContent = setting.section;
+                container.appendChild(sectionDiv);
+            } else {
+                const settingRow = document.createElement('div');
+                settingRow.className = 'setting-row';
+                const currentValue = this.state[setting.id] || setting.default;
+                settingRow.innerHTML = `
+                    <div class="setting-label">${setting.label}</div>
+                    <div class="slider-container">
+                        <input type="range" class="slider-input" id="${setting.id}" 
+                               min="${setting.min}" max="${setting.max}" value="${currentValue}" step="1">
+                        <div class="slider-fill" id="${setting.id}Fill"></div>
+                        <div class="slider-indicator" id="${setting.id}Indicator"></div>
+                        ${setting.separator ? `<div class="slider-separator" id="${setting.id}Separator" style="left: ${setting.separator}%"></div>` : ''}
+                    </div>
+                    <div class="setting-value" id="${setting.id}Value">${currentValue}${setting.unit}</div>
+                `;
+                container.appendChild(settingRow);
+                
+                if (setting.warningId) {
+                    const warningDiv = document.createElement('div');
+                    warningDiv.id = setting.warningId;
+                    container.appendChild(warningDiv);
+                }
+                
+                const slider = settingRow.querySelector('.slider-input');
+                slider.addEventListener('input', () => this.handleSliderChange(setting.id));
+                
+                this.updateSliderVisual(setting.id);
             }
         });
-
-        // Tab switching
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            if (tab === 'hipfire') {
-                document.querySelector('.tab-button:first-child').classList.add('active');
-                document.getElementById('hipfire-tab').classList.add('active');
-            } else {
-                document.querySelector('.tab-button:last-child').classList.add('active');
-                document.getElementById('ads-tab').classList.add('active');
-            }
-        }
-
-        function switchVizTab(tab) {
-            document.querySelectorAll('.viz-tab').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.viz-content').forEach(content => content.classList.remove('active'));
-            
-            document.querySelector(`.viz-tab:nth-child(${['core', 'movement', 'aimassist', 'metrics'].indexOf(tab) + 1})`).classList.add('active');
-            document.getElementById(`${tab}-viz`).classList.add('active');
-        }
-
-        function setAAMode(mode) {
-            aaViewMode = mode;
-            document.querySelectorAll('.action-button').forEach(btn => {
-                if (btn.textContent === 'Hip Fire' || btn.textContent === 'ADS') {
-                    btn.style.backgroundColor = '#555';
-                }
-            });
-            event.target.style.backgroundColor = '#ff6b00';
-            
-            const infoContent = document.getElementById('aaInfoContent');
-            if (mode === 'hipfire') {
-                infoContent.innerHTML = `
-                    <p>• <strong>Hip Fire Range:</strong> 3m to 33m (No AA under 3m or over 33m)</p>
-                    <p>• <strong>AA Strength:</strong> 30% relative position maintenance within AA bubble</p>
-                    <p>• <strong>Bubble Size:</strong> Scales with enemy distance (smaller at range)</p>
-                    <p>• <strong>No Direct Assistance:</strong> No recoil control or bullet drop compensation</p>
-                    <p>• Lower response curves provide smoother tracking within AA bubble</p>
-                `;
-            } else {
-                infoContent.innerHTML = `
-                    <p>• <strong>ADS Range:</strong> No technical limit (practical limit based on bubble size)</p>
-                    <p>• <strong>AA Strength:</strong> 30% relative position maintenance within AA bubble</p>
-                    <p>• <strong>Bubble Scaling:</strong> Decreases with distance, increases with optic magnification</p>
-                    <p>• <strong>Magnification Effect:</strong> Higher zoom = larger on-screen bubble = more effective AA</p>
-                    <p>• <strong>Limitations:</strong> No recoil control, no bullet drop/velocity compensation</p>
-                `;
-            }
-            
-            drawAimAssist();
-        }
-
-        // Preset handling
-        document.getElementById('presets').addEventListener('change', (e) => {
-            if (e.target.value !== 'custom') {
-                const preset = presets[e.target.value];
-                Object.keys(preset).forEach(key => {
-                    const slider = document.getElementById(key);
-                    if (slider) {
-                        slider.value = preset[key];
-                        updateSlider(key);
-                    }
-                });
-                updateWarnings();
-                updateVisualizations();
-                updateAnalysis();
-                updateStats();
-            }
+    }
+    
+    attachEventListeners() {
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
         });
-
-        // Warning system
-        function updateWarnings() {
-            // Hip fire yaw warnings
-            const hipYaw = parseInt(document.getElementById('yawSpeed').value);
-            const hipPitch = parseInt(document.getElementById('pitchSpeed').value);
-            const hipYawWarning = document.getElementById('hipYawWarning');
-            const hipPitchWarning = document.getElementById('hipPitchWarning');
-            
-            hipYawWarning.innerHTML = '';
-            hipPitchWarning.innerHTML = '';
-            
-            if (hipYaw < 90) {
-                hipYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
-            } else if (hipYaw < 130) {
-                hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited strafe tracking</div>';
-            } else if (hipYaw > 180) {
-                hipYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s - Extra speed may be hard to control</div>';
-            } else {
-                hipYawWarning.innerHTML = '<div class="warning warning-green">✓ Good for close range tracking</div>';
-            }
-            
-            if (hipPitch <= 49) {
-                hipPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 50°/s - Cannot track close range vertical movement</div>';
-            } else if (hipPitch >= 50 && hipPitch <= 59) {
-                hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
-            } else if (hipPitch > 180) {
-                hipPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s - Extra speed may be hard to control</div>';
-            } else {
-                hipPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good vertical tracking</div>';
-            }
-            
-            // ADS warnings
-            const adsYaw = parseInt(document.getElementById('adsYawSpeed').value);
-            const adsPitch = parseInt(document.getElementById('adsPitchSpeed').value);
-            const adsYawWarning = document.getElementById('adsYawWarning');
-            const adsPitchWarning = document.getElementById('adsPitchWarning');
-            
-            adsYawWarning.innerHTML = '';
-            adsPitchWarning.innerHTML = '';
-            
-            if (adsYaw < 45) {
-                adsYawWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
-            } else if (adsYaw < 75) {
-                adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
-            } else if (adsYaw > 120) {
-                adsYawWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s - May be too fast for ADS precision</div>';
-            } else {
-                adsYawWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
-            }
-            
-            if (adsPitch < 45) {
-                adsPitchWarning.innerHTML = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
-            } else if (adsPitch < 75) {
-                adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
-            } else if (adsPitch > 120) {
-                adsPitchWarning.innerHTML = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s - May be too fast for ADS precision</div>';
-            } else {
-                adsPitchWarning.innerHTML = '<div class="warning warning-green">✓ Good tracking potential</div>';
-            }
-            
-            // Outer threshold warning
-            const outerWarning = document.getElementById('outerThresholdWarning');
-            outerWarning.innerHTML = '';
-            
-            if (document.getElementById('outerThreshold').value < 2) {
-                outerWarning.innerHTML = '<div class="warning warning-red">⚠️ ALPS controllers need minimum 2% to avoid edge detection issues</div>';
-            }
-        }
-
-        // Calculate uniformity
-        function calculateUniformity(yaw, pitch) {
-            const min = Math.min(yaw, pitch);
-            const max = Math.max(yaw, pitch);
-            return max > 0 ? (min / max * 100) : 100;
-        }
-
-        // Update diagonal uniformity
-        function updateDiagonalUniformity() {
-            const hipYaw = parseInt(document.getElementById('yawSpeed').value);
-            const hipPitch = parseInt(document.getElementById('pitchSpeed').value);
-            const adsYaw = parseInt(document.getElementById('adsYawSpeed').value);
-            const adsPitch = parseInt(document.getElementById('adsPitchSpeed').value);
-            
-            const hipUniformity = calculateUniformity(hipYaw, hipPitch);
-            const adsUniformity = calculateUniformity(adsYaw, adsPitch);
-            
-            document.getElementById('hipUniformityBar').style.width = hipUniformity + '%';
-            document.getElementById('hipUniformityLabel').textContent = Math.round(hipUniformity) + '%';
-            document.getElementById('adsUniformityBar').style.width = adsUniformity + '%';
-            document.getElementById('adsUniformityLabel').textContent = Math.round(adsUniformity) + '%';
-            
-            const worstUniformity = Math.min(hipUniformity, adsUniformity);
-            const statusEl = document.getElementById('uniformityStatus');
-            const textEl = document.getElementById('uniformityText');
-            
-            if (worstUniformity >= 80) {
-                statusEl.style.color = '#ff6b00';
-                statusEl.textContent = '✓ Excellent Diagonal Uniformity';
-                textEl.textContent = 'Your diagonal movement will feel consistent and predictable. Pro-level settings!';
-            } else if (worstUniformity >= 60) {
-                statusEl.style.color = '#ffcc00';
-                statusEl.textContent = '⚡ Acceptable Diagonal Uniformity';
-                textEl.textContent = 'Some diagonal inconsistency. Consider matching yaw/pitch closer for better feel.';
-            } else {
-                statusEl.style.color = '#ff6666';
-                statusEl.textContent = '⚠️ Poor Diagonal Uniformity';
-                textEl.textContent = 'Diagonal tracking will feel very inconsistent! Match yaw and pitch speeds.';
-            }
-        }
-
-        // Update stats
-        function updateStats() {
-            const hipYaw = parseInt(document.getElementById('yawSpeed').value);
-            const hipYawExtra = parseInt(document.getElementById('yawSpeed').value) + parseInt(document.getElementById('extraYaw').value);
-            const adsYaw = parseInt(document.getElementById('adsYawSpeed').value);
-            const adsYawExtra = parseInt(document.getElementById('adsYawSpeed').value) + parseInt(document.getElementById('adsExtraYaw').value);
-            
-            document.getElementById('hip180Time').textContent = (180 / hipYaw).toFixed(2) + 's';
-            document.getElementById('hip180TimeExtra').textContent = (180 / hipYawExtra).toFixed(2) + 's';
-            document.getElementById('ads180Time').textContent = (180 / adsYaw).toFixed(2) + 's';
-            document.getElementById('ads180TimeExtra').textContent = (180 / adsYawExtra).toFixed(2) + 's';
-            
-            document.getElementById('hipBaseSpeed').textContent = hipYaw + '°/s';
-            document.getElementById('hipMaxSpeed').textContent = hipYawExtra + '°/s';
-            document.getElementById('adsBaseSpeed').textContent = adsYaw + '°/s';
-            document.getElementById('adsMaxSpeed').textContent = adsYawExtra + '°/s';
-        }
-
-        // Update micro adjustment
-        function updateMicroAdjustment() {
-            const deadzone = parseInt(document.getElementById('deadzone').value);
-            const capability = Math.max(0, 100 - deadzone * 2);
-            
-            document.getElementById('microBar').style.width = capability + '%';
-            document.getElementById('microLabel').textContent = capability + '%';
-            
-            let text;
-            if (deadzone === 0) {
-                text = "Perfect micro-adjustments - maximum precision possible";
-            } else if (deadzone < 5) {
-                text = "Excellent micro-adjustments - minimal input required";
-            } else if (deadzone < 15) {
-                text = "Good micro-adjustments - balanced precision";
-            } else {
-                text = "Limited micro-adjustments - requires larger movements";
-            }
-            document.getElementById('microText').textContent = text;
-        }
-
-        // Update analysis
-        function updateAnalysis() {
-            const deadzone = parseInt(document.getElementById('deadzone').value);
-            const curve = parseInt(document.getElementById('responseCurve').value);
-            const hipYaw = parseInt(document.getElementById('yawSpeed').value);
-            const hipPitch = parseInt(document.getElementById('pitchSpeed').value);
-            const adsYaw = parseInt(document.getElementById('adsYawSpeed').value);
-            const extraYaw = parseInt(document.getElementById('extraYaw').value);
-            
-            let analysis = "";
-            
-            // Deadzone analysis
-            if (deadzone === 0) {
-                analysis += "• Perfect deadzone: Maximum micro-adjustment capability.<br>";
-            } else if (deadzone < 5) {
-                analysis += "• Excellent deadzone: Great micro-adjustments with minimal input.<br>";
-            } else if (deadzone < 15) {
-                analysis += "• Moderate deadzone: Balanced but could benefit from lowering.<br>";
-            } else {
-                analysis += "• High deadzone: Limiting your micro-adjustment potential significantly.<br>";
-            }
-            
-            // Curve analysis
-            if (curve == 0) {
-                analysis += "• Linear response: Maximum control for recoil and tracking. High skill ceiling.<br>";
-            } else if (curve <= 5) {
-                analysis += "• Mild curve: Good balance between control and forgiveness.<br>";
-            } else if (curve == 10) {
-                analysis += "• Classic curve: Forgiving and familiar, but less precise than linear.<br>";
-            } else {
-                analysis += "• Heavy curve: Very forgiving but sacrifices precision and consistency.<br>";
-            }
-            
-            // Speed analysis
-            if (hipYaw < 90) {
-                analysis += "• ⚠️ CRITICAL: Hip fire too slow for close range! Increase to at least 90°/s.<br>";
-            } else if (hipYaw < 130) {
-                analysis += "• Hip fire speed is minimum viable. Consider increasing for better close range.<br>";
-            }
-            
-            if (adsYaw < 45) {
-                analysis += "• ⚠️ CRITICAL: ADS too slow for basic tracking! Increase to at least 45°/s.<br>";
-            } else if (adsYaw < 75) {
-                analysis += "• ADS speed is minimum viable. Consider increasing for better tracking.<br>";
-            }
-            
-            const hipUniformity = calculateUniformity(hipYaw, hipPitch);
-            if (hipUniformity < 70) {
-                analysis += "• ⚠️ Poor diagonal uniformity! Match yaw/pitch speeds for consistent aim.<br>";
-            } else if (hipUniformity < 85) {
-                analysis += "• Diagonal movement may feel slightly inconsistent.<br>";
-            }
-            
-            if (extraYaw > 100) {
-                analysis += "• High turning extra enables quick 180s while maintaining low base sens.<br>";
-            } else if (extraYaw === 0) {
-                analysis += "• No turning extra: Consider adding some for emergency flicks.<br>";
-            }
-            
-            const avgSpeed = (hipYaw + hipPitch) / 2;
-            if (curve === 0 && deadzone < 5 && avgSpeed > 150 && hipUniformity > 85) {
-                analysis += "<br><strong>🏆 Pro-level setup detected! High skill ceiling configuration.</strong>";
-            } else if (curve > 15 || deadzone > 20) {
-                analysis += "<br><strong>⚠️ Settings may be limiting your potential. Consider moving toward linear/low deadzone.</strong>";
-            }
-            
-            document.getElementById('analysisText').innerHTML = analysis;
-            
-            updateMicroAdjustment();
-            updateDiagonalUniformity();
-        }
-
-        // Visualization functions
-        function applyDeadzone(x, y, deadzone, outerThreshold) {
-            const magnitude = Math.sqrt(x * x + y * y);
-            const deadzoneValue = deadzone / 100;
-            const outerValue = outerThreshold / 100;
-            
-            if (magnitude < deadzoneValue) return { x: 0, y: 0, inDeadzone: true };
-            
-            let adjustedMagnitude = magnitude;
-            if (magnitude > 1 - outerValue) {
-                adjustedMagnitude = 1 - outerValue;
-            }
-            
-            const scaled = (adjustedMagnitude - deadzoneValue) / (1 - deadzoneValue - outerValue);
-            const angle = Math.atan2(y, x);
-            
-            return {
-                x: scaled * Math.cos(angle),
-                y: scaled * Math.sin(angle),
-                inDeadzone: false,
-                inOuter: magnitude > 1 - outerValue
-            };
-        }
-
-        function applyResponseCurve(input, curveValue) {
-            const absInput = Math.abs(input);
-            let output;
-            
-            if (curveValue == 0) {
-                output = absInput;
-            } else if (curveValue <= 5) {
-                const power = 1 + (curveValue * 0.2);
-                output = Math.pow(absInput, power);
-            } else if (curveValue <= 9) {
-                const t = (curveValue - 5) / 4;
-                const linearOutput = absInput;
-                const classicOutput = Math.pow(absInput, 2.2);
-                output = linearOutput * (1 - t) + classicOutput * t;
-            } else if (curveValue == 10) {
-                output = Math.pow(absInput, 2.2);
-            } else if (curveValue < 20) {
-                const power = 2.2 + (curveValue - 10) * 0.15;
-                output = Math.pow(absInput, power);
-            } else {
-                const power = 3.7 + (curveValue - 20) * 0.25;
-                output = Math.pow(absInput, power);
-            }
-            
-            return Math.sign(input) * output;
-        }
-
-        function drawDeadzone() {
-            const centerX = deadzoneCanvas.width / 2;
-            const centerY = deadzoneCanvas.height / 2;
-            const maxRadius = Math.min(centerX, centerY) - 20;
-            
-            deadzoneCtx.clearRect(0, 0, deadzoneCanvas.width, deadzoneCanvas.height);
-            
-            deadzoneCtx.fillStyle = '#3a3a3a';
-            deadzoneCtx.fillRect(0, 0, deadzoneCanvas.width, deadzoneCanvas.height);
-            
-            // Outer ring
-            deadzoneCtx.strokeStyle = '#666';
-            deadzoneCtx.lineWidth = 3;
-            deadzoneCtx.beginPath();
-            deadzoneCtx.arc(centerX, centerY, maxRadius, 0, Math.PI * 2);
-            deadzoneCtx.stroke();
-            
-            const outerThresholdRadius = maxRadius * (1 - document.getElementById('outerThreshold').value / 100);
-            deadzoneCtx.fillStyle = 'rgba(255, 107, 0, 0.15)';
-            deadzoneCtx.beginPath();
-            deadzoneCtx.arc(centerX, centerY, maxRadius, 0, Math.PI * 2);
-            deadzoneCtx.arc(centerX, centerY, outerThresholdRadius, 0, Math.PI * 2, true);
-            deadzoneCtx.fill();
-            
-            const deadzoneRadius = maxRadius * (document.getElementById('deadzone').value / 100);
-            deadzoneCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            deadzoneCtx.beginPath();
-            deadzoneCtx.arc(centerX, centerY, outerThresholdRadius, 0, Math.PI * 2);
-            deadzoneCtx.arc(centerX, centerY, deadzoneRadius, 0, Math.PI * 2, true);
-            deadzoneCtx.fill();
-            
-            deadzoneCtx.fillStyle = 'rgba(120, 40, 40, 0.4)';
-            deadzoneCtx.beginPath();
-            deadzoneCtx.arc(centerX, centerY, deadzoneRadius, 0, Math.PI * 2);
-            deadzoneCtx.fill();
-            
-            // Center crosshair
-            deadzoneCtx.strokeStyle = '#ff6b00';
-            deadzoneCtx.lineWidth = 2;
-            deadzoneCtx.shadowBlur = 10;
-            deadzoneCtx.shadowColor = '#ff6b00';
-            deadzoneCtx.beginPath();
-            deadzoneCtx.moveTo(centerX - 10, centerY);
-            deadzoneCtx.lineTo(centerX + 10, centerY);
-            deadzoneCtx.moveTo(centerX, centerY - 10);
-            deadzoneCtx.lineTo(centerX, centerY + 10);
-            deadzoneCtx.stroke();
-            deadzoneCtx.shadowBlur = 0;
-            
-            const stickAngle = Date.now() / 2000;
-            const stickRadius = maxRadius * 0.7;
-            const stickX = Math.cos(stickAngle) * stickRadius / maxRadius;
-            const stickY = Math.sin(stickAngle) * stickRadius / maxRadius;
-            
-            const processed = applyDeadzone(stickX, stickY, document.getElementById('deadzone').value, document.getElementById('outerThreshold').value);
-            
-            // Input position
-            deadzoneCtx.fillStyle = '#666';
-            deadzoneCtx.beginPath();
-            deadzoneCtx.arc(centerX + stickX * maxRadius, centerY + stickY * maxRadius, 6, 0, Math.PI * 2);
-            deadzoneCtx.fill();
-            
-            if (!processed.inDeadzone) {
-                // Output position
-                deadzoneCtx.fillStyle = '#ff6b00';
-                deadzoneCtx.shadowBlur = 15;
-                deadzoneCtx.shadowColor = '#ff6b00';
-                deadzoneCtx.beginPath();
-                deadzoneCtx.arc(centerX + processed.x * maxRadius, centerY + processed.y * maxRadius, 6, 0, Math.PI * 2);
-                deadzoneCtx.fill();
-                deadzoneCtx.shadowBlur = 0;
-                
-                // Connection line
-                deadzoneCtx.strokeStyle = '#ff6b00';
-                deadzoneCtx.lineWidth = 2;
-                deadzoneCtx.setLineDash([5, 5]);
-                deadzoneCtx.beginPath();
-                deadzoneCtx.moveTo(centerX + stickX * maxRadius, centerY + stickY * maxRadius);
-                deadzoneCtx.lineTo(centerX + processed.x * maxRadius, centerY + processed.y * maxRadius);
-                deadzoneCtx.stroke();
-                deadzoneCtx.setLineDash([]);
-            }
-        }
-
-        function drawResponseCurve() {
-            const width = curveCanvas.width;
-            const height = curveCanvas.height;
-            const padding = 30;
-            const graphWidth = width - 2 * padding;
-            const graphHeight = height - 2 * padding;
-            
-            curveCtx.clearRect(0, 0, width, height);
-            
-            curveCtx.fillStyle = '#3a3a3a';
-            curveCtx.fillRect(0, 0, width, height);
-            
-            const deadzonePercent = parseInt(document.getElementById('deadzone').value) / 100;
-            const outerThresholdPercent = Math.max(0.01, parseInt(document.getElementById('outerThreshold').value) / 100);
-            
-            // Grid
-            curveCtx.strokeStyle = '#3a3a3a';
-            curveCtx.lineWidth = 1;
-            
-            for (let i = 0; i <= 10; i++) {
-                const x = padding + (i / 10) * graphWidth;
-                curveCtx.beginPath();
-                curveCtx.moveTo(x, padding);
-                curveCtx.lineTo(x, height - padding);
-                curveCtx.stroke();
-                
-                const y = padding + (i / 10) * graphHeight;
-                curveCtx.beginPath();
-                curveCtx.moveTo(padding, y);
-                curveCtx.lineTo(width - padding, y);
-                curveCtx.stroke();
-            }
-            
-            // Axes
-            curveCtx.strokeStyle = '#666';
-            curveCtx.lineWidth = 2;
-            curveCtx.beginPath();
-            curveCtx.moveTo(padding, height - padding);
-            curveCtx.lineTo(width - padding, height - padding);
-            curveCtx.moveTo(padding, padding);
-            curveCtx.lineTo(padding, height - padding);
-            curveCtx.stroke();
-            
-            // Linear reference
-            curveCtx.strokeStyle = '#444';
-            curveCtx.lineWidth = 1;
-            curveCtx.setLineDash([5, 5]);
-            curveCtx.beginPath();
-            curveCtx.moveTo(padding, height - padding);
-            curveCtx.lineTo(width - padding, padding);
-            curveCtx.stroke();
-            curveCtx.setLineDash([]);
-            
-            // Deadzone area
-            if (deadzonePercent > 0) {
-                curveCtx.fillStyle = 'rgba(120, 40, 40, 0.2)';
-                curveCtx.fillRect(padding, padding, deadzonePercent * graphWidth, graphHeight);
-            }
-            
-            // Outer threshold area
-            curveCtx.fillStyle = 'rgba(255, 107, 0, 0.1)';
-            curveCtx.fillRect(
-                padding + (1 - outerThresholdPercent) * graphWidth, 
-                padding, 
-                outerThresholdPercent * graphWidth, 
-                graphHeight
-            );
-            
-            // Response curve
-            curveCtx.strokeStyle = '#ff6b00';
-            curveCtx.lineWidth = 3;
-            curveCtx.shadowBlur = 10;
-            curveCtx.shadowColor = '#ff6b00';
-            curveCtx.beginPath();
-            
-            for (let i = 0; i <= 100; i++) {
-                const rawInput = i / 100;
-                let x = padding + rawInput * graphWidth;
-                let y = height - padding;
-                
-                if (rawInput <= deadzonePercent) {
-                    y = height - padding;
-                } else if (rawInput >= 1 - outerThresholdPercent) {
-                    y = padding;
-                } else {
-                    const normalizedInput = (rawInput - deadzonePercent) / (1 - deadzonePercent - outerThresholdPercent);
-                    const curvedOutput = applyResponseCurve(normalizedInput, document.getElementById('responseCurve').value);
-                    y = height - padding - curvedOutput * graphHeight;
-                }
-                
-                if (i === 0) {
-                    curveCtx.moveTo(x, y);
-                } else {
-                    curveCtx.lineTo(x, y);
-                }
-            }
-            
-            curveCtx.stroke();
-            curveCtx.shadowBlur = 0;
-            
-            // Labels
-            curveCtx.fillStyle = '#999';
-            curveCtx.font = '12px Arial';
-            curveCtx.textAlign = 'center';
-            curveCtx.fillText('Input', width / 2, height - 5);
-            curveCtx.save();
-            curveCtx.translate(10, height / 2);
-            curveCtx.rotate(-Math.PI / 2);
-            curveCtx.fillText('Output', 0, 0);
-            curveCtx.restore();
-        }
-
-        function drawStrafeTracking() {
-            const width = strafeCanvas.width;
-            const height = strafeCanvas.height;
-            const padding = 40;
-            const graphWidth = width - 2 * padding;
-            const graphHeight = height - 2 * padding;
-            
-            strafeCtx.clearRect(0, 0, width, height);
-            
-            strafeCtx.fillStyle = '#3a3a3a';
-            strafeCtx.fillRect(0, 0, width, height);
-            
-            const hipYaw = parseInt(document.getElementById('yawSpeed').value);
-            const adsYaw = parseInt(document.getElementById('adsYawSpeed').value);
-            
-            const maxDistance = 50;
-            const maxSpeed = 200;
-            
-            // Grid
-            strafeCtx.strokeStyle = '#3a3a3a';
-            strafeCtx.lineWidth = 1;
-            
-            const distances = [3, 10, 20, 30, 40, 50];
-            distances.forEach(dist => {
-                const x = padding + (dist / maxDistance) * graphWidth;
-                strafeCtx.beginPath();
-                strafeCtx.moveTo(x, padding);
-                strafeCtx.lineTo(x, height - padding);
-                strafeCtx.stroke();
-                
-                strafeCtx.fillStyle = '#666';
-                strafeCtx.font = '10px Arial';
-                strafeCtx.textAlign = 'center';
-                strafeCtx.fillText(dist + 'm', x, height - padding + 15);
+        
+        document.querySelectorAll('.viz-tab').forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchVizTab(e.target.dataset.viz));
+        });
+        
+        document.querySelectorAll('[data-aa-mode]').forEach(btn => {
+            btn.addEventListener('click', (e) => this.setAAMode(e.target.dataset.aaMode));
+        });
+        
+        document.getElementById('presets').addEventListener('change', (e) => this.loadPreset(e.target.value));
+        
+        document.getElementById('reset-btn').addEventListener('click', () => this.resetSettings());
+        document.getElementById('export-btn').addEventListener('click', () => this.exportSettings());
+        document.getElementById('import-btn').addEventListener('click', () => this.importSettings());
+        
+        // 3D rotation toggle
+        const rotate3DBtn = document.getElementById('rotate3D');
+        if (rotate3DBtn) {
+            rotate3DBtn.addEventListener('click', () => {
+                this.autoRotate3D = !this.autoRotate3D;
+                rotate3DBtn.textContent = this.autoRotate3D ? 'Stop Rotation' : 'Toggle Rotation';
             });
-            
-            const speeds = [0, 25, 50, 75, 100, 125, 150, 175, 200];
-            speeds.forEach(speed => {
-                const y = height - padding - (speed / maxSpeed) * graphHeight;
-                strafeCtx.beginPath();
-                strafeCtx.moveTo(padding, y);
-                strafeCtx.lineTo(width - padding, y);
-                strafeCtx.stroke();
-                
-                strafeCtx.fillStyle = '#666';
-                strafeCtx.font = '10px Arial';
-                strafeCtx.textAlign = 'right';
-                strafeCtx.fillText(speed + '°/s', padding - 5, y + 3);
-            });
-            
-            // Fill zones with themed colors
-            strafeCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            strafeCtx.beginPath();
-            strafeCtx.moveTo(padding, padding);
-            strafeCtx.lineTo(width - padding, padding);
-            
-            for (let x = width - padding; x >= padding; x--) {
-                const dist = ((x - padding) / graphWidth) * maxDistance;
-                if (dist < 3) continue;
-                const requiredSpeed = 90 * (3 / dist);
-                const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
-                strafeCtx.lineTo(x, y);
-            }
-            
-            strafeCtx.closePath();
-            strafeCtx.fill();
-            
-            strafeCtx.fillStyle = 'rgba(120, 40, 40, 0.15)';
-            strafeCtx.beginPath();
-            
-            strafeCtx.moveTo(padding, height - padding);
-            
-            for (let x = padding; x <= width - padding; x++) {
-                const dist = ((x - padding) / graphWidth) * maxDistance;
-                if (dist < 3) {
-                    strafeCtx.lineTo(x, padding);
-                } else {
-                    const requiredSpeed = 90 * (3 / dist);
-                    const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
-                    strafeCtx.lineTo(x, y);
-                }
-            }
-            
-            strafeCtx.lineTo(width - padding, height - padding);
-            strafeCtx.closePath();
-            strafeCtx.fill();
-            
-            // Draw required speed curves
-            strafeCtx.strokeStyle = '#ff6b00';
-            strafeCtx.lineWidth = 3;
-            strafeCtx.beginPath();
-            
-            for (let x = padding; x <= width - padding; x++) {
-                const dist = ((x - padding) / graphWidth) * maxDistance;
-                if (dist < 3) continue;
-                const requiredSpeed = 90 * (3 / dist);
-                const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
-                
-                if (x === padding || dist === 3) {
-                    strafeCtx.moveTo(x, y);
-                } else {
-                    strafeCtx.lineTo(x, y);
-                }
-            }
-            strafeCtx.stroke();
-            
-            strafeCtx.strokeStyle = '#888';
-            strafeCtx.lineWidth = 2;
-            strafeCtx.beginPath();
-            
-            for (let x = padding; x <= width - padding; x++) {
-                const dist = ((x - padding) / graphWidth) * maxDistance;
-                if (dist < 3) continue;
-                const requiredSpeed = 45 * (3 / dist);
-                const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
-                
-                if (x === padding || dist === 3) {
-                    strafeCtx.moveTo(x, y);
-                } else {
-                    strafeCtx.lineTo(x, y);
-                }
-            }
-            strafeCtx.stroke();
-            
-            // User speed lines
-            const hipY = height - padding - (hipYaw / maxSpeed) * graphHeight;
-            strafeCtx.strokeStyle = '#fff';
-            strafeCtx.lineWidth = 3;
-            strafeCtx.setLineDash([10, 5]);
-            strafeCtx.beginPath();
-            strafeCtx.moveTo(padding, hipY);
-            strafeCtx.lineTo(width - padding, hipY);
-            strafeCtx.stroke();
-            
-            const adsY = height - padding - (adsYaw / maxSpeed) * graphHeight;
-            strafeCtx.strokeStyle = '#999';
-            strafeCtx.lineWidth = 2;
-            strafeCtx.setLineDash([5, 5]);
-            strafeCtx.beginPath();
-            strafeCtx.moveTo(padding, adsY);
-            strafeCtx.lineTo(width - padding, adsY);
-            strafeCtx.stroke();
-            strafeCtx.setLineDash([]);
-            
-            // Labels
-            strafeCtx.font = '11px Arial';
-            strafeCtx.fillStyle = '#fff';
-            strafeCtx.textAlign = 'left';
-            strafeCtx.fillText(`Your Hip Fire: ${hipYaw}°/s`, padding + 10, hipY - 5);
-            
-            strafeCtx.fillStyle = '#999';
-            strafeCtx.fillText(`Your ADS: ${adsYaw}°/s`, padding + 10, adsY + 12);
-            
-            // Axes
-            strafeCtx.strokeStyle = '#666';
-            strafeCtx.lineWidth = 2;
-            strafeCtx.beginPath();
-            strafeCtx.moveTo(padding, height - padding);
-            strafeCtx.lineTo(width - padding, height - padding);
-            strafeCtx.moveTo(padding, padding);
-            strafeCtx.lineTo(padding, height - padding);
-            strafeCtx.stroke();
-            
-            // Status (keeping the existing status logic)
-            const hipCanTrackAt3m = hipYaw >= 90;
-            const adsCanTrackAt3m = adsYaw >= 45;
-            const statusBox = document.getElementById('strafeStatusBox');
-            
-            statusBox.style.backgroundColor = '#4a4a4a';
-            statusBox.style.border = 'none';
-            statusBox.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
-            
-            if (hipCanTrackAt3m && adsCanTrackAt3m) {
-                statusBox.style.display = 'block';
-                statusBox.innerHTML = '<div style="color: #ff6b00; font-size: 18px; font-weight: bold;">✓ Both Hip Fire and ADS can track at all engagement ranges!</div>';
-            } else if (!hipCanTrackAt3m && !adsCanTrackAt3m) {
-                const hipClosest = Math.ceil(270 / hipYaw);
-                const adsClosest = Math.ceil(135 / adsYaw);
-                statusBox.style.display = 'block';
-                statusBox.innerHTML = `<div style="color: #ff6666; font-size: 16px; font-weight: bold;">⚠️ Hip Fire: Cannot track closer than ${hipClosest}m<br>⚠️ ADS: Cannot track closer than ${adsClosest}m</div>`;
-            } else if (!hipCanTrackAt3m) {
-                const hipClosest = Math.ceil(270 / hipYaw);
-                statusBox.style.display = 'block';
-                statusBox.innerHTML = `<div style="color: #ff6666; font-size: 16px; font-weight: bold;">⚠️ Hip Fire: Cannot track closer than ${hipClosest}m - Increase speed!</div>`;
-            } else {
-                const adsClosest = Math.ceil(135 / adsYaw);
-                statusBox.style.display = 'block';
-                statusBox.innerHTML = `<div style="color: #ff6666; font-size: 16px; font-weight: bold;">⚠️ ADS: Cannot track closer than ${adsClosest}m - Increase ADS speed!</div>`;
-            }
         }
-
-        function drawDiagonalVisualization() {
-            const width = diagonalCanvas.width;
-            const height = diagonalCanvas.height;
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const maxRadius = Math.min(centerX, centerY) - 40;
-            
-            diagonalCtx.clearRect(0, 0, width, height);
-            
-            diagonalCtx.fillStyle = '#3a3a3a';
-            diagonalCtx.fillRect(0, 0, width, height);
-            
-            // Grid
-            diagonalCtx.strokeStyle = '#3a3a3a';
-            diagonalCtx.lineWidth = 1;
-            
-            diagonalCtx.beginPath();
-            diagonalCtx.moveTo(centerX - maxRadius, centerY);
-            diagonalCtx.lineTo(centerX + maxRadius, centerY);
-            diagonalCtx.moveTo(centerX, centerY - maxRadius);
-            diagonalCtx.lineTo(centerX, centerY + maxRadius);
-            diagonalCtx.stroke();
-            
-            diagonalCtx.strokeStyle = '#444';
-            diagonalCtx.setLineDash([5, 5]);
-            diagonalCtx.beginPath();
-            const diag = maxRadius * 0.707;
-            diagonalCtx.moveTo(centerX - diag, centerY - diag);
-            diagonalCtx.lineTo(centerX + diag, centerY + diag);
-            diagonalCtx.moveTo(centerX - diag, centerY + diag);
-            diagonalCtx.lineTo(centerX + diag, centerY - diag);
-            diagonalCtx.stroke();
-            diagonalCtx.setLineDash([]);
-            
-            // Perfect circle reference
-            diagonalCtx.strokeStyle = '#555';
-            diagonalCtx.lineWidth = 2;
-            diagonalCtx.beginPath();
-            diagonalCtx.arc(centerX, centerY, maxRadius * 0.7, 0, Math.PI * 2);
-            diagonalCtx.stroke();
-            
-            const hipYaw = parseInt(document.getElementById('yawSpeed').value);
-            const hipPitch = parseInt(document.getElementById('pitchSpeed').value);
-            const adsYaw = parseInt(document.getElementById('adsYawSpeed').value);
-            const adsPitch = parseInt(document.getElementById('adsPitchSpeed').value);
-            
-            // Hip fire oval
-            diagonalCtx.save();
-            diagonalCtx.translate(centerX - centerX/2, centerY);
-            const hipScaleX = 1;
-            const hipScaleY = hipPitch / hipYaw;
-            diagonalCtx.scale(hipScaleX, hipScaleY);
-            diagonalCtx.strokeStyle = '#fff';
-            diagonalCtx.lineWidth = 3 / Math.max(hipScaleX, hipScaleY);
-            diagonalCtx.shadowBlur = 10;
-            diagonalCtx.shadowColor = '#fff';
-            diagonalCtx.beginPath();
-            diagonalCtx.arc(0, 0, maxRadius * 0.5, 0, Math.PI * 2);
-            diagonalCtx.stroke();
-            diagonalCtx.restore();
-            
-            // ADS oval
-            diagonalCtx.save();
-            diagonalCtx.translate(centerX + centerX/2, centerY);
-            const adsScaleX = 1;
-            const adsScaleY = adsPitch / adsYaw;
-            diagonalCtx.scale(adsScaleX, adsScaleY);
-            diagonalCtx.strokeStyle = '#ff6b00';
-            diagonalCtx.lineWidth = 3 / Math.max(adsScaleX, adsScaleY);
-            diagonalCtx.shadowBlur = 10;
-            diagonalCtx.shadowColor = '#ff6b00';
-            diagonalCtx.beginPath();
-            diagonalCtx.arc(0, 0, maxRadius * 0.5, 0, Math.PI * 2);
-            diagonalCtx.stroke();
-            diagonalCtx.restore();
-            
-            diagonalCtx.shadowBlur = 0;
-            
-            // Labels
-            diagonalCtx.fillStyle = '#999';
-            diagonalCtx.font = '12px Arial';
-            diagonalCtx.textAlign = 'center';
-            diagonalCtx.fillText('Hip Fire', centerX - centerX/2, height - 20);
-            diagonalCtx.fillText('ADS', centerX + centerX/2, height - 20);
-            
-            diagonalCtx.fillStyle = '#666';
-            diagonalCtx.fillText('Perfect Circle Reference', centerX, 20);
+    }
+    
+    handle3DMouseDown(e) {
+        this.isDragging = true;
+        const rect = this.canvases.aimAssist3DCanvas.getBoundingClientRect();
+        this.lastMousePos = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+    
+    handle3DMouseMove(e) {
+        if (!this.isDragging) return;
+        
+        const rect = this.canvases.aimAssist3DCanvas.getBoundingClientRect();
+        const currentPos = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+        
+        const deltaX = currentPos.x - this.lastMousePos.x;
+        const deltaY = currentPos.y - this.lastMousePos.y;
+        
+        this.rotation3D.y += deltaX * 0.01;
+        this.rotation3D.x += deltaY * 0.01;
+        
+        // Clamp X rotation to prevent flipping
+        this.rotation3D.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, this.rotation3D.x));
+        
+        this.lastMousePos = currentPos;
+        this.draw3DAimAssist();
+    }
+    
+    handle3DMouseUp() {
+        this.isDragging = false;
+    }
+    
+    handleSliderChange(settingId) {
+        const slider = document.getElementById(settingId);
+        if (slider) {
+            this.state[settingId] = parseInt(slider.value);
+            this.updateSliderVisual(settingId);
+            this.updateAll();
         }
-
-        function drawAimAssist() {
-            const width = aimAssistCanvas.width;
-            const height = aimAssistCanvas.height;
-            const padding = 40;
-            const graphWidth = width - 2 * padding;
-            const graphHeight = height - 2 * padding;
-            
-            aimAssistCtx.clearRect(0, 0, width, height);
-            
-            aimAssistCtx.fillStyle = '#3a3a3a';
-            aimAssistCtx.fillRect(0, 0, width, height);
-            
-            aimAssistCtx.strokeStyle = '#3a3a3a';
-            aimAssistCtx.lineWidth = 1;
-            
-            if (aaViewMode === 'hipfire') {
-                const distances = [0, 3, 10, 20, 33, 40];
-                distances.forEach((dist) => {
-                    const x = padding + (dist / 40) * graphWidth;
-                    aimAssistCtx.beginPath();
-                    aimAssistCtx.moveTo(x, padding);
-                    aimAssistCtx.lineTo(x, height - padding);
-                    aimAssistCtx.stroke();
-                    
-                    aimAssistCtx.fillStyle = '#666';
-                    aimAssistCtx.font = '10px Arial';
-                    aimAssistCtx.textAlign = 'center';
-                    aimAssistCtx.fillText(dist + 'm', x, height - padding + 15);
-                });
-                
-                // No-AA zones
-                aimAssistCtx.fillStyle = 'rgba(120, 40, 40, 0.15)';
-                aimAssistCtx.fillRect(padding, padding, (3/40) * graphWidth, graphHeight);
-                aimAssistCtx.fillRect(padding + (33/40) * graphWidth, padding, (7/40) * graphWidth, graphHeight);
-                
-                // AA active zone
-                aimAssistCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-                aimAssistCtx.fillRect(padding + (3/40) * graphWidth, padding, (30/40) * graphWidth, graphHeight);
-                
-                // AA strength line
-                aimAssistCtx.strokeStyle = '#ff6b00';
-                aimAssistCtx.lineWidth = 3;
-                aimAssistCtx.shadowBlur = 10;
-                aimAssistCtx.shadowColor = '#ff6b00';
-                aimAssistCtx.beginPath();
-                
-                for (let i = 0; i <= 40; i++) {
-                    const distance = i;
-                    let aaStrength = 0;
-                    
-                    if (distance >= 3 && distance <= 33) {
-                        aaStrength = 0.3;
-                    }
-                    
-                    const x = padding + (distance / 40) * graphWidth;
-                    const y = height - padding - (aaStrength / 0.3 * graphHeight * 0.8);
-                    
-                    if (i === 0) {
-                        aimAssistCtx.moveTo(x, y);
-                    } else {
-                        aimAssistCtx.lineTo(x, y);
-                    }
-                }
-                
-                aimAssistCtx.stroke();
-                aimAssistCtx.shadowBlur = 0;
-                
-                // Bubble size curve
-                aimAssistCtx.strokeStyle = '#999';
-                aimAssistCtx.lineWidth = 2;
-                aimAssistCtx.beginPath();
-                
-                for (let i = 0; i <= 40; i++) {
-                    const distance = i;
-                    let bubbleSize = 0;
-                    
-                    if (distance >= 3 && distance <= 33) {
-                        bubbleSize = 1 - (distance - 3) / 30 * 0.7;
-                    }
-                    
-                    const x = padding + (distance / 40) * graphWidth;
-                    const y = height - padding - (bubbleSize * graphHeight * 0.8);
-                    
-                    if (i === 0) {
-                        aimAssistCtx.moveTo(x, y);
-                    } else {
-                        aimAssistCtx.lineTo(x, y);
-                    }
-                }
-                
-                aimAssistCtx.stroke();
-                
-            } else {
-                // ADS view
-                const distances = [0, 10, 25, 50, 75, 100];
-                distances.forEach((dist) => {
-                    const x = padding + (dist / 100) * graphWidth;
-                    aimAssistCtx.beginPath();
-                    aimAssistCtx.moveTo(x, padding);
-                    aimAssistCtx.lineTo(x, height - padding);
-                    aimAssistCtx.stroke();
-                    
-                    aimAssistCtx.fillStyle = '#666';
-                    aimAssistCtx.font = '10px Arial';
-                    aimAssistCtx.textAlign = 'center';
-                    aimAssistCtx.fillText(dist + 'm', x, height - padding + 15);
-                });
-                
-                // AA strength line
-                aimAssistCtx.strokeStyle = '#ff6b00';
-                aimAssistCtx.lineWidth = 3;
-                aimAssistCtx.shadowBlur = 10;
-                aimAssistCtx.shadowColor = '#ff6b00';
-                aimAssistCtx.beginPath();
-                aimAssistCtx.moveTo(padding, height - padding - 0.3 * graphHeight * 0.8);
-                aimAssistCtx.lineTo(width - padding, height - padding - 0.3 * graphHeight * 0.8);
-                aimAssistCtx.stroke();
-                aimAssistCtx.shadowBlur = 0;
-                
-                // Bubble size curve
-                aimAssistCtx.strokeStyle = '#999';
-                aimAssistCtx.lineWidth = 2;
-                aimAssistCtx.beginPath();
-                
-                for (let i = 0; i <= 100; i++) {
-                    const distance = i;
-                    const bubbleSize = Math.exp(-distance / 30);
-                    
-                    const x = padding + (distance / 100) * graphWidth;
-                    const y = height - padding - (bubbleSize * graphHeight * 0.8);
-                    
-                    if (i === 0) {
-                        aimAssistCtx.moveTo(x, y);
-                    } else {
-                        aimAssistCtx.lineTo(x, y);
-                    }
-                }
-                
-                aimAssistCtx.stroke();
-                
-                // Practical limit zone
-                aimAssistCtx.fillStyle = 'rgba(120, 40, 40, 0.1)';
-                aimAssistCtx.fillRect(padding + (50/100) * graphWidth, padding, (50/100) * graphWidth, graphHeight);
-                
-                aimAssistCtx.fillStyle = '#666';
-                aimAssistCtx.font = '12px Arial';
-                aimAssistCtx.textAlign = 'center';
-                aimAssistCtx.fillText('Practical Limit', padding + (75/100) * graphWidth, padding + 20);
-            }
-            
-            // Axes
-            aimAssistCtx.strokeStyle = '#666';
-            aimAssistCtx.lineWidth = 2;
-            aimAssistCtx.beginPath();
-            aimAssistCtx.moveTo(padding, height - padding);
-            aimAssistCtx.lineTo(width - padding, height - padding);
-            aimAssistCtx.moveTo(padding, padding);
-            aimAssistCtx.lineTo(padding, height - padding);
-            aimAssistCtx.stroke();
-            
-            aimAssistCtx.fillStyle = '#999';
-            aimAssistCtx.font = '12px Arial';
-            aimAssistCtx.textAlign = 'center';
-            aimAssistCtx.fillText('Distance (meters)', width / 2, height - 5);
-            
-            // Legend
-            aimAssistCtx.font = '11px Arial';
-            aimAssistCtx.textAlign = 'left';
-            
-            aimAssistCtx.fillStyle = '#ff6b00';
-            aimAssistCtx.fillText('AA Strength (30%)', width - 130, 20);
-            
-            aimAssistCtx.fillStyle = '#999';
-            aimAssistCtx.fillText('Bubble Size', width - 130, 35);
+    }
+    
+    updateSliderVisual(settingId) {
+        const slider = document.getElementById(settingId);
+        const fill = document.getElementById(settingId + 'Fill');
+        const indicator = document.getElementById(settingId + 'Indicator');
+        const valueDisplay = document.getElementById(settingId + 'Value');
+        
+        if (!slider || !fill || !indicator || !valueDisplay) return;
+        
+        const value = parseInt(slider.value);
+        const max = parseInt(slider.max);
+        const percentage = (value / max) * 100;
+        
+        fill.style.width = percentage + '%';
+        indicator.style.left = percentage + '%';
+        
+        const allSettings = [...SETTINGS_CONFIG.hipfire, ...SETTINGS_CONFIG.ads];
+        const setting = allSettings.find(s => s.id === settingId);
+        valueDisplay.textContent = value + (setting?.unit || '');
+    }
+    
+    switchTab(tab) {
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+        document.getElementById(`${tab}-tab`).classList.add('active');
+    }
+    
+    switchVizTab(tab) {
+        document.querySelectorAll('.viz-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.viz-content').forEach(content => content.classList.remove('active'));
+        
+        document.querySelector(`[data-viz="${tab}"]`).classList.add('active');
+        document.getElementById(`${tab}-viz`).classList.add('active');
+    }
+    
+    setAAMode(mode) {
+        this.aaViewMode = mode;
+        document.querySelectorAll('[data-aa-mode]').forEach(btn => {
+            btn.style.backgroundColor = btn.dataset.aaMode === mode ? CONSTANTS.COLORS.PRIMARY : '#555';
+        });
+        this.updateAAInfo();
+        this.drawAimAssist();
+        this.draw3DAimAssist();
+    }
+    
+    updateAAInfo() {
+        const infoContent = document.getElementById('aaInfoContent');
+        if (!infoContent) return;
+        
+        if (this.aaViewMode === 'hipfire') {
+            infoContent.innerHTML = `
+                <p>• <strong>Hip Fire Range:</strong> 3m to 33m (No AA under 3m or over 33m)</p>
+                <p>• <strong>AA Strength:</strong> 30% relative position maintenance within AA bubble</p>
+                <p>• <strong>Bubble Size:</strong> Scales with enemy distance (smaller at range)</p>
+                <p>• <strong>No Direct Assistance:</strong> No recoil control or bullet drop compensation</p>
+                <p>• Lower response curves provide smoother tracking within AA bubble</p>
+            `;
+        } else {
+            infoContent.innerHTML = `
+                <p>• <strong>ADS Range:</strong> No technical limit (practical limit based on bubble size)</p>
+                <p>• <strong>AA Strength:</strong> 30% relative position maintenance within AA bubble</p>
+                <p>• <strong>Bubble Scaling:</strong> Decreases with distance, increases with optic magnification</p>
+                <p>• <strong>Magnification Effect:</strong> Higher zoom = larger on-screen bubble = more effective AA</p>
+                <p>• <strong>Limitations:</strong> No recoil control, no bullet drop/velocity compensation</p>
+            `;
         }
-
-        function drawSpeedComparison() {
-            const width = speedComparisonCanvas.width;
-            const height = speedComparisonCanvas.height;
-            const padding = 40;
-            const graphWidth = width - 2 * padding;
-            const graphHeight = height - 2 * padding;
-            
-            speedComparisonCtx.clearRect(0, 0, width, height);
-            
-            speedComparisonCtx.fillStyle = '#3a3a3a';
-            speedComparisonCtx.fillRect(0, 0, width, height);
-            
-            const hipBase = parseInt(document.getElementById('yawSpeed').value);
-            const hipMax = parseInt(document.getElementById('yawSpeed').value) + parseInt(document.getElementById('extraYaw').value);
-            const adsBase = parseInt(document.getElementById('adsYawSpeed').value);
-            const adsMax = parseInt(document.getElementById('adsYawSpeed').value) + parseInt(document.getElementById('adsExtraYaw').value);
-            
-            const maxSpeed = Math.max(hipBase, hipMax, adsBase, adsMax);
-            const scale = graphHeight / (maxSpeed * 1.1);
-            
-            // Grid
-            speedComparisonCtx.strokeStyle = '#3a3a3a';
-            speedComparisonCtx.lineWidth = 1;
-            
-            for (let i = 0; i <= 5; i++) {
-                const y = padding + (i / 5) * graphHeight;
-                speedComparisonCtx.beginPath();
-                speedComparisonCtx.moveTo(padding, y);
-                speedComparisonCtx.lineTo(width - padding, y);
-                speedComparisonCtx.stroke();
-                
-                const speed = Math.round((1 - i / 5) * maxSpeed * 1.1);
-                speedComparisonCtx.fillStyle = '#666';
-                speedComparisonCtx.font = '10px Arial';
-                speedComparisonCtx.textAlign = 'right';
-                speedComparisonCtx.fillText(speed + '°/s', padding - 5, y + 3);
-            }
-            
-            const barWidth = graphWidth / 8;
-            const barSpacing = graphWidth / 4;
-            
-            const bars = [
-                { label: 'Hip Base', value: hipBase, color: '#666', x: padding + barSpacing - barWidth * 1.5 },
-                { label: 'Hip Max', value: hipMax, color: '#fff', x: padding + barSpacing - barWidth * 0.5 },
-                { label: 'ADS Base', value: adsBase, color: '#666', x: padding + barSpacing * 3 - barWidth * 1.5 },
-                { label: 'ADS Max', value: adsMax, color: '#ff6b00', x: padding + barSpacing * 3 - barWidth * 0.5 }
-            ];
-            
-            bars.forEach(bar => {
-                const barHeight = bar.value * scale;
-                
-                // Bar with gradient
-                const gradient = speedComparisonCtx.createLinearGradient(0, height - padding - barHeight, 0, height - padding);
-                gradient.addColorStop(0, bar.color);
-                gradient.addColorStop(1, '#3a3a3a');
-                
-                speedComparisonCtx.fillStyle = gradient;
-                speedComparisonCtx.fillRect(bar.x, height - padding - barHeight, barWidth, barHeight);
-                
-                // Border
-                speedComparisonCtx.strokeStyle = bar.color;
-                speedComparisonCtx.lineWidth = 2;
-                speedComparisonCtx.strokeRect(bar.x, height - padding - barHeight, barWidth, barHeight);
-                
-                // Value label
-                speedComparisonCtx.fillStyle = bar.color;
-                speedComparisonCtx.font = '11px Arial';
-                speedComparisonCtx.textAlign = 'center';
-                speedComparisonCtx.fillText(bar.value + '°/s', bar.x + barWidth / 2, height - padding - barHeight - 5);
-                
-                // Bar label
-                speedComparisonCtx.fillStyle = '#999';
-                speedComparisonCtx.fillText(bar.label, bar.x + barWidth / 2, height - padding + 15);
-            });
-            
-            // Axes
-            speedComparisonCtx.strokeStyle = '#666';
-            speedComparisonCtx.lineWidth = 2;
-            speedComparisonCtx.beginPath();
-            speedComparisonCtx.moveTo(padding, height - padding);
-            speedComparisonCtx.lineTo(width - padding, height - padding);
-            speedComparisonCtx.moveTo(padding, padding);
-            speedComparisonCtx.lineTo(padding, height - padding);
-            speedComparisonCtx.stroke();
-        }
-
-        function updateVisualizations() {
-            drawResponseCurve();
-            drawStrafeTracking();
-            drawDiagonalVisualization();
-            drawAimAssist();
-            drawSpeedComparison();
-        }
-
-        function animate() {
-            drawDeadzone();
-            requestAnimationFrame(animate);
-        }
-
-        // Reset settings
-        function resetSettings() {
-            const defaultSettings = presets.default;
-            Object.keys(defaultSettings).forEach(key => {
+    }
+    
+    loadPreset(presetName) {
+        if (presetName !== 'custom' && PRESETS[presetName]) {
+            const preset = PRESETS[presetName];
+            Object.keys(preset).forEach(key => {
+                this.state[key] = preset[key];
                 const slider = document.getElementById(key);
                 if (slider) {
-                    slider.value = defaultSettings[key];
-                    updateSlider(key);
+                    slider.value = preset[key];
+                    this.updateSliderVisual(key);
                 }
             });
-            document.getElementById('presets').value = 'default';
-            updateWarnings();
-            updateVisualizations();
-            updateAnalysis();
-            updateStats();
+            this.updateAll();
         }
-
-        // Export settings
-        function exportSettings() {
-            const currentSettings = {};
-            settings.forEach(setting => {
-                const slider = document.getElementById(setting);
-                if (slider) {
-                    currentSettings[setting] = slider.value;
-                }
-            });
-            
-            const text = `Apex Legends ALC Settings:
+    }
+    
+    resetSettings() {
+        const preset = PRESETS.default;
+        Object.keys(preset).forEach(key => {
+            this.state[key] = preset[key];
+            const slider = document.getElementById(key);
+            if (slider) {
+                slider.value = preset[key];
+                this.updateSliderVisual(key);
+            }
+        });
+        document.getElementById('presets').value = 'default';
+        this.updateAll();
+    }
+    
+    exportSettings() {
+        const settings = Object.keys(this.state).reduce((acc, key) => {
+            acc[key] = this.state[key];
+            return acc;
+        }, {});
+        
+        const text = `Apex Legends ALC Settings:
 ==================
 HIP FIRE:
-Deadzone: ${currentSettings.deadzone}%
-Outer Threshold: ${currentSettings.outerThreshold}%
-Response Curve: ${currentSettings.responseCurve}
-Yaw Speed: ${currentSettings.yawSpeed}
-Pitch Speed: ${currentSettings.pitchSpeed}
-Turning Extra Yaw: ${currentSettings.extraYaw}
-Turning Extra Pitch: ${currentSettings.extraPitch}
-Ramp-up Time: ${currentSettings.rampTime}%
-Ramp-up Delay: ${currentSettings.rampDelay}%
+Deadzone: ${settings.deadzone}%
+Outer Threshold: ${settings.outerThreshold}%
+Response Curve: ${settings.responseCurve}
+Yaw Speed: ${settings.yawSpeed}
+Pitch Speed: ${settings.pitchSpeed}
+Turning Extra Yaw: ${settings.extraYaw}
+Turning Extra Pitch: ${settings.extraPitch}
+Ramp-up Time: ${settings.rampTime}%
+Ramp-up Delay: ${settings.rampDelay}%
 
 ADS:
-ADS Yaw Speed: ${currentSettings.adsYawSpeed}
-ADS Pitch Speed: ${currentSettings.adsPitchSpeed}
-ADS Turning Extra Yaw: ${currentSettings.adsExtraYaw}
-ADS Turning Extra Pitch: ${currentSettings.adsExtraPitch}
-ADS Ramp-up Time: ${currentSettings.adsRampTime}%
-ADS Ramp-up Delay: ${currentSettings.adsRampDelay}%`;
+ADS Yaw Speed: ${settings.adsYawSpeed}
+ADS Pitch Speed: ${settings.adsPitchSpeed}
+ADS Turning Extra Yaw: ${settings.adsExtraYaw}
+ADS Turning Extra Pitch: ${settings.adsExtraPitch}
+ADS Ramp-up Time: ${settings.adsRampTime}%
+ADS Ramp-up Delay: ${settings.adsRampDelay}%`;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Settings copied to clipboard!');
+        }).catch(() => {
+            alert(text);
+        });
+    }
+    
+    importSettings() {
+        const input = prompt('Paste your settings string here:');
+        if (!input) return;
+        
+        try {
+            const mapping = {
+                'deadzone': 'deadzone',
+                'outerthreshold': 'outerThreshold',
+                'responsecurve': 'responseCurve',
+                'yawspeed': 'yawSpeed',
+                'pitchspeed': 'pitchSpeed',
+                'turningextrayaw': 'extraYaw',
+                'turningextrapitch': 'extraPitch',
+                'ramp-uptime': 'rampTime',
+                'ramp-updelay': 'rampDelay',
+                'adsyawspeed': 'adsYawSpeed',
+                'adspitchspeed': 'adsPitchSpeed',
+                'adsturningextrayaw': 'adsExtraYaw',
+                'adsturningextrapitch': 'adsExtraPitch',
+                'adsramp-uptime': 'adsRampTime',
+                'adsramp-updelay': 'adsRampDelay'
+            };
             
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Settings copied to clipboard!');
-            }).catch(() => {
-                alert(text);
-            });
-        }
-
-        // Import settings
-        function importSettings() {
-            const input = prompt('Paste your settings string here:');
-            if (input) {
-                try {
-                    const lines = input.split('\n');
-                    lines.forEach(line => {
-                        const match = line.match(/^(.*?):\s*(\d+)%?$/);
-                        if (match) {
-                            const key = match[1].trim().toLowerCase().replace(/ /g, '');
-                            const value = match[2];
-                            
-                            const mapping = {
-                                'deadzone': 'deadzone',
-                                'outerthreshold': 'outerThreshold',
-                                'responsecurve': 'responseCurve',
-                                'yawspeed': 'yawSpeed',
-                                'pitchspeed': 'pitchSpeed',
-                                'turningextrayaw': 'extraYaw',
-                                'turningextrapitch': 'extraPitch',
-                                'ramp-uptime': 'rampTime',
-                                'ramp-updelay': 'rampDelay',
-                                'adsyawspeed': 'adsYawSpeed',
-                                'adspitchspeed': 'adsPitchSpeed',
-                                'adsturningextrayaw': 'adsExtraYaw',
-                                'adsturningextrapitch': 'adsExtraPitch',
-                                'adsramp-uptime': 'adsRampTime',
-                                'adsramp-updelay': 'adsRampDelay'
-                            };
-                            
-                            Object.keys(mapping).forEach(textKey => {
-                                if (key.includes(textKey)) {
-                                    const elementId = mapping[textKey];
-                                    const slider = document.getElementById(elementId);
-                                    if (slider) {
-                                        slider.value = value;
-                                        updateSlider(elementId);
-                                    }
-                                }
-                            });
+            const lines = input.split('\n');
+            lines.forEach(line => {
+                const match = line.match(/^(.*?):\s*(\d+)%?$/);
+                if (match) {
+                    const key = match[1].trim().toLowerCase().replace(/ /g, '');
+                    const value = parseInt(match[2]);
+                    
+                    Object.keys(mapping).forEach(textKey => {
+                        if (key.includes(textKey)) {
+                            const settingId = mapping[textKey];
+                            this.state[settingId] = value;
+                            const slider = document.getElementById(settingId);
+                            if (slider) {
+                                slider.value = value;
+                                this.updateSliderVisual(settingId);
+                            }
                         }
                     });
-                    
-                    document.getElementById('presets').value = 'custom';
-                    updateWarnings();
-                    updateVisualizations();
-                    updateAnalysis();
-                    updateStats();
-                    alert('Settings imported successfully!');
-                } catch (e) {
-                    alert('Failed to import settings. Please check the format.');
                 }
+            });
+            
+            document.getElementById('presets').value = 'custom';
+            this.updateAll();
+            alert('Settings imported successfully!');
+        } catch (e) {
+            alert('Failed to import settings. Please check the format.');
+        }
+    }
+    
+    updateAll() {
+        this.updateWarnings();
+        this.updateVisualizations();
+        this.updateAnalysis();
+        this.updateStats();
+    }
+    
+    updateWarnings() {
+        this.updateSpeedWarnings('yawSpeed', 'hipYawWarning', 'hip');
+        this.updateSpeedWarnings('pitchSpeed', 'hipPitchWarning', 'hip_pitch');
+        this.updateSpeedWarnings('adsYawSpeed', 'adsYawWarning', 'ads');
+        this.updateSpeedWarnings('adsPitchSpeed', 'adsPitchWarning', 'ads_pitch');
+        
+        const outerWarning = document.getElementById('outerThresholdWarning');
+        if (outerWarning) {
+            outerWarning.innerHTML = this.state.outerThreshold < 2 
+                ? '<div class="warning warning-red">⚠️ ALPS controllers need minimum 2% to avoid edge detection issues</div>'
+                : '';
+        }
+    }
+    
+    updateSpeedWarnings(settingId, warningId, type) {
+        const value = this.state[settingId];
+        const warning = document.getElementById(warningId);
+        if (!warning) return;
+        
+        let html = '';
+        const t = CONSTANTS.THRESHOLDS;
+        
+        switch(type) {
+            case 'hip':
+                if (value < t.HIP_YAW_MIN) {
+                    html = '<div class="warning warning-red">⚠️ Below 90°/s - Cannot track close range strafes at 3m</div>';
+                } else if (value < t.HIP_YAW_VIABLE) {
+                    html = '<div class="warning warning-yellow">⚡ Minimum viable - limited strafe tracking</div>';
+                } else if (value > t.HIP_YAW_MAX) {
+                    html = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s - Extra speed may be hard to control</div>';
+                } else {
+                    html = '<div class="warning warning-green">✓ Good for close range tracking</div>';
+                }
+                break;
+                
+            case 'hip_pitch':
+                if (value < t.HIP_PITCH_MIN) {
+                    html = '<div class="warning warning-red">⚠️ Below 50°/s - Cannot track close range vertical movement</div>';
+                } else if (value <= t.HIP_PITCH_VIABLE) {
+                    html = '<div class="warning warning-yellow">⚡ Minimum viable - limited vertical tracking</div>';
+                } else if (value > t.HIP_PITCH_MAX) {
+                    html = '<div class="warning warning-yellow">⚠️ Exceeding 180°/s - Extra speed may be hard to control</div>';
+                } else {
+                    html = '<div class="warning warning-green">✓ Good vertical tracking</div>';
+                }
+                break;
+                
+            case 'ads':
+                if (value < t.ADS_YAW_MIN) {
+                    html = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
+                } else if (value < t.ADS_YAW_VIABLE) {
+                    html = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
+                } else if (value > t.ADS_YAW_MAX) {
+                    html = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s - May be too fast for ADS precision</div>';
+                } else {
+                    html = '<div class="warning warning-green">✓ Good tracking potential</div>';
+                }
+                break;
+                
+            case 'ads_pitch':
+                if (value < t.ADS_PITCH_MIN) {
+                    html = '<div class="warning warning-red">⚠️ Below 45°/s - Cannot track basic movement</div>';
+                } else if (value < t.ADS_PITCH_VIABLE) {
+                    html = '<div class="warning warning-yellow">⚡ Minimum viable for tracking</div>';
+                } else if (value > t.ADS_PITCH_MAX) {
+                    html = '<div class="warning warning-yellow">⚠️ Exceeding 120°/s - May be too fast for ADS precision</div>';
+                } else {
+                    html = '<div class="warning warning-green">✓ Good tracking potential</div>';
+                }
+                break;
+        }
+        
+        warning.innerHTML = html;
+    }
+    
+    updateStats() {
+        const stats = {
+            hip180Time: (180 / this.state.yawSpeed).toFixed(2),
+            hip180TimeExtra: (180 / (this.state.yawSpeed + this.state.extraYaw)).toFixed(2),
+            ads180Time: (180 / this.state.adsYawSpeed).toFixed(2),
+            ads180TimeExtra: (180 / (this.state.adsYawSpeed + this.state.adsExtraYaw)).toFixed(2),
+            hipBaseSpeed: this.state.yawSpeed,
+            hipMaxSpeed: this.state.yawSpeed + this.state.extraYaw,
+            adsBaseSpeed: this.state.adsYawSpeed,
+            adsMaxSpeed: this.state.adsYawSpeed + this.state.adsExtraYaw
+        };
+        
+        Object.keys(stats).forEach(key => {
+            const element = document.getElementById(key);
+            if (element) {
+                element.textContent = key.includes('Time') ? stats[key] + 's' : stats[key] + '°/s';
+            }
+        });
+    }
+    
+    updateAnalysis() {
+        this.updateMainAnalysis();
+        this.updateDiagonalUniformity();
+        this.updateMicroAdjustment();
+    }
+    
+    updateMainAnalysis() {
+        const { deadzone, responseCurve: curve, yawSpeed: hipYaw, pitchSpeed: hipPitch, 
+                adsYawSpeed: adsYaw, extraYaw } = this.state;
+        
+        let analysis = "";
+        
+        if (deadzone === 0) {
+            analysis += "• Perfect deadzone: Maximum micro-adjustment capability.<br>";
+        } else if (deadzone < 5) {
+            analysis += "• Excellent deadzone: Great micro-adjustments with minimal input.<br>";
+        } else if (deadzone < 15) {
+            analysis += "• Moderate deadzone: Balanced but could benefit from lowering.<br>";
+        } else {
+            analysis += "• High deadzone: Limiting your micro-adjustment potential significantly.<br>";
+        }
+        
+        if (curve == 0) {
+            analysis += "• Linear response: Maximum control for recoil and tracking. High skill ceiling.<br>";
+        } else if (curve <= 5) {
+            analysis += "• Mild curve: Good balance between control and forgiveness.<br>";
+        } else if (curve == 10) {
+            analysis += "• Classic curve: Forgiving and familiar, but less precise than linear.<br>";
+        } else {
+            analysis += "• Heavy curve: Very forgiving but sacrifices precision and consistency.<br>";
+        }
+        
+        if (hipYaw < CONSTANTS.THRESHOLDS.HIP_YAW_MIN) {
+            analysis += "• ⚠️ CRITICAL: Hip fire too slow for close range! Increase to at least 90°/s.<br>";
+        } else if (hipYaw < CONSTANTS.THRESHOLDS.HIP_YAW_VIABLE) {
+            analysis += "• Hip fire speed is minimum viable. Consider increasing for better close range.<br>";
+        }
+        
+        if (adsYaw < CONSTANTS.THRESHOLDS.ADS_YAW_MIN) {
+            analysis += "• ⚠️ CRITICAL: ADS too slow for basic tracking! Increase to at least 45°/s.<br>";
+        } else if (adsYaw < CONSTANTS.THRESHOLDS.ADS_YAW_VIABLE) {
+            analysis += "• ADS speed is minimum viable. Consider increasing for better tracking.<br>";
+        }
+        
+        const hipUniformity = this.calculateUniformity(hipYaw, hipPitch);
+        if (hipUniformity < 70) {
+            analysis += "• ⚠️ Poor diagonal uniformity! Match yaw/pitch speeds for consistent aim.<br>";
+        } else if (hipUniformity < 85) {
+            analysis += "• Diagonal movement may feel slightly inconsistent.<br>";
+        }
+        
+        if (extraYaw > 100) {
+            analysis += "• High turning extra enables quick 180s while maintaining low base sens.<br>";
+        } else if (extraYaw === 0) {
+            analysis += "• No turning extra: Consider adding some for emergency flicks.<br>";
+        }
+        
+        const avgSpeed = (hipYaw + hipPitch) / 2;
+        if (curve === 0 && deadzone < 5 && avgSpeed > 150 && hipUniformity > 85) {
+            analysis += "<br><strong>🏆 Pro-level setup detected! High skill ceiling configuration.</strong>";
+        } else if (curve > 15 || deadzone > 20) {
+            analysis += "<br><strong>⚠️ Settings may be limiting your potential. Consider moving toward linear/low deadzone.</strong>";
+        }
+        
+        document.getElementById('analysisText').innerHTML = analysis;
+    }
+    
+    calculateUniformity(yaw, pitch) {
+        const min = Math.min(yaw, pitch);
+        const max = Math.max(yaw, pitch);
+        return max > 0 ? (min / max * 100) : 100;
+    }
+    
+    updateDiagonalUniformity() {
+        const hipUniformity = this.calculateUniformity(this.state.yawSpeed, this.state.pitchSpeed);
+        const adsUniformity = this.calculateUniformity(this.state.adsYawSpeed, this.state.adsPitchSpeed);
+        
+        document.getElementById('hipUniformityBar').style.width = hipUniformity + '%';
+        document.getElementById('hipUniformityLabel').textContent = Math.round(hipUniformity) + '%';
+        document.getElementById('adsUniformityBar').style.width = adsUniformity + '%';
+        document.getElementById('adsUniformityLabel').textContent = Math.round(adsUniformity) + '%';
+        
+        const worstUniformity = Math.min(hipUniformity, adsUniformity);
+        const statusEl = document.getElementById('uniformityStatus');
+        const textEl = document.getElementById('uniformityText');
+        
+        if (worstUniformity >= 80) {
+            statusEl.style.color = CONSTANTS.COLORS.PRIMARY;
+            statusEl.textContent = '✓ Excellent Diagonal Uniformity';
+            textEl.textContent = 'Your diagonal movement will feel consistent and predictable. Pro-level settings!';
+        } else if (worstUniformity >= 60) {
+            statusEl.style.color = '#ffcc00';
+            statusEl.textContent = '⚡ Acceptable Diagonal Uniformity';
+            textEl.textContent = 'Some diagonal inconsistency. Consider matching yaw/pitch closer for better feel.';
+        } else {
+            statusEl.style.color = '#ff6666';
+            statusEl.textContent = '⚠️ Poor Diagonal Uniformity';
+            textEl.textContent = 'Diagonal tracking will feel very inconsistent! Match yaw and pitch speeds.';
+        }
+    }
+    
+    updateMicroAdjustment() {
+        const capability = Math.max(0, 100 - this.state.deadzone * 2);
+        
+        document.getElementById('microBar').style.width = capability + '%';
+        document.getElementById('microLabel').textContent = capability + '%';
+        
+        let text;
+        if (this.state.deadzone === 0) {
+            text = "Perfect micro-adjustments - maximum precision possible";
+        } else if (this.state.deadzone < 5) {
+            text = "Excellent micro-adjustments - minimal input required";
+        } else if (this.state.deadzone < 15) {
+            text = "Good micro-adjustments - balanced precision";
+        } else {
+            text = "Limited micro-adjustments - requires larger movements";
+        }
+        document.getElementById('microText').textContent = text;
+    }
+    
+    updateVisualizations() {
+        this.drawResponseCurve();
+        this.drawStrafeTracking();
+        this.drawDiagonalVisualization();
+        this.drawAimAssist();
+        this.draw3DAimAssist();
+        this.drawSpeedComparison();
+    }
+    
+    applyDeadzone(x, y) {
+        const magnitude = Math.sqrt(x * x + y * y);
+        const deadzoneValue = this.state.deadzone / 100;
+        const outerValue = this.state.outerThreshold / 100;
+        
+        if (magnitude < deadzoneValue) return { x: 0, y: 0, inDeadzone: true };
+        
+        let adjustedMagnitude = magnitude;
+        if (magnitude > 1 - outerValue) {
+            adjustedMagnitude = 1 - outerValue;
+        }
+        
+        const scaled = (adjustedMagnitude - deadzoneValue) / (1 - deadzoneValue - outerValue);
+        const angle = Math.atan2(y, x);
+        
+        return {
+            x: scaled * Math.cos(angle),
+            y: scaled * Math.sin(angle),
+            inDeadzone: false,
+            inOuter: magnitude > 1 - outerValue
+        };
+    }
+    
+    applyResponseCurve(input) {
+        const curveValue = this.state.responseCurve;
+        const absInput = Math.abs(input);
+        let output;
+        
+        if (curveValue == 0) {
+            output = absInput;
+        } else if (curveValue <= 5) {
+            const power = 1 + (curveValue * 0.2);
+            output = Math.pow(absInput, power);
+        } else if (curveValue <= 9) {
+            const t = (curveValue - 5) / 4;
+            const linearOutput = absInput;
+            const classicOutput = Math.pow(absInput, 2.2);
+            output = linearOutput * (1 - t) + classicOutput * t;
+        } else if (curveValue == 10) {
+            output = Math.pow(absInput, 2.2);
+        } else if (curveValue < 20) {
+            const power = 2.2 + (curveValue - 10) * 0.15;
+            output = Math.pow(absInput, power);
+        } else {
+            const power = 3.7 + (curveValue - 20) * 0.25;
+            output = Math.pow(absInput, power);
+        }
+        
+        return Math.sign(input) * output;
+    }
+    
+    drawDeadzone() {
+        const ctx = this.contexts.deadzoneCanvas;
+        const canvas = this.canvases.deadzoneCanvas;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const maxRadius = Math.min(centerX, centerY) - 20;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#3a3a3a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.strokeStyle = '#666';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, maxRadius, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        const outerThresholdRadius = maxRadius * (1 - this.state.outerThreshold / 100);
+        ctx.fillStyle = 'rgba(255, 107, 0, 0.15)';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, maxRadius, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, outerThresholdRadius, 0, Math.PI * 2, true);
+        ctx.fill();
+        
+        const deadzoneRadius = maxRadius * (this.state.deadzone / 100);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, outerThresholdRadius, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, deadzoneRadius, 0, Math.PI * 2, true);
+        ctx.fill();
+        
+        ctx.fillStyle = 'rgba(120, 40, 40, 0.4)';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, deadzoneRadius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.strokeStyle = '#ff6b00';
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ff6b00';
+        ctx.beginPath();
+        ctx.moveTo(centerX - 10, centerY);
+        ctx.lineTo(centerX + 10, centerY);
+        ctx.moveTo(centerX, centerY - 10);
+        ctx.lineTo(centerX, centerY + 10);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        
+        const stickAngle = Date.now() / 2000;
+        const stickRadius = maxRadius * 0.7;
+        const stickX = Math.cos(stickAngle) * stickRadius / maxRadius;
+        const stickY = Math.sin(stickAngle) * stickRadius / maxRadius;
+        
+        const processed = this.applyDeadzone(stickX, stickY);
+        
+        ctx.fillStyle = '#666';
+        ctx.beginPath();
+        ctx.arc(centerX + stickX * maxRadius, centerY + stickY * maxRadius, 6, 0, Math.PI * 2);
+        ctx.fill();
+        
+        if (!processed.inDeadzone) {
+            ctx.fillStyle = '#ff6b00';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#ff6b00';
+            ctx.beginPath();
+            ctx.arc(centerX + processed.x * maxRadius, centerY + processed.y * maxRadius, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            
+            ctx.strokeStyle = '#ff6b00';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(centerX + stickX * maxRadius, centerY + stickY * maxRadius);
+            ctx.lineTo(centerX + processed.x * maxRadius, centerY + processed.y * maxRadius);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+    }
+    
+    drawResponseCurve() {
+        const ctx = this.contexts.curveCanvas;
+        const canvas = this.canvases.curveCanvas;
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 30;
+        const graphWidth = width - 2 * padding;
+        const graphHeight = height - 2 * padding;
+        
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = CONSTANTS.COLORS.GRID;
+        ctx.fillRect(0, 0, width, height);
+        
+        const deadzonePercent = this.state.deadzone / 100;
+        const outerThresholdPercent = Math.max(0.01, this.state.outerThreshold / 100);
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.GRID;
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i <= 10; i++) {
+            const x = padding + (i / 10) * graphWidth;
+            ctx.beginPath();
+            ctx.moveTo(x, padding);
+            ctx.lineTo(x, height - padding);
+            ctx.stroke();
+            
+            const y = padding + (i / 10) * graphHeight;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+        }
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.AXES;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.stroke();
+        
+        ctx.strokeStyle = '#444';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, padding);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        if (deadzonePercent > 0) {
+            ctx.fillStyle = 'rgba(120, 40, 40, 0.2)';
+            ctx.fillRect(padding, padding, deadzonePercent * graphWidth, graphHeight);
+        }
+        
+        ctx.fillStyle = 'rgba(255, 107, 0, 0.1)';
+        ctx.fillRect(
+            padding + (1 - outerThresholdPercent) * graphWidth, 
+            padding, 
+            outerThresholdPercent * graphWidth, 
+            graphHeight
+        );
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.PRIMARY;
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = CONSTANTS.COLORS.PRIMARY;
+        ctx.beginPath();
+        
+        for (let i = 0; i <= 100; i++) {
+            const rawInput = i / 100;
+            let x = padding + rawInput * graphWidth;
+            let y = height - padding;
+            
+            if (rawInput <= deadzonePercent) {
+                y = height - padding;
+            } else if (rawInput >= 1 - outerThresholdPercent) {
+                y = padding;
+            } else {
+                const normalizedInput = (rawInput - deadzonePercent) / (1 - deadzonePercent - outerThresholdPercent);
+                const curvedOutput = this.applyResponseCurve(normalizedInput);
+                y = height - padding - curvedOutput * graphHeight;
+            }
+            
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
             }
         }
-
-        // Initialize
-        updateWarnings();
-        updateVisualizations();
-        updateAnalysis();
-        updateStats();
+        
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        
+        ctx.fillStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Input', width / 2, height - 5);
+        ctx.save();
+        ctx.translate(10, height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('Output', 0, 0);
+        ctx.restore();
+    }
+    
+    drawStrafeTracking() {
+        const ctx = this.contexts.strafeCanvas;
+        const canvas = this.canvases.strafeCanvas;
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 40;
+        const graphWidth = width - 2 * padding;
+        const graphHeight = height - 2 * padding;
+        
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = CONSTANTS.COLORS.GRID;
+        ctx.fillRect(0, 0, width, height);
+        
+        const hipYaw = this.state.yawSpeed;
+        const adsYaw = this.state.adsYawSpeed;
+        
+        const maxDistance = 50;
+        const maxSpeed = 200;
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.GRID;
+        ctx.lineWidth = 1;
+        
+        const distances = [3, 10, 20, 30, 40, 50];
+        distances.forEach(dist => {
+            const x = padding + (dist / maxDistance) * graphWidth;
+            ctx.beginPath();
+            ctx.moveTo(x, padding);
+            ctx.lineTo(x, height - padding);
+            ctx.stroke();
+            
+            ctx.fillStyle = CONSTANTS.COLORS.AXES;
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(dist + 'm', x, height - padding + 15);
+        });
+        
+        const speeds = [0, 25, 50, 75, 100, 125, 150, 175, 200];
+        speeds.forEach(speed => {
+            const y = height - padding - (speed / maxSpeed) * graphHeight;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+            
+            ctx.fillStyle = CONSTANTS.COLORS.AXES;
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'right';
+            ctx.fillText(speed + '°/s', padding - 5, y + 3);
+        });
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(width - padding, padding);
+        
+        for (let x = width - padding; x >= padding; x--) {
+            const dist = ((x - padding) / graphWidth) * maxDistance;
+            if (dist < 3) continue;
+            const requiredSpeed = 90 * (3 / dist);
+            const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
+            ctx.lineTo(x, y);
+        }
+        
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.fillStyle = 'rgba(120, 40, 40, 0.15)';
+        ctx.beginPath();
+        
+        ctx.moveTo(padding, height - padding);
+        
+        for (let x = padding; x <= width - padding; x++) {
+            const dist = ((x - padding) / graphWidth) * maxDistance;
+            if (dist < 3) {
+                ctx.lineTo(x, padding);
+            } else {
+                const requiredSpeed = 90 * (3 / dist);
+                const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
+                ctx.lineTo(x, y);
+            }
+        }
+        
+        ctx.lineTo(width - padding, height - padding);
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.PRIMARY;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        
+        for (let x = padding; x <= width - padding; x++) {
+            const dist = ((x - padding) / graphWidth) * maxDistance;
+            if (dist < 3) continue;
+            const requiredSpeed = 90 * (3 / dist);
+            const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
+            
+            if (x === padding || dist === 3) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+        
+        ctx.strokeStyle = '#888';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        
+        for (let x = padding; x <= width - padding; x++) {
+            const dist = ((x - padding) / graphWidth) * maxDistance;
+            if (dist < 3) continue;
+            const requiredSpeed = 45 * (3 / dist);
+            const y = height - padding - (Math.min(requiredSpeed, maxSpeed) / maxSpeed) * graphHeight;
+            
+            if (x === padding || dist === 3) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+        
+        const hipY = height - padding - (hipYaw / maxSpeed) * graphHeight;
+        ctx.strokeStyle = CONSTANTS.COLORS.TEXT_WHITE;
+        ctx.lineWidth = 3;
+        ctx.setLineDash([10, 5]);
+        ctx.beginPath();
+        ctx.moveTo(padding, hipY);
+        ctx.lineTo(width - padding, hipY);
+        ctx.stroke();
+        
+        const adsY = height - padding - (adsYaw / maxSpeed) * graphHeight;
+        ctx.strokeStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(padding, adsY);
+        ctx.lineTo(width - padding, adsY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        ctx.font = '11px Arial';
+        ctx.fillStyle = CONSTANTS.COLORS.TEXT_WHITE;
+        ctx.textAlign = 'left';
+        ctx.fillText(`Your Hip Fire: ${hipYaw}°/s`, padding + 10, hipY - 5);
+        
+        ctx.fillStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+        ctx.fillText(`Your ADS: ${adsYaw}°/s`, padding + 10, adsY + 12);
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.AXES;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.stroke();
+        
+        const hipCanTrackAt3m = hipYaw >= 90;
+        const adsCanTrackAt3m = adsYaw >= 45;
+        const statusBox = document.getElementById('strafeStatusBox');
+        
+        if (hipCanTrackAt3m && adsCanTrackAt3m) {
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = '<div style="color: #ff6b00; font-size: 18px; font-weight: bold;">✓ Both Hip Fire and ADS can track at all engagement ranges!</div>';
+        } else if (!hipCanTrackAt3m && !adsCanTrackAt3m) {
+            const hipClosest = Math.ceil(270 / hipYaw);
+            const adsClosest = Math.ceil(135 / adsYaw);
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<div style="color: #ff6666; font-size: 16px; font-weight: bold;">⚠️ Hip Fire: Cannot track closer than ${hipClosest}m<br>⚠️ ADS: Cannot track closer than ${adsClosest}m</div>`;
+        } else if (!hipCanTrackAt3m) {
+            const hipClosest = Math.ceil(270 / hipYaw);
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<div style="color: #ff6666; font-size: 16px; font-weight: bold;">⚠️ Hip Fire: Cannot track closer than ${hipClosest}m - Increase speed!</div>`;
+        } else {
+            const adsClosest = Math.ceil(135 / adsYaw);
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<div style="color: #ff6666; font-size: 16px; font-weight: bold;">⚠️ ADS: Cannot track closer than ${adsClosest}m - Increase ADS speed!</div>`;
+        }
+    }
+    
+    drawDiagonalVisualization() {
+        const ctx = this.contexts.diagonalCanvas;
+        const canvas = this.canvases.diagonalCanvas;
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const maxRadius = Math.min(centerX, centerY) - 40;
+        
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = CONSTANTS.COLORS.GRID;
+        ctx.fillRect(0, 0, width, height);
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.GRID;
+        ctx.lineWidth = 1;
+        
+        ctx.beginPath();
+        ctx.moveTo(centerX - maxRadius, centerY);
+        ctx.lineTo(centerX + maxRadius, centerY);
+        ctx.moveTo(centerX, centerY - maxRadius);
+        ctx.lineTo(centerX, centerY + maxRadius);
+        ctx.stroke();
+        
+        ctx.strokeStyle = '#444';
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        const diag = maxRadius * 0.707;
+        ctx.moveTo(centerX - diag, centerY - diag);
+        ctx.lineTo(centerX + diag, centerY + diag);
+        ctx.moveTo(centerX - diag, centerY + diag);
+        ctx.lineTo(centerX + diag, centerY - diag);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        ctx.strokeStyle = '#555';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, maxRadius * 0.7, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        const hipYaw = this.state.yawSpeed;
+        const hipPitch = this.state.pitchSpeed;
+        const adsYaw = this.state.adsYawSpeed;
+        const adsPitch = this.state.adsPitchSpeed;
+        
+        ctx.save();
+        ctx.translate(centerX - centerX/2, centerY);
+        const hipScaleX = 1;
+        const hipScaleY = hipPitch / hipYaw;
+        ctx.scale(hipScaleX, hipScaleY);
+        ctx.strokeStyle = CONSTANTS.COLORS.TEXT_WHITE;
+        ctx.lineWidth = 3 / Math.max(hipScaleX, hipScaleY);
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = CONSTANTS.COLORS.TEXT_WHITE;
+        ctx.beginPath();
+        ctx.arc(0, 0, maxRadius * 0.5, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        
+        ctx.save();
+        ctx.translate(centerX + centerX/2, centerY);
+        const adsScaleX = 1;
+        const adsScaleY = adsPitch / adsYaw;
+        ctx.scale(adsScaleX, adsScaleY);
+        ctx.strokeStyle = CONSTANTS.COLORS.PRIMARY;
+        ctx.lineWidth = 3 / Math.max(adsScaleX, adsScaleY);
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = CONSTANTS.COLORS.PRIMARY;
+        ctx.beginPath();
+        ctx.arc(0, 0, maxRadius * 0.5, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        
+        ctx.shadowBlur = 0;
+        
+        ctx.fillStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Hip Fire', centerX - centerX/2, height - 20);
+        ctx.fillText('ADS', centerX + centerX/2, height - 20);
+        
+        ctx.fillStyle = CONSTANTS.COLORS.AXES;
+        ctx.fillText('Perfect Circle Reference', centerX, 20);
+    }
+    
+    drawAimAssist() {
+        const ctx = this.contexts.aimAssistCanvas;
+        const canvas = this.canvases.aimAssistCanvas;
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 40;
+        const graphWidth = width - 2 * padding;
+        const graphHeight = height - 2 * padding;
+        
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = CONSTANTS.COLORS.GRID;
+        ctx.fillRect(0, 0, width, height);
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.GRID;
+        ctx.lineWidth = 1;
+        
+        if (this.aaViewMode === 'hipfire') {
+            const distances = [0, 3, 10, 20, 33, 40];
+            distances.forEach((dist) => {
+                const x = padding + (dist / 40) * graphWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, height - padding);
+                ctx.stroke();
+                
+                ctx.fillStyle = CONSTANTS.COLORS.AXES;
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(dist + 'm', x, height - padding + 15);
+            });
+            
+            ctx.fillStyle = CONSTANTS.COLORS.NO_AA_ZONE;
+            ctx.fillRect(padding, padding, (3/40) * graphWidth, graphHeight);
+            ctx.fillRect(padding + (33/40) * graphWidth, padding, (7/40) * graphWidth, graphHeight);
+            
+            ctx.fillStyle = CONSTANTS.COLORS.AA_ACTIVE_ZONE;
+            ctx.fillRect(padding + (3/40) * graphWidth, padding, (30/40) * graphWidth, graphHeight);
+            
+            ctx.strokeStyle = CONSTANTS.COLORS.PRIMARY;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = CONSTANTS.COLORS.PRIMARY;
+            ctx.beginPath();
+            
+            for (let i = 0; i <= 40; i++) {
+                const distance = i;
+                let aaStrength = 0;
+                
+                if (distance >= 3 && distance <= 33) {
+                    aaStrength = CONSTANTS.AA.STRENGTH;
+                }
+                
+                const x = padding + (distance / 40) * graphWidth;
+                const y = height - padding - (aaStrength / CONSTANTS.AA.STRENGTH * graphHeight * 0.8);
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            ctx.strokeStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let i = 0; i <= 40; i++) {
+                const distance = i;
+                let bubbleSize = 0;
+                
+                if (distance >= 3 && distance <= 33) {
+                    bubbleSize = 1 - (distance - 3) / 30 * 0.7;
+                }
+                
+                const x = padding + (distance / 40) * graphWidth;
+                const y = height - padding - (bubbleSize * graphHeight * 0.8);
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+            
+        } else {
+            const distances = [0, 10, 25, 50, 75, 100];
+            distances.forEach((dist) => {
+                const x = padding + (dist / 100) * graphWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, height - padding);
+                ctx.stroke();
+                
+                ctx.fillStyle = CONSTANTS.COLORS.AXES;
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(dist + 'm', x, height - padding + 15);
+            });
+            
+            ctx.strokeStyle = CONSTANTS.COLORS.PRIMARY;
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = CONSTANTS.COLORS.PRIMARY;
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding - CONSTANTS.AA.STRENGTH * graphHeight * 0.8);
+            ctx.lineTo(width - padding, height - padding - CONSTANTS.AA.STRENGTH * graphHeight * 0.8);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
+            ctx.strokeStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let i = 0; i <= 100; i++) {
+                const distance = i;
+                const bubbleSize = Math.exp(-distance / 30);
+                
+                const x = padding + (distance / 100) * graphWidth;
+                const y = height - padding - (bubbleSize * graphHeight * 0.8);
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+            
+            ctx.fillStyle = 'rgba(120, 40, 40, 0.1)';
+            ctx.fillRect(padding + (50/100) * graphWidth, padding, (50/100) * graphWidth, graphHeight);
+            
+            ctx.fillStyle = CONSTANTS.COLORS.AXES;
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Practical Limit', padding + (75/100) * graphWidth, padding + 20);
+        }
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.AXES;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.stroke();
+        
+        ctx.fillStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Distance (meters)', width / 2, height - 5);
+        
+        ctx.font = '11px Arial';
+        ctx.textAlign = 'left';
+        
+        ctx.fillStyle = CONSTANTS.COLORS.PRIMARY;
+        ctx.fillText('AA Strength (30%)', width - 130, 20);
+        
+        ctx.fillStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+        ctx.fillText('Bubble Size', width - 130, 35);
+    }
+    
+    draw3DAimAssist() {
+        const ctx = this.contexts.aimAssist3DCanvas;
+        const canvas = this.canvases.aimAssist3DCanvas;
+        if (!ctx || !canvas) return;
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#2a2a2a';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Auto-rotation
+        if (this.autoRotate3D) {
+            this.rotation3D.y += 0.01;
+        }
+        
+        // 3D projection function
+        const project3D = (x, y, z) => {
+            // Apply rotation
+            const cosX = Math.cos(this.rotation3D.x);
+            const sinX = Math.sin(this.rotation3D.x);
+            const cosY = Math.cos(this.rotation3D.y);
+            const sinY = Math.sin(this.rotation3D.y);
+            
+            // Rotate around Y axis
+            const x1 = x * cosY - z * sinY;
+            const z1 = x * sinY + z * cosY;
+            
+            // Rotate around X axis
+            const y1 = y * cosX - z1 * sinX;
+            const z2 = y * sinX + z1 * cosX;
+            
+            // Perspective projection
+            const scale = 300 / (z2 + 500);
+            return {
+                x: centerX + x1 * scale,
+                y: centerY + y1 * scale,
+                scale: scale,
+                z: z2
+            };
+        };
+        
+        // Draw grid floor centered at origin
+        ctx.strokeStyle = '#444';
+        ctx.lineWidth = 1;
+        
+        // X-axis lines (perpendicular to view direction)
+        for (let x = -250; x <= 250; x += 50) {
+            const start = project3D(x, 50, -50);
+            const end = project3D(x, 50, 400);
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.lineTo(end.x, end.y);
+            ctx.stroke();
+        }
+        
+        // Z-axis lines (along view direction)
+        for (let z = -50; z <= 400; z += 50) {
+            const start = project3D(-250, 50, z);
+            const end = project3D(250, 50, z);
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.lineTo(end.x, end.y);
+            ctx.stroke();
+        }
+        
+        // Draw coordinate axes for reference
+        ctx.strokeStyle = '#666';
+        ctx.lineWidth = 2;
+        
+        // X-axis (red)
+        ctx.strokeStyle = '#663333';
+        const xStart = project3D(-100, 0, 0);
+        const xEnd = project3D(100, 0, 0);
+        ctx.beginPath();
+        ctx.moveTo(xStart.x, xStart.y);
+        ctx.lineTo(xEnd.x, xEnd.y);
+        ctx.stroke();
+        
+        // Z-axis (blue) - forward direction
+        ctx.strokeStyle = '#333366';
+        const zStart = project3D(0, 0, -50);
+        const zEnd = project3D(0, 0, 150);
+        ctx.beginPath();
+        ctx.moveTo(zStart.x, zStart.y);
+        ctx.lineTo(zEnd.x, zEnd.y);
+        ctx.stroke();
+        
+        // Draw player position at origin
+        const playerPos = project3D(0, 0, 0);
+        ctx.fillStyle = '#ff6b00';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ff6b00';
+        ctx.beginPath();
+        ctx.arc(playerPos.x, playerPos.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        // Draw aim assist visualization based on mode
+        if (this.aaViewMode === 'hipfire') {
+            // Hip fire: 3-33m range
+            const minDist = 30;  // 3m scaled
+            const maxDist = 330; // 33m scaled
+            
+            // Draw aim assist cone segments
+            for (let dist = minDist; dist <= maxDist; dist += 30) {
+                const bubbleSize = 1 - ((dist/10 - 3) / 30 * 0.7);
+                const radius = bubbleSize * 40;
+                
+                // Draw cone at this distance
+                ctx.strokeStyle = `rgba(255, 107, 0, ${0.5 - dist/maxDist * 0.3})`;
+                ctx.lineWidth = 2;
+                
+                // Draw circle at distance
+                const numPoints = 32;
+                ctx.beginPath();
+                for (let i = 0; i <= numPoints; i++) {
+                    const angle = (i / numPoints) * Math.PI * 2;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    const point = project3D(x, y, dist);
+                    
+                    if (i === 0) {
+                        ctx.moveTo(point.x, point.y);
+                    } else {
+                        ctx.lineTo(point.x, point.y);
+                    }
+                }
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Fill the circle with semi-transparent color
+                ctx.fillStyle = `rgba(255, 107, 0, ${0.1 - dist/maxDist * 0.08})`;
+                ctx.fill();
+                
+                // Draw cone lines from player to edges
+                if (dist === minDist || dist === maxDist) {
+                    ctx.strokeStyle = `rgba(255, 107, 0, 0.4)`;
+                    ctx.lineWidth = 1;
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (i / 8) * Math.PI * 2;
+                        const x = Math.cos(angle) * radius;
+                        const y = Math.sin(angle) * radius;
+                        
+                        const start = project3D(0, 0, 0);
+                        const end = project3D(x, y, dist);
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(start.x, start.y);
+                        ctx.lineTo(end.x, end.y);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Draw optimal range indicator
+                if (dist >= 100 && dist <= 200) { // 10-20m is optimal
+                    const optimalLabel = project3D(0, -radius - 20, dist);
+                    ctx.fillStyle = 'rgba(0, 255, 100, 0.3)';
+                    ctx.fillRect(optimalLabel.x - 35, optimalLabel.y - 10, 70, 20);
+                    ctx.fillStyle = '#00ff66';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Optimal', optimalLabel.x, optimalLabel.y + 3);
+                }
+            }
+            
+            // Draw no-AA zones with better positioning
+            ctx.fillStyle = 'rgba(120, 40, 40, 0.4)';
+            
+            // Near zone (< 3m)
+            const nearZone = project3D(0, -30, minDist/2);
+            ctx.fillRect(nearZone.x - 50, nearZone.y - 15, 100, 30);
+            ctx.fillStyle = '#ff6666';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('No AA < 3m', nearZone.x, nearZone.y + 5);
+            
+            // Far zone (> 33m)
+            const farZone = project3D(0, -30, maxDist + 50);
+            ctx.fillStyle = 'rgba(120, 40, 40, 0.4)';
+            ctx.fillRect(farZone.x - 50, farZone.y - 15, 100, 30);
+            ctx.fillStyle = '#ff6666';
+            ctx.fillText('No AA > 33m', farZone.x, farZone.y + 5);
+            
+        } else {
+            // ADS: Exponential falloff
+            const maxDist = 400;
+            
+            // Draw aim assist bubble at different distances
+            for (let dist = 10; dist <= maxDist; dist += 30) {
+                const bubbleSize = Math.exp(-dist/10 / 30);
+                const radius = bubbleSize * 60;
+                
+                if (radius < 5) continue; // Skip very small bubbles
+                
+                ctx.strokeStyle = `rgba(255, 107, 0, ${bubbleSize * 0.6})`;
+                ctx.lineWidth = 2;
+                
+                // Draw sphere approximation using circles
+                const numPoints = 32;
+                ctx.beginPath();
+                for (let i = 0; i <= numPoints; i++) {
+                    const angle = (i / numPoints) * Math.PI * 2;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    const point = project3D(x, y, dist);
+                    
+                    if (i === 0) {
+                        ctx.moveTo(point.x, point.y);
+                    } else {
+                        ctx.lineTo(point.x, point.y);
+                    }
+                }
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Fill with semi-transparent color
+                ctx.fillStyle = `rgba(255, 107, 0, ${bubbleSize * 0.15})`;
+                ctx.fill();
+                
+                // Draw optimal range indicator for ADS
+                if (dist >= 50 && dist <= 150) { // 10-30m is optimal for ADS
+                    const optimalLabel = project3D(0, -radius - 20, dist);
+                    ctx.fillStyle = 'rgba(0, 255, 100, 0.3)';
+                    ctx.fillRect(optimalLabel.x - 35, optimalLabel.y - 10, 70, 20);
+                    ctx.fillStyle = '#00ff66';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Optimal', optimalLabel.x, optimalLabel.y + 3);
+                }
+            }
+            
+            // Draw center line showing view direction
+            ctx.strokeStyle = 'rgba(255, 107, 0, 0.2)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            const lineStart = project3D(0, 0, 0);
+            const lineEnd = project3D(0, 0, maxDist);
+            ctx.beginPath();
+            ctx.moveTo(lineStart.x, lineStart.y);
+            ctx.lineTo(lineEnd.x, lineEnd.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw practical limit zone
+            const limitZone = project3D(0, -30, 300);
+            ctx.fillStyle = 'rgba(120, 40, 40, 0.3)';
+            ctx.fillRect(limitZone.x - 60, limitZone.y - 15, 120, 30);
+            ctx.fillStyle = '#ff6666';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Practical Limit', limitZone.x, limitZone.y + 5);
+        }
+        
+        // Draw distance markers on the floor
+        ctx.fillStyle = '#999';
+        ctx.font = '11px Arial';
+        ctx.textAlign = 'center';
+        
+        const distances = this.aaViewMode === 'hipfire' 
+            ? [0, 30, 100, 200, 330] 
+            : [0, 50, 150, 250, 350];
+        
+        distances.forEach(dist => {
+            const point = project3D(0, 48, dist);
+            const label = dist === 0 ? 'Player' : `${dist/10}m`;
+            ctx.fillText(label, point.x, point.y);
+        });
+        
+        // Draw legend
+        ctx.fillStyle = '#ff6b00';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(this.aaViewMode === 'hipfire' ? 'Hip Fire AA Cone' : 'ADS AA Falloff', 20, 30);
+        
+        ctx.fillStyle = '#999';
+        ctx.font = '11px Arial';
+        ctx.fillText('Bubble size shows AA effectiveness', 20, 50);
+        ctx.fillText('Orange intensity shows AA strength', 20, 65);
+        
+        // Draw AA strength indicator
+        const strengthY = 90;
+        ctx.fillText('AA Strength: 30%', 20, strengthY);
+        ctx.fillStyle = 'rgba(255, 107, 0, 0.8)';
+        ctx.fillRect(20, strengthY + 5, 100 * 0.3, 10);
+        ctx.strokeStyle = '#666';
+        ctx.strokeRect(20, strengthY + 5, 100, 10);
+    }
+    
+    drawSpeedComparison() {
+        const ctx = this.contexts.speedComparisonCanvas;
+        const canvas = this.canvases.speedComparisonCanvas;
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 40;
+        const graphWidth = width - 2 * padding;
+        const graphHeight = height - 2 * padding;
+        
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = CONSTANTS.COLORS.GRID;
+        ctx.fillRect(0, 0, width, height);
+        
+        const hipBase = this.state.yawSpeed;
+        const hipMax = this.state.yawSpeed + this.state.extraYaw;
+        const adsBase = this.state.adsYawSpeed;
+        const adsMax = this.state.adsYawSpeed + this.state.adsExtraYaw;
+        
+        const maxSpeed = Math.max(hipBase, hipMax, adsBase, adsMax);
+        const scale = graphHeight / (maxSpeed * 1.1);
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.GRID;
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i <= 5; i++) {
+            const y = padding + (i / 5) * graphHeight;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(width - padding, y);
+            ctx.stroke();
+            
+            const speed = Math.round((1 - i / 5) * maxSpeed * 1.1);
+            ctx.fillStyle = CONSTANTS.COLORS.AXES;
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'right';
+            ctx.fillText(speed + '°/s', padding - 5, y + 3);
+        }
+        
+        const barWidth = graphWidth / 8;
+        const barSpacing = graphWidth / 4;
+        
+        const bars = [
+            { label: 'Hip Base', value: hipBase, color: CONSTANTS.COLORS.AXES, x: padding + barSpacing - barWidth * 1.5 },
+            { label: 'Hip Max', value: hipMax, color: CONSTANTS.COLORS.TEXT_WHITE, x: padding + barSpacing - barWidth * 0.5 },
+            { label: 'ADS Base', value: adsBase, color: CONSTANTS.COLORS.AXES, x: padding + barSpacing * 3 - barWidth * 1.5 },
+            { label: 'ADS Max', value: adsMax, color: CONSTANTS.COLORS.PRIMARY, x: padding + barSpacing * 3 - barWidth * 0.5 }
+        ];
+        
+        bars.forEach(bar => {
+            const barHeight = bar.value * scale;
+            
+            const gradient = ctx.createLinearGradient(0, height - padding - barHeight, 0, height - padding);
+            gradient.addColorStop(0, bar.color);
+            gradient.addColorStop(1, CONSTANTS.COLORS.GRID);
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(bar.x, height - padding - barHeight, barWidth, barHeight);
+            
+            ctx.strokeStyle = bar.color;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(bar.x, height - padding - barHeight, barWidth, barHeight);
+            
+            ctx.fillStyle = bar.color;
+            ctx.font = '11px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(bar.value + '°/s', bar.x + barWidth / 2, height - padding - barHeight - 5);
+            
+            ctx.fillStyle = CONSTANTS.COLORS.TEXT_LIGHT;
+            ctx.fillText(bar.label, bar.x + barWidth / 2, height - padding + 15);
+        });
+        
+        ctx.strokeStyle = CONSTANTS.COLORS.AXES;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.stroke();
+    }
+    
+    startAnimation() {
+        const animate = () => {
+            this.drawDeadzone();
+            if (this.autoRotate3D) {
+                this.draw3DAimAssist();
+            }
+            this.animationId = requestAnimationFrame(animate);
+        };
         animate();
-    </script>
+    }
+    
+    destroy() {
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+        }
+    }
+}
+
+// Initialize app when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const app = new ALCAnalyzer();
+        
+        window.addEventListener('beforeunload', () => {
+            app.destroy();
+        });
+    });
+} else {
+    const app = new ALCAnalyzer();
+    
+    window.addEventListener('beforeunload', () => {
+        app.destroy();
+    });
+}
+</script>
 </body>
 </html>
