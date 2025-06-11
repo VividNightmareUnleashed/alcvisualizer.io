@@ -1397,18 +1397,18 @@ ADS Ramp-up Delay: ${settings.adsRampDelay}%`;
         
         // X-axis lines (perpendicular to view direction)
         for (let x = -250; x <= 250; x += 50) {
-            const start = project3D(x, 50, -50);
-            const end = project3D(x, 50, 400);
+            const start = project3D(x, 0, -50);
+            const end = project3D(x, 0, 400);
             ctx.beginPath();
             ctx.moveTo(start.x, start.y);
             ctx.lineTo(end.x, end.y);
             ctx.stroke();
         }
-        
+
         // Z-axis lines (along view direction)
         for (let z = -50; z <= 400; z += 50) {
-            const start = project3D(-250, 50, z);
-            const end = project3D(250, 50, z);
+            const start = project3D(-250, 0, z);
+            const end = project3D(250, 0, z);
             ctx.beginPath();
             ctx.moveTo(start.x, start.y);
             ctx.lineTo(end.x, end.y);
@@ -1613,7 +1613,7 @@ ADS Ramp-up Delay: ${settings.adsRampDelay}%`;
             : [0, 50, 150, 250, 350];
         
         distances.forEach(dist => {
-            const point = project3D(0, 48, dist);
+            const point = project3D(0, -2, dist);
             const label = dist === 0 ? 'Player' : `${dist/10}m`;
             ctx.fillText(label, point.x, point.y);
         });
